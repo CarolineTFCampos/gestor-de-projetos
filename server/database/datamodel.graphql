@@ -1,0 +1,103 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Collaborator {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  doc: String! @unique
+  price: Float! @default(value: 0)
+  active: Boolean! @default(value: true)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesCollaborator")
+}
+
+type Project {
+  id: ID! @unique
+  name: String!
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  features: [Feature!]! @relation(name: "ProjectFeatures")
+  lifecycle: Lifecycle! @relation(name: "LifecycleProjects")
+  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRoles")
+}
+
+type ProjectRoles {
+  id: ID! @unique
+  role: Role! @relation(name: "ProjectRolesRole")
+  project: Project! @relation(name: "ProjectRoles")
+  collaborator: Collaborator @relation(name: "ProjectRolesCollaborator")
+  price: Float! @default(value: 0)
+  hours: Int! @default(value: 0)
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Role {
+  id: ID! @unique
+  name: String!
+  description: String
+  experience: String
+  priceMin: Float! @default(value: 0)
+  priceMax: Float! @default(value: 0)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesRole")
+}
+
+type Lifecycle {
+  id: ID! @unique
+  name: String!
+  phase: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  projects: [Project!]! @relation(name: "LifecycleProjects")
+}
+
+type Feature {
+  id: ID! @unique
+  name: String!
+  descriptions: String
+  userStory: [String!]!
+  priority: Int! @default(value: 0)
+  estimateSize: Int @default(value: 0)
+  estimatePrice: Int @default(value: 0)
+  estimateEffort: Int @default(value: 0)
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  epics: [Epic!]! @relation(name: "FeatureEpics")
+  project: Project! @relation(name: "ProjectFeatures")
+}
+
+type Epic {
+  id: ID! @unique
+  name: String!
+  descriptions: String
+  userStory: [String!]!
+  priority: Int! @default(value: 0)
+  estimateSize: Int @default(value: 0)
+  estimatePrice: Int @default(value: 0)
+  estimateEffort: Int @default(value: 0)
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  feature: Feature! @relation(name: "FeatureEpics")
+}
