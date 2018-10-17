@@ -1,9 +1,9 @@
 mutation {
   createUser(
     data: {
-      name: "Caroline Ferrari"
-      email: "carolinee.decampos@gmail.com"
-      password: "$2y$12$/69vO3rSmQF.hyEd/QYjYuvGgiHgSPDcmur6LBatmISALhoHJ0U9u" # plaintext password: "1"
+      name: "Gerente de Projetos"
+      email: "gp@gp.com"
+      password: "$2y$12$ncOYXQItkzAYZQJTUpcFXeARS3fux0PCNPoN2vt2sPREWY1uGbM4u" # plaintext password: "gp"
     }
   ) {
     id
