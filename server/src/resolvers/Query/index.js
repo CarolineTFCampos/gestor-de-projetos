@@ -1,5 +1,10 @@
+const { forwardTo } = require('prisma-binding')
+
 const { me } = require('./me')
 
 module.exports = {
-  me
+  me,
+
+  role: forwardTo('db'),
+  roles: forwardTo('db')
 }

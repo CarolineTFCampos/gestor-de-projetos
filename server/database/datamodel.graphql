@@ -52,12 +52,30 @@ type Role {
   id: ID! @unique
   name: String!
   description: String
+  department: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  roleLevels: [RoleLevel!]! @relation(name: "RoleLevels", onDelete: CASCADE)
+  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesRole")
+}
+
+enum RoleLevelType {
+  TRAINEE
+  JUNIOR
+  INTERMEDIATE
+  SENIOR
+  EXPERT
+}
+
+type RoleLevel {
+  id: ID! @unique
+  level: RoleLevelType!
   experience: String
   priceMin: Float! @default(value: 0)
   priceMax: Float! @default(value: 0)
   createdAt: DateTime!
   updatedAt: DateTime!
-  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesRole")
+  role: Role! @relation(name: "RoleLevels")
 }
 
 type Lifecycle {

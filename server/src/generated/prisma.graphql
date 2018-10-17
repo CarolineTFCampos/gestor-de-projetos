@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Fri Oct 05 2018 21:04:01 GMT-0300 (-03)
+# timestamp: Sun Oct 14 2018 19:35:41 GMT-0300 (-03)
 
 type AggregateCollaborator {
   count: Int!
@@ -26,6 +26,10 @@ type AggregateProjectRoles {
 }
 
 type AggregateRole {
+  count: Int!
+}
+
+type AggregateRoleLevel {
   count: Int!
 }
 
@@ -1799,6 +1803,7 @@ type Mutation {
   createProject(data: ProjectCreateInput!): Project!
   createProjectRoles(data: ProjectRolesCreateInput!): ProjectRoles!
   createRole(data: RoleCreateInput!): Role!
+  createRoleLevel(data: RoleLevelCreateInput!): RoleLevel!
   createLifecycle(data: LifecycleCreateInput!): Lifecycle!
   createFeature(data: FeatureCreateInput!): Feature!
   createEpic(data: EpicCreateInput!): Epic!
@@ -1807,6 +1812,7 @@ type Mutation {
   updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
   updateProjectRoles(data: ProjectRolesUpdateInput!, where: ProjectRolesWhereUniqueInput!): ProjectRoles
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
+  updateRoleLevel(data: RoleLevelUpdateInput!, where: RoleLevelWhereUniqueInput!): RoleLevel
   updateLifecycle(data: LifecycleUpdateInput!, where: LifecycleWhereUniqueInput!): Lifecycle
   updateFeature(data: FeatureUpdateInput!, where: FeatureWhereUniqueInput!): Feature
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
@@ -1815,6 +1821,7 @@ type Mutation {
   deleteProject(where: ProjectWhereUniqueInput!): Project
   deleteProjectRoles(where: ProjectRolesWhereUniqueInput!): ProjectRoles
   deleteRole(where: RoleWhereUniqueInput!): Role
+  deleteRoleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
   deleteLifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   deleteFeature(where: FeatureWhereUniqueInput!): Feature
   deleteEpic(where: EpicWhereUniqueInput!): Epic
@@ -1823,6 +1830,7 @@ type Mutation {
   upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
   upsertProjectRoles(where: ProjectRolesWhereUniqueInput!, create: ProjectRolesCreateInput!, update: ProjectRolesUpdateInput!): ProjectRoles!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
+  upsertRoleLevel(where: RoleLevelWhereUniqueInput!, create: RoleLevelCreateInput!, update: RoleLevelUpdateInput!): RoleLevel!
   upsertLifecycle(where: LifecycleWhereUniqueInput!, create: LifecycleCreateInput!, update: LifecycleUpdateInput!): Lifecycle!
   upsertFeature(where: FeatureWhereUniqueInput!, create: FeatureCreateInput!, update: FeatureUpdateInput!): Feature!
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
@@ -1831,6 +1839,7 @@ type Mutation {
   updateManyProjects(data: ProjectUpdateInput!, where: ProjectWhereInput): BatchPayload!
   updateManyProjectRoleses(data: ProjectRolesUpdateInput!, where: ProjectRolesWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateInput!, where: RoleWhereInput): BatchPayload!
+  updateManyRoleLevels(data: RoleLevelUpdateInput!, where: RoleLevelWhereInput): BatchPayload!
   updateManyLifecycles(data: LifecycleUpdateInput!, where: LifecycleWhereInput): BatchPayload!
   updateManyFeatures(data: FeatureUpdateInput!, where: FeatureWhereInput): BatchPayload!
   updateManyEpics(data: EpicUpdateInput!, where: EpicWhereInput): BatchPayload!
@@ -1839,6 +1848,7 @@ type Mutation {
   deleteManyProjects(where: ProjectWhereInput): BatchPayload!
   deleteManyProjectRoleses(where: ProjectRolesWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
+  deleteManyRoleLevels(where: RoleLevelWhereInput): BatchPayload!
   deleteManyLifecycles(where: LifecycleWhereInput): BatchPayload!
   deleteManyFeatures(where: FeatureWhereInput): BatchPayload!
   deleteManyEpics(where: EpicWhereInput): BatchPayload!
@@ -2931,6 +2941,7 @@ type Query {
   projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
   projectRoleses(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
+  roleLevels(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleLevel]!
   lifecycles(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Lifecycle]!
   features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature]!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
@@ -2939,6 +2950,7 @@ type Query {
   project(where: ProjectWhereUniqueInput!): Project
   projectRoles(where: ProjectRolesWhereUniqueInput!): ProjectRoles
   role(where: RoleWhereUniqueInput!): Role
+  roleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
   lifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   feature(where: FeatureWhereUniqueInput!): Feature
   epic(where: EpicWhereUniqueInput!): Epic
@@ -2947,6 +2959,7 @@ type Query {
   projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
   projectRolesesConnection(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRolesConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
+  roleLevelsConnection(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleLevelConnection!
   lifecyclesConnection(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LifecycleConnection!
   featuresConnection(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeatureConnection!
   epicsConnection(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EpicConnection!
@@ -2962,11 +2975,10 @@ type Role implements Node {
   id: ID!
   name: String!
   description: String
-  experience: String
-  priceMin: Float!
-  priceMax: Float!
+  department: String
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleLevels(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleLevel!]
   projectRoles(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles!]
 }
 
@@ -2983,9 +2995,8 @@ type RoleConnection {
 input RoleCreateInput {
   name: String!
   description: String
-  experience: String
-  priceMin: Float
-  priceMax: Float
+  department: String
+  roleLevels: RoleLevelCreateManyWithoutRoleInput
   projectRoles: ProjectRolesCreateManyWithoutRoleInput
 }
 
@@ -2994,12 +3005,23 @@ input RoleCreateOneWithoutProjectRolesInput {
   connect: RoleWhereUniqueInput
 }
 
+input RoleCreateOneWithoutRoleLevelsInput {
+  create: RoleCreateWithoutRoleLevelsInput
+  connect: RoleWhereUniqueInput
+}
+
 input RoleCreateWithoutProjectRolesInput {
   name: String!
   description: String
-  experience: String
-  priceMin: Float
-  priceMax: Float
+  department: String
+  roleLevels: RoleLevelCreateManyWithoutRoleInput
+}
+
+input RoleCreateWithoutRoleLevelsInput {
+  name: String!
+  description: String
+  department: String
+  projectRoles: ProjectRolesCreateManyWithoutRoleInput
 }
 
 """An edge in a connection."""
@@ -3011,13 +3033,61 @@ type RoleEdge {
   cursor: String!
 }
 
-enum RoleOrderByInput {
+type RoleLevel implements Node {
+  id: ID!
+  level: RoleLevelType!
+  experience: String
+  priceMin: Float!
+  priceMax: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  role: Role!
+}
+
+"""A connection to a list of items."""
+type RoleLevelConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RoleLevelEdge]!
+  aggregate: AggregateRoleLevel!
+}
+
+input RoleLevelCreateInput {
+  level: RoleLevelType!
+  experience: String
+  priceMin: Float
+  priceMax: Float
+  role: RoleCreateOneWithoutRoleLevelsInput!
+}
+
+input RoleLevelCreateManyWithoutRoleInput {
+  create: [RoleLevelCreateWithoutRoleInput!]
+  connect: [RoleLevelWhereUniqueInput!]
+}
+
+input RoleLevelCreateWithoutRoleInput {
+  level: RoleLevelType!
+  experience: String
+  priceMin: Float
+  priceMax: Float
+}
+
+"""An edge in a connection."""
+type RoleLevelEdge {
+  """The item at the end of the edge."""
+  node: RoleLevel!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RoleLevelOrderByInput {
   id_ASC
   id_DESC
-  name_ASC
-  name_DESC
-  description_ASC
-  description_DESC
+  level_ASC
+  level_DESC
   experience_ASC
   experience_DESC
   priceMin_ASC
@@ -3030,13 +3100,312 @@ enum RoleOrderByInput {
   updatedAt_DESC
 }
 
+type RoleLevelPreviousValues {
+  id: ID!
+  level: RoleLevelType!
+  experience: String
+  priceMin: Float!
+  priceMax: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type RoleLevelSubscriptionPayload {
+  mutation: MutationType!
+  node: RoleLevel
+  updatedFields: [String!]
+  previousValues: RoleLevelPreviousValues
+}
+
+input RoleLevelSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoleLevelSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoleLevelSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoleLevelSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RoleLevelWhereInput
+}
+
+enum RoleLevelType {
+  TRAINEE
+  JUNIOR
+  INTERMEDIATE
+  SENIOR
+  EXPERT
+}
+
+input RoleLevelUpdateInput {
+  level: RoleLevelType
+  experience: String
+  priceMin: Float
+  priceMax: Float
+  role: RoleUpdateOneRequiredWithoutRoleLevelsInput
+}
+
+input RoleLevelUpdateManyWithoutRoleInput {
+  create: [RoleLevelCreateWithoutRoleInput!]
+  connect: [RoleLevelWhereUniqueInput!]
+  disconnect: [RoleLevelWhereUniqueInput!]
+  delete: [RoleLevelWhereUniqueInput!]
+  update: [RoleLevelUpdateWithWhereUniqueWithoutRoleInput!]
+  upsert: [RoleLevelUpsertWithWhereUniqueWithoutRoleInput!]
+}
+
+input RoleLevelUpdateWithoutRoleDataInput {
+  level: RoleLevelType
+  experience: String
+  priceMin: Float
+  priceMax: Float
+}
+
+input RoleLevelUpdateWithWhereUniqueWithoutRoleInput {
+  where: RoleLevelWhereUniqueInput!
+  data: RoleLevelUpdateWithoutRoleDataInput!
+}
+
+input RoleLevelUpsertWithWhereUniqueWithoutRoleInput {
+  where: RoleLevelWhereUniqueInput!
+  update: RoleLevelUpdateWithoutRoleDataInput!
+  create: RoleLevelCreateWithoutRoleInput!
+}
+
+input RoleLevelWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoleLevelWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoleLevelWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoleLevelWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  level: RoleLevelType
+
+  """All values that are not equal to given value."""
+  level_not: RoleLevelType
+
+  """All values that are contained in given list."""
+  level_in: [RoleLevelType!]
+
+  """All values that are not contained in given list."""
+  level_not_in: [RoleLevelType!]
+  experience: String
+
+  """All values that are not equal to given value."""
+  experience_not: String
+
+  """All values that are contained in given list."""
+  experience_in: [String!]
+
+  """All values that are not contained in given list."""
+  experience_not_in: [String!]
+
+  """All values less than the given value."""
+  experience_lt: String
+
+  """All values less than or equal the given value."""
+  experience_lte: String
+
+  """All values greater than the given value."""
+  experience_gt: String
+
+  """All values greater than or equal the given value."""
+  experience_gte: String
+
+  """All values containing the given string."""
+  experience_contains: String
+
+  """All values not containing the given string."""
+  experience_not_contains: String
+
+  """All values starting with the given string."""
+  experience_starts_with: String
+
+  """All values not starting with the given string."""
+  experience_not_starts_with: String
+
+  """All values ending with the given string."""
+  experience_ends_with: String
+
+  """All values not ending with the given string."""
+  experience_not_ends_with: String
+  priceMin: Float
+
+  """All values that are not equal to given value."""
+  priceMin_not: Float
+
+  """All values that are contained in given list."""
+  priceMin_in: [Float!]
+
+  """All values that are not contained in given list."""
+  priceMin_not_in: [Float!]
+
+  """All values less than the given value."""
+  priceMin_lt: Float
+
+  """All values less than or equal the given value."""
+  priceMin_lte: Float
+
+  """All values greater than the given value."""
+  priceMin_gt: Float
+
+  """All values greater than or equal the given value."""
+  priceMin_gte: Float
+  priceMax: Float
+
+  """All values that are not equal to given value."""
+  priceMax_not: Float
+
+  """All values that are contained in given list."""
+  priceMax_in: [Float!]
+
+  """All values that are not contained in given list."""
+  priceMax_not_in: [Float!]
+
+  """All values less than the given value."""
+  priceMax_lt: Float
+
+  """All values less than or equal the given value."""
+  priceMax_lte: Float
+
+  """All values greater than the given value."""
+  priceMax_gt: Float
+
+  """All values greater than or equal the given value."""
+  priceMax_gte: Float
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  role: RoleWhereInput
+}
+
+input RoleLevelWhereUniqueInput {
+  id: ID
+}
+
+enum RoleOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  department_ASC
+  department_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
 type RolePreviousValues {
   id: ID!
   name: String!
   description: String
-  experience: String
-  priceMin: Float!
-  priceMax: Float!
+  department: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -3083,9 +3452,8 @@ input RoleSubscriptionWhereInput {
 input RoleUpdateInput {
   name: String
   description: String
-  experience: String
-  priceMin: Float
-  priceMax: Float
+  department: String
+  roleLevels: RoleLevelUpdateManyWithoutRoleInput
   projectRoles: ProjectRolesUpdateManyWithoutRoleInput
 }
 
@@ -3096,17 +3464,35 @@ input RoleUpdateOneRequiredWithoutProjectRolesInput {
   upsert: RoleUpsertWithoutProjectRolesInput
 }
 
+input RoleUpdateOneRequiredWithoutRoleLevelsInput {
+  create: RoleCreateWithoutRoleLevelsInput
+  connect: RoleWhereUniqueInput
+  update: RoleUpdateWithoutRoleLevelsDataInput
+  upsert: RoleUpsertWithoutRoleLevelsInput
+}
+
 input RoleUpdateWithoutProjectRolesDataInput {
   name: String
   description: String
-  experience: String
-  priceMin: Float
-  priceMax: Float
+  department: String
+  roleLevels: RoleLevelUpdateManyWithoutRoleInput
+}
+
+input RoleUpdateWithoutRoleLevelsDataInput {
+  name: String
+  description: String
+  department: String
+  projectRoles: ProjectRolesUpdateManyWithoutRoleInput
 }
 
 input RoleUpsertWithoutProjectRolesInput {
   update: RoleUpdateWithoutProjectRolesDataInput!
   create: RoleCreateWithoutProjectRolesInput!
+}
+
+input RoleUpsertWithoutRoleLevelsInput {
+  update: RoleUpdateWithoutRoleLevelsDataInput!
+  create: RoleCreateWithoutRoleLevelsInput!
 }
 
 input RoleWhereInput {
@@ -3238,90 +3624,46 @@ input RoleWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
-  experience: String
+  department: String
 
   """All values that are not equal to given value."""
-  experience_not: String
+  department_not: String
 
   """All values that are contained in given list."""
-  experience_in: [String!]
+  department_in: [String!]
 
   """All values that are not contained in given list."""
-  experience_not_in: [String!]
+  department_not_in: [String!]
 
   """All values less than the given value."""
-  experience_lt: String
+  department_lt: String
 
   """All values less than or equal the given value."""
-  experience_lte: String
+  department_lte: String
 
   """All values greater than the given value."""
-  experience_gt: String
+  department_gt: String
 
   """All values greater than or equal the given value."""
-  experience_gte: String
+  department_gte: String
 
   """All values containing the given string."""
-  experience_contains: String
+  department_contains: String
 
   """All values not containing the given string."""
-  experience_not_contains: String
+  department_not_contains: String
 
   """All values starting with the given string."""
-  experience_starts_with: String
+  department_starts_with: String
 
   """All values not starting with the given string."""
-  experience_not_starts_with: String
+  department_not_starts_with: String
 
   """All values ending with the given string."""
-  experience_ends_with: String
+  department_ends_with: String
 
   """All values not ending with the given string."""
-  experience_not_ends_with: String
-  priceMin: Float
-
-  """All values that are not equal to given value."""
-  priceMin_not: Float
-
-  """All values that are contained in given list."""
-  priceMin_in: [Float!]
-
-  """All values that are not contained in given list."""
-  priceMin_not_in: [Float!]
-
-  """All values less than the given value."""
-  priceMin_lt: Float
-
-  """All values less than or equal the given value."""
-  priceMin_lte: Float
-
-  """All values greater than the given value."""
-  priceMin_gt: Float
-
-  """All values greater than or equal the given value."""
-  priceMin_gte: Float
-  priceMax: Float
-
-  """All values that are not equal to given value."""
-  priceMax_not: Float
-
-  """All values that are contained in given list."""
-  priceMax_in: [Float!]
-
-  """All values that are not contained in given list."""
-  priceMax_not_in: [Float!]
-
-  """All values less than the given value."""
-  priceMax_lt: Float
-
-  """All values less than or equal the given value."""
-  priceMax_lte: Float
-
-  """All values greater than the given value."""
-  priceMax_gt: Float
-
-  """All values greater than or equal the given value."""
-  priceMax_gte: Float
+  department_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -3366,6 +3708,9 @@ input RoleWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  roleLevels_every: RoleLevelWhereInput
+  roleLevels_some: RoleLevelWhereInput
+  roleLevels_none: RoleLevelWhereInput
   projectRoles_every: ProjectRolesWhereInput
   projectRoles_some: ProjectRolesWhereInput
   projectRoles_none: ProjectRolesWhereInput
@@ -3381,6 +3726,7 @@ type Subscription {
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
   projectRoles(where: ProjectRolesSubscriptionWhereInput): ProjectRolesSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
+  roleLevel(where: RoleLevelSubscriptionWhereInput): RoleLevelSubscriptionPayload
   lifecycle(where: LifecycleSubscriptionWhereInput): LifecycleSubscriptionPayload
   feature(where: FeatureSubscriptionWhereInput): FeatureSubscriptionPayload
   epic(where: EpicSubscriptionWhereInput): EpicSubscriptionPayload
