@@ -71,7 +71,7 @@ class Login extends Component {
         })
 
         // TODO: Salva token do usuário no localStorage
-        localStorage.setItem('gestor__token', values.token)
+        localStorage.setItem('gestor__token', result.data.signin.token)
 
         // TODO: Redireciona o usuário para tela principal
         self.props.history.push('/admin')
@@ -155,12 +155,6 @@ class Login extends Component {
           <Link to="/auth/forgot-password">
             <a href>Esqueci minha senha</a>
           </Link>
-        </Card>
-        <Card>
-          {/* TRAINEE, JUNIOR, PLENO, SENIOR, EXPERT */}
-          {/* VALOR POR HORA MIN
-          VALOR POR HORA  MAX
-          EXPERIENCIA */}
         </Card>
       </AuthLayout>
     )
