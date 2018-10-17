@@ -11,8 +11,9 @@ import Admin from './admin/Admin'
 import PageNotFound from './components/PageNotFound'
 
 const client = new ApolloClient({
-  // uri: 'http://192.168.1.14:4000' // local
-  uri: 'https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev' // server
+  uri: 'http://localhost:4000' // local
+  // uri: 'http://192.168.1.14:4000' //ip
+  // uri: 'https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev' // server
 })
 
 function RedirectToAuth() {
