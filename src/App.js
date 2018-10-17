@@ -7,10 +7,12 @@ import { ApolloProvider } from 'react-apollo'
 import 'antd/dist/antd.css'
 
 import Auth from './auth/Auth'
+import Admin from './admin/Admin'
 import PageNotFound from './components/PageNotFound'
 
 const client = new ApolloClient({
-  uri: 'http://192.168.0.121:4000'
+  // uri: 'http://192.168.1.14:4000' // local
+  uri: 'https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev' // server
 })
 
 function RedirectToAuth() {
@@ -23,7 +25,7 @@ class App extends Component {
       <ApolloProvider client={client}>
         <BrowserRouter>
           <Switch>
-            {/* <Route path="/admin" component={Admin} /> */}
+            <Route path="/admin" component={Admin} />
             <Route path="/auth" component={Auth} />
             <Route path="/" exact={true} component={RedirectToAuth} />
             <Route component={PageNotFound} />
