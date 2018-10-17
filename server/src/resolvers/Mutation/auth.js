@@ -12,7 +12,7 @@ const auth = {
 
     // se não encontrar usuário pelo e-mail retorna erro
     if (!user) {
-      throw new Error(`E-mail e/ou senha não encontrado.`)
+      throw new Error('E-mail e/ou senha não encontrado.')
     }
 
     // compara a senha para verificar se é válida
