@@ -2,7 +2,7 @@ import React from 'react'
 
 const style = {
   container: {
-    height: '100vh',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
