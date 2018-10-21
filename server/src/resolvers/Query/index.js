@@ -6,5 +6,8 @@ module.exports = {
   me,
 
   role: forwardTo('db'),
-  roles: forwardTo('db')
+  roles: forwardTo('db'),
+
+  contributor: forwardTo('db'),
+  contributors: forwardTo('db')
 }
