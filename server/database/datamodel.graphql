@@ -7,7 +7,7 @@ type User {
   updatedAt: DateTime!
 }
 
-type Collaborator {
+type Contributor {
   id: ID! @unique
   name: String!
   email: String! @unique
@@ -16,7 +16,34 @@ type Collaborator {
   active: Boolean! @default(value: true)
   createdAt: DateTime!
   updatedAt: DateTime!
-  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesCollaborator")
+  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesContributor")
+  experiences: [ContributorExperience!]!
+    @relation(name: "ContributorExperiences")
+  formations: [ContributorFormation!]! @relation(name: "ContributorFormations")
+}
+
+type ContributorExperience {
+  id: ID! @unique
+  name: String!
+  company: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  contributor: Contributor! @relation(name: "ContributorExperiences")
+}
+
+type ContributorFormation {
+  id: ID! @unique
+  name: String!
+  institution: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  contributor: Contributor! @relation(name: "ContributorFormations")
 }
 
 type Project {
@@ -39,7 +66,7 @@ type ProjectRoles {
   id: ID! @unique
   role: Role! @relation(name: "ProjectRolesRole")
   project: Project! @relation(name: "ProjectRoles")
-  collaborator: Collaborator @relation(name: "ProjectRolesCollaborator")
+  contributor: Contributor @relation(name: "ProjectRolesContributor")
   price: Float! @default(value: 0)
   hours: Int! @default(value: 0)
   startAt: DateTime!

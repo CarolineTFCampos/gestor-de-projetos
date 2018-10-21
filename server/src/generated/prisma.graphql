@@ -1,7 +1,15 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Oct 14 2018 19:35:41 GMT-0300 (-03)
+# timestamp: Sun Oct 21 2018 18:22:03 GMT-0300 (-03)
 
-type AggregateCollaborator {
+type AggregateContributor {
+  count: Int!
+}
+
+type AggregateContributorExperience {
+  count: Int!
+}
+
+type AggregateContributorFormation {
   count: Int!
 }
 
@@ -42,7 +50,7 @@ type BatchPayload {
   count: Long!
 }
 
-type Collaborator implements Node {
+type Contributor implements Node {
   id: ID!
   name: String!
   email: String!
@@ -52,95 +60,184 @@ type Collaborator implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   projectRoles(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles!]
+  experiences(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorExperience!]
+  formations(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorFormation!]
 }
 
 """A connection to a list of items."""
-type CollaboratorConnection {
+type ContributorConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [CollaboratorEdge]!
-  aggregate: AggregateCollaborator!
+  edges: [ContributorEdge]!
+  aggregate: AggregateContributor!
 }
 
-input CollaboratorCreateInput {
+input ContributorCreateInput {
   name: String!
   email: String!
   doc: String!
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesCreateManyWithoutCollaboratorInput
+  projectRoles: ProjectRolesCreateManyWithoutContributorInput
+  experiences: ContributorExperienceCreateManyWithoutContributorInput
+  formations: ContributorFormationCreateManyWithoutContributorInput
 }
 
-input CollaboratorCreateOneWithoutProjectRolesInput {
-  create: CollaboratorCreateWithoutProjectRolesInput
-  connect: CollaboratorWhereUniqueInput
+input ContributorCreateOneWithoutExperiencesInput {
+  create: ContributorCreateWithoutExperiencesInput
+  connect: ContributorWhereUniqueInput
 }
 
-input CollaboratorCreateWithoutProjectRolesInput {
+input ContributorCreateOneWithoutFormationsInput {
+  create: ContributorCreateWithoutFormationsInput
+  connect: ContributorWhereUniqueInput
+}
+
+input ContributorCreateOneWithoutProjectRolesInput {
+  create: ContributorCreateWithoutProjectRolesInput
+  connect: ContributorWhereUniqueInput
+}
+
+input ContributorCreateWithoutExperiencesInput {
   name: String!
   email: String!
   doc: String!
   price: Float
   active: Boolean
+  projectRoles: ProjectRolesCreateManyWithoutContributorInput
+  formations: ContributorFormationCreateManyWithoutContributorInput
+}
+
+input ContributorCreateWithoutFormationsInput {
+  name: String!
+  email: String!
+  doc: String!
+  price: Float
+  active: Boolean
+  projectRoles: ProjectRolesCreateManyWithoutContributorInput
+  experiences: ContributorExperienceCreateManyWithoutContributorInput
+}
+
+input ContributorCreateWithoutProjectRolesInput {
+  name: String!
+  email: String!
+  doc: String!
+  price: Float
+  active: Boolean
+  experiences: ContributorExperienceCreateManyWithoutContributorInput
+  formations: ContributorFormationCreateManyWithoutContributorInput
 }
 
 """An edge in a connection."""
-type CollaboratorEdge {
+type ContributorEdge {
   """The item at the end of the edge."""
-  node: Collaborator!
+  node: Contributor!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum CollaboratorOrderByInput {
+type ContributorExperience implements Node {
+  id: ID!
+  name: String!
+  company: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  contributor: Contributor!
+}
+
+"""A connection to a list of items."""
+type ContributorExperienceConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ContributorExperienceEdge]!
+  aggregate: AggregateContributorExperience!
+}
+
+input ContributorExperienceCreateInput {
+  name: String!
+  company: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  contributor: ContributorCreateOneWithoutExperiencesInput!
+}
+
+input ContributorExperienceCreateManyWithoutContributorInput {
+  create: [ContributorExperienceCreateWithoutContributorInput!]
+  connect: [ContributorExperienceWhereUniqueInput!]
+}
+
+input ContributorExperienceCreateWithoutContributorInput {
+  name: String!
+  company: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+"""An edge in a connection."""
+type ContributorExperienceEdge {
+  """The item at the end of the edge."""
+  node: ContributorExperience!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ContributorExperienceOrderByInput {
   id_ASC
   id_DESC
   name_ASC
   name_DESC
-  email_ASC
-  email_DESC
-  doc_ASC
-  doc_DESC
-  price_ASC
-  price_DESC
-  active_ASC
-  active_DESC
+  company_ASC
+  company_DESC
+  description_ASC
+  description_DESC
+  startAt_ASC
+  startAt_DESC
+  endAt_ASC
+  endAt_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
 
-type CollaboratorPreviousValues {
+type ContributorExperiencePreviousValues {
   id: ID!
   name: String!
-  email: String!
-  doc: String!
-  price: Float!
-  active: Boolean!
+  company: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type CollaboratorSubscriptionPayload {
+type ContributorExperienceSubscriptionPayload {
   mutation: MutationType!
-  node: Collaborator
+  node: ContributorExperience
   updatedFields: [String!]
-  previousValues: CollaboratorPreviousValues
+  previousValues: ContributorExperiencePreviousValues
 }
 
-input CollaboratorSubscriptionWhereInput {
+input ContributorExperienceSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [CollaboratorSubscriptionWhereInput!]
+  AND: [ContributorExperienceSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [CollaboratorSubscriptionWhereInput!]
+  OR: [ContributorExperienceSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [CollaboratorSubscriptionWhereInput!]
+  NOT: [ContributorExperienceSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -161,49 +258,890 @@ input CollaboratorSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: CollaboratorWhereInput
+  node: ContributorExperienceWhereInput
 }
 
-input CollaboratorUpdateInput {
+input ContributorExperienceUpdateInput {
   name: String
-  email: String
-  doc: String
-  price: Float
-  active: Boolean
-  projectRoles: ProjectRolesUpdateManyWithoutCollaboratorInput
+  company: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+  contributor: ContributorUpdateOneRequiredWithoutExperiencesInput
 }
 
-input CollaboratorUpdateOneWithoutProjectRolesInput {
-  create: CollaboratorCreateWithoutProjectRolesInput
-  connect: CollaboratorWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: CollaboratorUpdateWithoutProjectRolesDataInput
-  upsert: CollaboratorUpsertWithoutProjectRolesInput
+input ContributorExperienceUpdateManyWithoutContributorInput {
+  create: [ContributorExperienceCreateWithoutContributorInput!]
+  connect: [ContributorExperienceWhereUniqueInput!]
+  disconnect: [ContributorExperienceWhereUniqueInput!]
+  delete: [ContributorExperienceWhereUniqueInput!]
+  update: [ContributorExperienceUpdateWithWhereUniqueWithoutContributorInput!]
+  upsert: [ContributorExperienceUpsertWithWhereUniqueWithoutContributorInput!]
 }
 
-input CollaboratorUpdateWithoutProjectRolesDataInput {
+input ContributorExperienceUpdateWithoutContributorDataInput {
   name: String
-  email: String
-  doc: String
-  price: Float
-  active: Boolean
+  company: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
 }
 
-input CollaboratorUpsertWithoutProjectRolesInput {
-  update: CollaboratorUpdateWithoutProjectRolesDataInput!
-  create: CollaboratorCreateWithoutProjectRolesInput!
+input ContributorExperienceUpdateWithWhereUniqueWithoutContributorInput {
+  where: ContributorExperienceWhereUniqueInput!
+  data: ContributorExperienceUpdateWithoutContributorDataInput!
 }
 
-input CollaboratorWhereInput {
+input ContributorExperienceUpsertWithWhereUniqueWithoutContributorInput {
+  where: ContributorExperienceWhereUniqueInput!
+  update: ContributorExperienceUpdateWithoutContributorDataInput!
+  create: ContributorExperienceCreateWithoutContributorInput!
+}
+
+input ContributorExperienceWhereInput {
   """Logical AND on all given filters."""
-  AND: [CollaboratorWhereInput!]
+  AND: [ContributorExperienceWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [CollaboratorWhereInput!]
+  OR: [ContributorExperienceWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [CollaboratorWhereInput!]
+  NOT: [ContributorExperienceWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  company: String
+
+  """All values that are not equal to given value."""
+  company_not: String
+
+  """All values that are contained in given list."""
+  company_in: [String!]
+
+  """All values that are not contained in given list."""
+  company_not_in: [String!]
+
+  """All values less than the given value."""
+  company_lt: String
+
+  """All values less than or equal the given value."""
+  company_lte: String
+
+  """All values greater than the given value."""
+  company_gt: String
+
+  """All values greater than or equal the given value."""
+  company_gte: String
+
+  """All values containing the given string."""
+  company_contains: String
+
+  """All values not containing the given string."""
+  company_not_contains: String
+
+  """All values starting with the given string."""
+  company_starts_with: String
+
+  """All values not starting with the given string."""
+  company_not_starts_with: String
+
+  """All values ending with the given string."""
+  company_ends_with: String
+
+  """All values not ending with the given string."""
+  company_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  contributor: ContributorWhereInput
+}
+
+input ContributorExperienceWhereUniqueInput {
+  id: ID
+}
+
+type ContributorFormation implements Node {
+  id: ID!
+  name: String!
+  institution: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  contributor: Contributor!
+}
+
+"""A connection to a list of items."""
+type ContributorFormationConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ContributorFormationEdge]!
+  aggregate: AggregateContributorFormation!
+}
+
+input ContributorFormationCreateInput {
+  name: String!
+  institution: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  contributor: ContributorCreateOneWithoutFormationsInput!
+}
+
+input ContributorFormationCreateManyWithoutContributorInput {
+  create: [ContributorFormationCreateWithoutContributorInput!]
+  connect: [ContributorFormationWhereUniqueInput!]
+}
+
+input ContributorFormationCreateWithoutContributorInput {
+  name: String!
+  institution: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+"""An edge in a connection."""
+type ContributorFormationEdge {
+  """The item at the end of the edge."""
+  node: ContributorFormation!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ContributorFormationOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  institution_ASC
+  institution_DESC
+  description_ASC
+  description_DESC
+  startAt_ASC
+  startAt_DESC
+  endAt_ASC
+  endAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ContributorFormationPreviousValues {
+  id: ID!
+  name: String!
+  institution: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ContributorFormationSubscriptionPayload {
+  mutation: MutationType!
+  node: ContributorFormation
+  updatedFields: [String!]
+  previousValues: ContributorFormationPreviousValues
+}
+
+input ContributorFormationSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ContributorFormationSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ContributorFormationSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ContributorFormationSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ContributorFormationWhereInput
+}
+
+input ContributorFormationUpdateInput {
+  name: String
+  institution: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+  contributor: ContributorUpdateOneRequiredWithoutFormationsInput
+}
+
+input ContributorFormationUpdateManyWithoutContributorInput {
+  create: [ContributorFormationCreateWithoutContributorInput!]
+  connect: [ContributorFormationWhereUniqueInput!]
+  disconnect: [ContributorFormationWhereUniqueInput!]
+  delete: [ContributorFormationWhereUniqueInput!]
+  update: [ContributorFormationUpdateWithWhereUniqueWithoutContributorInput!]
+  upsert: [ContributorFormationUpsertWithWhereUniqueWithoutContributorInput!]
+}
+
+input ContributorFormationUpdateWithoutContributorDataInput {
+  name: String
+  institution: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input ContributorFormationUpdateWithWhereUniqueWithoutContributorInput {
+  where: ContributorFormationWhereUniqueInput!
+  data: ContributorFormationUpdateWithoutContributorDataInput!
+}
+
+input ContributorFormationUpsertWithWhereUniqueWithoutContributorInput {
+  where: ContributorFormationWhereUniqueInput!
+  update: ContributorFormationUpdateWithoutContributorDataInput!
+  create: ContributorFormationCreateWithoutContributorInput!
+}
+
+input ContributorFormationWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ContributorFormationWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ContributorFormationWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ContributorFormationWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  institution: String
+
+  """All values that are not equal to given value."""
+  institution_not: String
+
+  """All values that are contained in given list."""
+  institution_in: [String!]
+
+  """All values that are not contained in given list."""
+  institution_not_in: [String!]
+
+  """All values less than the given value."""
+  institution_lt: String
+
+  """All values less than or equal the given value."""
+  institution_lte: String
+
+  """All values greater than the given value."""
+  institution_gt: String
+
+  """All values greater than or equal the given value."""
+  institution_gte: String
+
+  """All values containing the given string."""
+  institution_contains: String
+
+  """All values not containing the given string."""
+  institution_not_contains: String
+
+  """All values starting with the given string."""
+  institution_starts_with: String
+
+  """All values not starting with the given string."""
+  institution_not_starts_with: String
+
+  """All values ending with the given string."""
+  institution_ends_with: String
+
+  """All values not ending with the given string."""
+  institution_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  contributor: ContributorWhereInput
+}
+
+input ContributorFormationWhereUniqueInput {
+  id: ID
+}
+
+enum ContributorOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  email_ASC
+  email_DESC
+  doc_ASC
+  doc_DESC
+  price_ASC
+  price_DESC
+  active_ASC
+  active_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ContributorPreviousValues {
+  id: ID!
+  name: String!
+  email: String!
+  doc: String!
+  price: Float!
+  active: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ContributorSubscriptionPayload {
+  mutation: MutationType!
+  node: Contributor
+  updatedFields: [String!]
+  previousValues: ContributorPreviousValues
+}
+
+input ContributorSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ContributorSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ContributorSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ContributorSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ContributorWhereInput
+}
+
+input ContributorUpdateInput {
+  name: String
+  email: String
+  doc: String
+  price: Float
+  active: Boolean
+  projectRoles: ProjectRolesUpdateManyWithoutContributorInput
+  experiences: ContributorExperienceUpdateManyWithoutContributorInput
+  formations: ContributorFormationUpdateManyWithoutContributorInput
+}
+
+input ContributorUpdateOneRequiredWithoutExperiencesInput {
+  create: ContributorCreateWithoutExperiencesInput
+  connect: ContributorWhereUniqueInput
+  update: ContributorUpdateWithoutExperiencesDataInput
+  upsert: ContributorUpsertWithoutExperiencesInput
+}
+
+input ContributorUpdateOneRequiredWithoutFormationsInput {
+  create: ContributorCreateWithoutFormationsInput
+  connect: ContributorWhereUniqueInput
+  update: ContributorUpdateWithoutFormationsDataInput
+  upsert: ContributorUpsertWithoutFormationsInput
+}
+
+input ContributorUpdateOneWithoutProjectRolesInput {
+  create: ContributorCreateWithoutProjectRolesInput
+  connect: ContributorWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ContributorUpdateWithoutProjectRolesDataInput
+  upsert: ContributorUpsertWithoutProjectRolesInput
+}
+
+input ContributorUpdateWithoutExperiencesDataInput {
+  name: String
+  email: String
+  doc: String
+  price: Float
+  active: Boolean
+  projectRoles: ProjectRolesUpdateManyWithoutContributorInput
+  formations: ContributorFormationUpdateManyWithoutContributorInput
+}
+
+input ContributorUpdateWithoutFormationsDataInput {
+  name: String
+  email: String
+  doc: String
+  price: Float
+  active: Boolean
+  projectRoles: ProjectRolesUpdateManyWithoutContributorInput
+  experiences: ContributorExperienceUpdateManyWithoutContributorInput
+}
+
+input ContributorUpdateWithoutProjectRolesDataInput {
+  name: String
+  email: String
+  doc: String
+  price: Float
+  active: Boolean
+  experiences: ContributorExperienceUpdateManyWithoutContributorInput
+  formations: ContributorFormationUpdateManyWithoutContributorInput
+}
+
+input ContributorUpsertWithoutExperiencesInput {
+  update: ContributorUpdateWithoutExperiencesDataInput!
+  create: ContributorCreateWithoutExperiencesInput!
+}
+
+input ContributorUpsertWithoutFormationsInput {
+  update: ContributorUpdateWithoutFormationsDataInput!
+  create: ContributorCreateWithoutFormationsInput!
+}
+
+input ContributorUpsertWithoutProjectRolesInput {
+  update: ContributorUpdateWithoutProjectRolesDataInput!
+  create: ContributorCreateWithoutProjectRolesInput!
+}
+
+input ContributorWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ContributorWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ContributorWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ContributorWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -437,9 +1375,15 @@ input CollaboratorWhereInput {
   projectRoles_every: ProjectRolesWhereInput
   projectRoles_some: ProjectRolesWhereInput
   projectRoles_none: ProjectRolesWhereInput
+  experiences_every: ContributorExperienceWhereInput
+  experiences_some: ContributorExperienceWhereInput
+  experiences_none: ContributorExperienceWhereInput
+  formations_every: ContributorFormationWhereInput
+  formations_some: ContributorFormationWhereInput
+  formations_none: ContributorFormationWhereInput
 }
 
-input CollaboratorWhereUniqueInput {
+input ContributorWhereUniqueInput {
   id: ID
   email: String
   doc: String
@@ -1799,7 +2743,9 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
-  createCollaborator(data: CollaboratorCreateInput!): Collaborator!
+  createContributor(data: ContributorCreateInput!): Contributor!
+  createContributorExperience(data: ContributorExperienceCreateInput!): ContributorExperience!
+  createContributorFormation(data: ContributorFormationCreateInput!): ContributorFormation!
   createProject(data: ProjectCreateInput!): Project!
   createProjectRoles(data: ProjectRolesCreateInput!): ProjectRoles!
   createRole(data: RoleCreateInput!): Role!
@@ -1808,7 +2754,9 @@ type Mutation {
   createFeature(data: FeatureCreateInput!): Feature!
   createEpic(data: EpicCreateInput!): Epic!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateCollaborator(data: CollaboratorUpdateInput!, where: CollaboratorWhereUniqueInput!): Collaborator
+  updateContributor(data: ContributorUpdateInput!, where: ContributorWhereUniqueInput!): Contributor
+  updateContributorExperience(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereUniqueInput!): ContributorExperience
+  updateContributorFormation(data: ContributorFormationUpdateInput!, where: ContributorFormationWhereUniqueInput!): ContributorFormation
   updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
   updateProjectRoles(data: ProjectRolesUpdateInput!, where: ProjectRolesWhereUniqueInput!): ProjectRoles
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
@@ -1817,7 +2765,9 @@ type Mutation {
   updateFeature(data: FeatureUpdateInput!, where: FeatureWhereUniqueInput!): Feature
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
   deleteUser(where: UserWhereUniqueInput!): User
-  deleteCollaborator(where: CollaboratorWhereUniqueInput!): Collaborator
+  deleteContributor(where: ContributorWhereUniqueInput!): Contributor
+  deleteContributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
+  deleteContributorFormation(where: ContributorFormationWhereUniqueInput!): ContributorFormation
   deleteProject(where: ProjectWhereUniqueInput!): Project
   deleteProjectRoles(where: ProjectRolesWhereUniqueInput!): ProjectRoles
   deleteRole(where: RoleWhereUniqueInput!): Role
@@ -1826,7 +2776,9 @@ type Mutation {
   deleteFeature(where: FeatureWhereUniqueInput!): Feature
   deleteEpic(where: EpicWhereUniqueInput!): Epic
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertCollaborator(where: CollaboratorWhereUniqueInput!, create: CollaboratorCreateInput!, update: CollaboratorUpdateInput!): Collaborator!
+  upsertContributor(where: ContributorWhereUniqueInput!, create: ContributorCreateInput!, update: ContributorUpdateInput!): Contributor!
+  upsertContributorExperience(where: ContributorExperienceWhereUniqueInput!, create: ContributorExperienceCreateInput!, update: ContributorExperienceUpdateInput!): ContributorExperience!
+  upsertContributorFormation(where: ContributorFormationWhereUniqueInput!, create: ContributorFormationCreateInput!, update: ContributorFormationUpdateInput!): ContributorFormation!
   upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
   upsertProjectRoles(where: ProjectRolesWhereUniqueInput!, create: ProjectRolesCreateInput!, update: ProjectRolesUpdateInput!): ProjectRoles!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
@@ -1835,7 +2787,9 @@ type Mutation {
   upsertFeature(where: FeatureWhereUniqueInput!, create: FeatureCreateInput!, update: FeatureUpdateInput!): Feature!
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
-  updateManyCollaborators(data: CollaboratorUpdateInput!, where: CollaboratorWhereInput): BatchPayload!
+  updateManyContributors(data: ContributorUpdateInput!, where: ContributorWhereInput): BatchPayload!
+  updateManyContributorExperiences(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereInput): BatchPayload!
+  updateManyContributorFormations(data: ContributorFormationUpdateInput!, where: ContributorFormationWhereInput): BatchPayload!
   updateManyProjects(data: ProjectUpdateInput!, where: ProjectWhereInput): BatchPayload!
   updateManyProjectRoleses(data: ProjectRolesUpdateInput!, where: ProjectRolesWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateInput!, where: RoleWhereInput): BatchPayload!
@@ -1844,7 +2798,9 @@ type Mutation {
   updateManyFeatures(data: FeatureUpdateInput!, where: FeatureWhereInput): BatchPayload!
   updateManyEpics(data: EpicUpdateInput!, where: EpicWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManyCollaborators(where: CollaboratorWhereInput): BatchPayload!
+  deleteManyContributors(where: ContributorWhereInput): BatchPayload!
+  deleteManyContributorExperiences(where: ContributorExperienceWhereInput): BatchPayload!
+  deleteManyContributorFormations(where: ContributorFormationWhereInput): BatchPayload!
   deleteManyProjects(where: ProjectWhereInput): BatchPayload!
   deleteManyProjectRoleses(where: ProjectRolesWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
@@ -2020,7 +2976,7 @@ type ProjectRoles implements Node {
   id: ID!
   role: Role!
   project: Project!
-  collaborator: Collaborator
+  contributor: Contributor
   price: Float!
   hours: Int!
   startAt: DateTime!
@@ -2046,11 +3002,11 @@ input ProjectRolesCreateInput {
   endAt: DateTime!
   role: RoleCreateOneWithoutProjectRolesInput!
   project: ProjectCreateOneWithoutProjectRolesInput!
-  collaborator: CollaboratorCreateOneWithoutProjectRolesInput
+  contributor: ContributorCreateOneWithoutProjectRolesInput
 }
 
-input ProjectRolesCreateManyWithoutCollaboratorInput {
-  create: [ProjectRolesCreateWithoutCollaboratorInput!]
+input ProjectRolesCreateManyWithoutContributorInput {
+  create: [ProjectRolesCreateWithoutContributorInput!]
   connect: [ProjectRolesWhereUniqueInput!]
 }
 
@@ -2064,7 +3020,7 @@ input ProjectRolesCreateManyWithoutRoleInput {
   connect: [ProjectRolesWhereUniqueInput!]
 }
 
-input ProjectRolesCreateWithoutCollaboratorInput {
+input ProjectRolesCreateWithoutContributorInput {
   price: Float
   hours: Int
   startAt: DateTime!
@@ -2079,7 +3035,7 @@ input ProjectRolesCreateWithoutProjectInput {
   startAt: DateTime!
   endAt: DateTime!
   role: RoleCreateOneWithoutProjectRolesInput!
-  collaborator: CollaboratorCreateOneWithoutProjectRolesInput
+  contributor: ContributorCreateOneWithoutProjectRolesInput
 }
 
 input ProjectRolesCreateWithoutRoleInput {
@@ -2088,7 +3044,7 @@ input ProjectRolesCreateWithoutRoleInput {
   startAt: DateTime!
   endAt: DateTime!
   project: ProjectCreateOneWithoutProjectRolesInput!
-  collaborator: CollaboratorCreateOneWithoutProjectRolesInput
+  contributor: ContributorCreateOneWithoutProjectRolesInput
 }
 
 """An edge in a connection."""
@@ -2173,16 +3129,16 @@ input ProjectRolesUpdateInput {
   endAt: DateTime
   role: RoleUpdateOneRequiredWithoutProjectRolesInput
   project: ProjectUpdateOneRequiredWithoutProjectRolesInput
-  collaborator: CollaboratorUpdateOneWithoutProjectRolesInput
+  contributor: ContributorUpdateOneWithoutProjectRolesInput
 }
 
-input ProjectRolesUpdateManyWithoutCollaboratorInput {
-  create: [ProjectRolesCreateWithoutCollaboratorInput!]
+input ProjectRolesUpdateManyWithoutContributorInput {
+  create: [ProjectRolesCreateWithoutContributorInput!]
   connect: [ProjectRolesWhereUniqueInput!]
   disconnect: [ProjectRolesWhereUniqueInput!]
   delete: [ProjectRolesWhereUniqueInput!]
-  update: [ProjectRolesUpdateWithWhereUniqueWithoutCollaboratorInput!]
-  upsert: [ProjectRolesUpsertWithWhereUniqueWithoutCollaboratorInput!]
+  update: [ProjectRolesUpdateWithWhereUniqueWithoutContributorInput!]
+  upsert: [ProjectRolesUpsertWithWhereUniqueWithoutContributorInput!]
 }
 
 input ProjectRolesUpdateManyWithoutProjectInput {
@@ -2203,7 +3159,7 @@ input ProjectRolesUpdateManyWithoutRoleInput {
   upsert: [ProjectRolesUpsertWithWhereUniqueWithoutRoleInput!]
 }
 
-input ProjectRolesUpdateWithoutCollaboratorDataInput {
+input ProjectRolesUpdateWithoutContributorDataInput {
   price: Float
   hours: Int
   startAt: DateTime
@@ -2218,7 +3174,7 @@ input ProjectRolesUpdateWithoutProjectDataInput {
   startAt: DateTime
   endAt: DateTime
   role: RoleUpdateOneRequiredWithoutProjectRolesInput
-  collaborator: CollaboratorUpdateOneWithoutProjectRolesInput
+  contributor: ContributorUpdateOneWithoutProjectRolesInput
 }
 
 input ProjectRolesUpdateWithoutRoleDataInput {
@@ -2227,12 +3183,12 @@ input ProjectRolesUpdateWithoutRoleDataInput {
   startAt: DateTime
   endAt: DateTime
   project: ProjectUpdateOneRequiredWithoutProjectRolesInput
-  collaborator: CollaboratorUpdateOneWithoutProjectRolesInput
+  contributor: ContributorUpdateOneWithoutProjectRolesInput
 }
 
-input ProjectRolesUpdateWithWhereUniqueWithoutCollaboratorInput {
+input ProjectRolesUpdateWithWhereUniqueWithoutContributorInput {
   where: ProjectRolesWhereUniqueInput!
-  data: ProjectRolesUpdateWithoutCollaboratorDataInput!
+  data: ProjectRolesUpdateWithoutContributorDataInput!
 }
 
 input ProjectRolesUpdateWithWhereUniqueWithoutProjectInput {
@@ -2245,10 +3201,10 @@ input ProjectRolesUpdateWithWhereUniqueWithoutRoleInput {
   data: ProjectRolesUpdateWithoutRoleDataInput!
 }
 
-input ProjectRolesUpsertWithWhereUniqueWithoutCollaboratorInput {
+input ProjectRolesUpsertWithWhereUniqueWithoutContributorInput {
   where: ProjectRolesWhereUniqueInput!
-  update: ProjectRolesUpdateWithoutCollaboratorDataInput!
-  create: ProjectRolesCreateWithoutCollaboratorInput!
+  update: ProjectRolesUpdateWithoutContributorDataInput!
+  create: ProjectRolesCreateWithoutContributorInput!
 }
 
 input ProjectRolesUpsertWithWhereUniqueWithoutProjectInput {
@@ -2446,7 +3402,7 @@ input ProjectRolesWhereInput {
   updatedAt_gte: DateTime
   role: RoleWhereInput
   project: ProjectWhereInput
-  collaborator: CollaboratorWhereInput
+  contributor: ContributorWhereInput
 }
 
 input ProjectRolesWhereUniqueInput {
@@ -2937,7 +3893,9 @@ input ProjectWhereUniqueInput {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  collaborators(where: CollaboratorWhereInput, orderBy: CollaboratorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Collaborator]!
+  contributors(where: ContributorWhereInput, orderBy: ContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Contributor]!
+  contributorExperiences(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorExperience]!
+  contributorFormations(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorFormation]!
   projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
   projectRoleses(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
@@ -2946,7 +3904,9 @@ type Query {
   features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature]!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
   user(where: UserWhereUniqueInput!): User
-  collaborator(where: CollaboratorWhereUniqueInput!): Collaborator
+  contributor(where: ContributorWhereUniqueInput!): Contributor
+  contributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
+  contributorFormation(where: ContributorFormationWhereUniqueInput!): ContributorFormation
   project(where: ProjectWhereUniqueInput!): Project
   projectRoles(where: ProjectRolesWhereUniqueInput!): ProjectRoles
   role(where: RoleWhereUniqueInput!): Role
@@ -2955,7 +3915,9 @@ type Query {
   feature(where: FeatureWhereUniqueInput!): Feature
   epic(where: EpicWhereUniqueInput!): Epic
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  collaboratorsConnection(where: CollaboratorWhereInput, orderBy: CollaboratorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CollaboratorConnection!
+  contributorsConnection(where: ContributorWhereInput, orderBy: ContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorConnection!
+  contributorExperiencesConnection(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorExperienceConnection!
+  contributorFormationsConnection(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorFormationConnection!
   projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
   projectRolesesConnection(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRolesConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
@@ -3722,7 +4684,9 @@ input RoleWhereUniqueInput {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  collaborator(where: CollaboratorSubscriptionWhereInput): CollaboratorSubscriptionPayload
+  contributor(where: ContributorSubscriptionWhereInput): ContributorSubscriptionPayload
+  contributorExperience(where: ContributorExperienceSubscriptionWhereInput): ContributorExperienceSubscriptionPayload
+  contributorFormation(where: ContributorFormationSubscriptionWhereInput): ContributorFormationSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
   projectRoles(where: ProjectRolesSubscriptionWhereInput): ProjectRolesSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
