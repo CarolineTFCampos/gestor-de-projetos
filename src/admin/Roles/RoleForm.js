@@ -82,7 +82,7 @@ function RolesForm(props) {
                     name="name"
                     type="text"
                     label="Name"
-                    placeholder="Digite o nome do papel"
+                    placeholder="Nome do papel"
                     component={FormInput}
                   />
                 </Col>
@@ -91,19 +91,19 @@ function RolesForm(props) {
                     name="department"
                     type="text"
                     label="Departamento"
-                    placeholder="Digite o nome do Departamento"
+                    placeholder="Nome do Departamento"
                     component={FormInput}
                   />
                 </Col>
               </Row>
 
               <Row>
-                <Col>
+                <Col md={24}>
                   <Field
                     name="description"
                     type="textarea"
                     label="Descrição"
-                    placeholder="Digite o nome do Departamento"
+                    placeholder="Descrição do papel"
                     component={FormInput}
                   />
                 </Col>
@@ -121,7 +121,7 @@ function RolesForm(props) {
                       style={styles.headerCollapse}
                     >
                       <Row type="flex" justify="space-between">
-                        <Col md={11}>
+                        <Col sm={24} md={11}>
                           <Field
                             name={`roleLevels[${index}].priceMin`}
                             type="number"
@@ -134,7 +134,7 @@ function RolesForm(props) {
                             component={FormInput}
                           />
                         </Col>
-                        <Col md={11}>
+                        <Col sm={24} md={11}>
                           <Field
                             name={`roleLevels[${index}].priceMax`}
                             type="number"
@@ -149,7 +149,7 @@ function RolesForm(props) {
                         </Col>
                       </Row>
                       <Row>
-                        <Col>
+                        <Col md={24}>
                           <Field
                             name={`roleLevels[${index}].experience`}
                             type="textarea"

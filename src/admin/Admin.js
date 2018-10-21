@@ -4,6 +4,7 @@ import PageNotFound from '../components/PageNotFound'
 
 import Home from './Home'
 import Roles from './Roles/Roles'
+import Contributors from './Contributors/Contributors'
 
 function RedirectToHome() {
   return <Redirect to="/admin/home" />
@@ -14,6 +15,7 @@ function Admin() {
     <Switch>
       <Route path="/admin/home" exact={true} component={Home} />
       <Route path="/admin/roles" component={Roles} />
+      <Route path="/admin/contributors" component={Contributors} />
       <Route path="/admin" exact={true} component={RedirectToHome} />
       <Route component={PageNotFound} />
     </Switch>

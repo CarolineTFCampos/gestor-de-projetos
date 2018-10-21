@@ -79,8 +79,10 @@ class SideBar extends Component {
               </Link>
             </MenuItem>
             <MenuItem key="5">
-              <Icon type="team" theme="outlined" />
-              <span>Recursos Humanos</span>
+              <Link to="/admin/contributors">
+                <Icon type="team" theme="outlined" />
+                <span>Colaboradores</span>
+              </Link>
             </MenuItem>
             <MenuItem key="6">
               <Icon type="project" theme="outlined" />
