@@ -10,11 +10,14 @@ import message from 'antd/lib/message'
 import Title from '../../components/Title'
 import AdminLayout from '../../components/AdminLayout'
 
-import ContributorForm from './ContributorForm'
+import ContributorsForm from './ContributorsForm'
 
 class ContributorsEdit extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      visible: true
+    }
 
     this.handleSubmit = this.handleSubmit.bind(this)
   }
@@ -62,7 +65,7 @@ class ContributorsEdit extends Component {
         {this.props.data && this.props.data.loading && 'Loading'}
         {this.props.data &&
           this.props.data.contributor && (
-            <ContributorForm
+            <ContributorsForm
               onSubmit={this.handleSubmit}
               initialValues={this.props.data.contributor}
             />
@@ -77,11 +80,32 @@ const GET_CONTRIBUTOR = gql`
     contributor(where: { id: $id }) {
       id
       name
-      doc
       email
+      doc
       price
+      active
       createdAt
       updatedAt
+      experiences {
+        id
+        name
+        company
+        description
+        startAt
+        endAt
+        createdAt
+        updatedAt
+      }
+      formations {
+        id
+        name
+        institution
+        description
+        startAt
+        endAt
+        createdAt
+        updatedAt
+      }
     }
   }
 `

@@ -10,7 +10,7 @@ import message from 'antd/lib/message'
 import Title from '../../components/Title'
 import AdminLayout from '../../components/AdminLayout'
 
-import ContributorForm from './ContributorForm'
+import ContributorsForm from './ContributorsForm'
 
 const initialValues = {
   experiences: [],
@@ -33,7 +33,13 @@ class ContributorsCreate extends Component {
       await this.props.mutate({
         variables: {
           data: {
-            ...values
+            ...values,
+            experiences: {
+              create: values.experiences
+            },
+            formations: {
+              create: values.formations
+            }
           }
         },
         refetchQueries: ['GetContributors']
@@ -64,7 +70,7 @@ class ContributorsCreate extends Component {
           <Link to="/admin/contributors">Voltar</Link>
         </Title>
 
-        <ContributorForm
+        <ContributorsForm
           onSubmit={this.handleSubmit}
           initialValues={initialValues}
         />
