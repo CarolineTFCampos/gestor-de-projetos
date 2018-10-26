@@ -9,5 +9,8 @@ module.exports = {
   roles: forwardTo('db'),
 
   contributor: forwardTo('db'),
-  contributors: forwardTo('db')
+  contributors: forwardTo('db'),
+
+  project: forwardTo('db'),
+  projects: forwardTo('db')
 }
