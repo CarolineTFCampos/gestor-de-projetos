@@ -10,7 +10,7 @@ import message from 'antd/lib/message'
 import Title from '../../components/Title'
 import AdminLayout from '../../components/AdminLayout'
 
-import RoleForm from './RoleForm'
+import RolesForm from './RolesForm'
 
 const roleLevelTypes = ['TRAINEE', 'JUNIOR', 'INTERMEDIATE', 'SENIOR', 'EXPERT']
 
@@ -76,7 +76,7 @@ class RolesCreate extends Component {
           <Link to="/admin/roles">Voltar</Link>
         </Title>
 
-        <RoleForm onSubmit={this.handleSubmit} initialValues={initialValues} />
+        <RolesForm onSubmit={this.handleSubmit} initialValues={initialValues} />
       </AdminLayout>
     )
   }

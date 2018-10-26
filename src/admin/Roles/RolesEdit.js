@@ -10,7 +10,7 @@ import message from 'antd/lib/message'
 import Title from '../../components/Title'
 import AdminLayout from '../../components/AdminLayout'
 
-import RoleForm from './RoleForm'
+import RolesForm from './RolesForm'
 
 /**
  * Componente responsável por exibir o crud de Roles
@@ -82,7 +82,7 @@ class RolesEdit extends Component {
         {this.props.data && this.props.data.loading && 'Loading'}
         {this.props.data &&
           this.props.data.role && (
-            <RoleForm
+            <RolesForm
               onSubmit={this.handleSubmit}
               initialValues={this.props.data.role}
             />
