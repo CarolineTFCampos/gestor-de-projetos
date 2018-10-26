@@ -1,4 +1,4 @@
-# import Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput, Role, RoleWhereInput, RoleOrderByInput, RoleWhereUniqueInput, RoleCreateInput, RoleUpdateInput from "./generated/prisma.graphql"
+# import Project,  ProjectCreateInput, ContributorOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput,  Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput, Role, RoleWhereInput, RoleOrderByInput, RoleWhereUniqueInput, RoleCreateInput, RoleUpdateInput from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -35,6 +35,17 @@ type Query {
     first: Int
     last: Int
   ): [Contributor]!
+
+  project(where: ProjectWhereUniqueInput!): Project
+  projects(
+    where: ProjectWhereInput
+    orderBy: ProjectOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Project]!
 }
 
 type Mutation {
@@ -51,4 +62,11 @@ type Mutation {
     where: ContributorWhereUniqueInput!
   ): Contributor
   deleteContributor(where: ContributorWhereUniqueInput!): Contributor
+
+  createProject(data: ProjectCreateInput!): Project!
+  updateProject(
+    data: ProjectUpdateInput!
+    where: ProjectWhereUniqueInput!
+  ): Project
+  deleteProject(where: ProjectWhereUniqueInput!): Project
 }

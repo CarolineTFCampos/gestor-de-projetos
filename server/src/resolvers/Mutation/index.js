@@ -11,5 +11,9 @@ module.exports = {
 
   createContributor: forwardTo('db'),
   updateContributor: forwardTo('db'),
-  deleteContributor: forwardTo('db')
+  deleteContributor: forwardTo('db'),
+
+  createProject: forwardTo('db'),
+  updateProject: forwardTo('db'),
+  deleteProject: forwardTo('db')
 }

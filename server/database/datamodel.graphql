@@ -46,19 +46,30 @@ type ContributorFormation {
   contributor: Contributor! @relation(name: "ContributorFormations")
 }
 
+enum ProjectStatus {
+  OPEN
+  TODO
+  PLANNED
+  INPROGRESS
+  DONE
+  CANCELED
+}
+
 type Project {
   id: ID! @unique
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
   features: [Feature!]! @relation(name: "ProjectFeatures")
-  lifecycle: Lifecycle! @relation(name: "LifecycleProjects")
+  lifecycle: Lifecycle @relation(name: "LifecycleProjects")
   projectRoles: [ProjectRoles!]! @relation(name: "ProjectRoles")
 }
 

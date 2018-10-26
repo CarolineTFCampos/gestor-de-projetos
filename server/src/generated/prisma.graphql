@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Oct 21 2018 18:22:03 GMT-0300 (-03)
+# timestamp: Mon Oct 22 2018 16:59:09 GMT-0300 (-03)
 
 type AggregateContributor {
   count: Int!
@@ -2572,9 +2572,11 @@ input LifecycleUpdateInput {
   projects: ProjectUpdateManyWithoutLifecycleInput
 }
 
-input LifecycleUpdateOneRequiredWithoutProjectsInput {
+input LifecycleUpdateOneWithoutProjectsInput {
   create: LifecycleCreateWithoutProjectsInput
   connect: LifecycleWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
   update: LifecycleUpdateWithoutProjectsDataInput
   upsert: LifecycleUpsertWithoutProjectsInput
 }
@@ -2840,16 +2842,18 @@ type PageInfo {
 type Project implements Node {
   id: ID!
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
   features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature!]
-  lifecycle: Lifecycle!
+  lifecycle: Lifecycle
   projectRoles(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles!]
 }
 
@@ -2865,14 +2869,16 @@ type ProjectConnection {
 
 input ProjectCreateInput {
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
   features: FeatureCreateManyWithoutProjectInput
-  lifecycle: LifecycleCreateOneWithoutProjectsInput!
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
   projectRoles: ProjectRolesCreateManyWithoutProjectInput
 }
 
@@ -2893,38 +2899,44 @@ input ProjectCreateOneWithoutProjectRolesInput {
 
 input ProjectCreateWithoutFeaturesInput {
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
-  lifecycle: LifecycleCreateOneWithoutProjectsInput!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
   projectRoles: ProjectRolesCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutLifecycleInput {
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
   features: FeatureCreateManyWithoutProjectInput
   projectRoles: ProjectRolesCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutProjectRolesInput {
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
   features: FeatureCreateManyWithoutProjectInput
-  lifecycle: LifecycleCreateOneWithoutProjectsInput!
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
 }
 
 """An edge in a connection."""
@@ -2941,6 +2953,8 @@ enum ProjectOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  sponsor_ASC
+  sponsor_DESC
   objectives_ASC
   objectives_DESC
   motivations_ASC
@@ -2949,6 +2963,8 @@ enum ProjectOrderByInput {
   limitations_DESC
   restrictions_ASC
   restrictions_DESC
+  status_ASC
+  status_DESC
   startAt_ASC
   startAt_DESC
   endAt_ASC
@@ -2962,12 +2978,14 @@ enum ProjectOrderByInput {
 type ProjectPreviousValues {
   id: ID!
   name: String!
+  sponsor: String!
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
-  startAt: DateTime!
-  endAt: DateTime!
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -3409,6 +3427,15 @@ input ProjectRolesWhereUniqueInput {
   id: ID
 }
 
+enum ProjectStatus {
+  OPEN
+  TODO
+  PLANNED
+  INPROGRESS
+  DONE
+  CANCELED
+}
+
 type ProjectSubscriptionPayload {
   mutation: MutationType!
   node: Project
@@ -3450,14 +3477,16 @@ input ProjectSubscriptionWhereInput {
 
 input ProjectUpdateInput {
   name: String
+  sponsor: String
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
+  status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
   features: FeatureUpdateManyWithoutProjectInput
-  lifecycle: LifecycleUpdateOneRequiredWithoutProjectsInput
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   projectRoles: ProjectRolesUpdateManyWithoutProjectInput
 }
 
@@ -3486,22 +3515,26 @@ input ProjectUpdateOneRequiredWithoutProjectRolesInput {
 
 input ProjectUpdateWithoutFeaturesDataInput {
   name: String
+  sponsor: String
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
+  status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
-  lifecycle: LifecycleUpdateOneRequiredWithoutProjectsInput
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   projectRoles: ProjectRolesUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateWithoutLifecycleDataInput {
   name: String
+  sponsor: String
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
+  status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
   features: FeatureUpdateManyWithoutProjectInput
@@ -3510,14 +3543,16 @@ input ProjectUpdateWithoutLifecycleDataInput {
 
 input ProjectUpdateWithoutProjectRolesDataInput {
   name: String
+  sponsor: String
   objectives: String
   motivations: String
   limitations: String
   restrictions: String
+  status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
   features: FeatureUpdateManyWithoutProjectInput
-  lifecycle: LifecycleUpdateOneRequiredWithoutProjectsInput
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
 }
 
 input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
@@ -3630,6 +3665,46 @@ input ProjectWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  sponsor: String
+
+  """All values that are not equal to given value."""
+  sponsor_not: String
+
+  """All values that are contained in given list."""
+  sponsor_in: [String!]
+
+  """All values that are not contained in given list."""
+  sponsor_not_in: [String!]
+
+  """All values less than the given value."""
+  sponsor_lt: String
+
+  """All values less than or equal the given value."""
+  sponsor_lte: String
+
+  """All values greater than the given value."""
+  sponsor_gt: String
+
+  """All values greater than or equal the given value."""
+  sponsor_gte: String
+
+  """All values containing the given string."""
+  sponsor_contains: String
+
+  """All values not containing the given string."""
+  sponsor_not_contains: String
+
+  """All values starting with the given string."""
+  sponsor_starts_with: String
+
+  """All values not starting with the given string."""
+  sponsor_not_starts_with: String
+
+  """All values ending with the given string."""
+  sponsor_ends_with: String
+
+  """All values not ending with the given string."""
+  sponsor_not_ends_with: String
   objectives: String
 
   """All values that are not equal to given value."""
@@ -3790,6 +3865,16 @@ input ProjectWhereInput {
 
   """All values not ending with the given string."""
   restrictions_not_ends_with: String
+  status: ProjectStatus
+
+  """All values that are not equal to given value."""
+  status_not: ProjectStatus
+
+  """All values that are contained in given list."""
+  status_in: [ProjectStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [ProjectStatus!]
   startAt: DateTime
 
   """All values that are not equal to given value."""
