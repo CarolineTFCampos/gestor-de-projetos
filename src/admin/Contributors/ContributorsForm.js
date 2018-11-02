@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import moment from 'moment'
+
 import { Form, Field } from 'react-final-form'
 
 import Row from 'antd/lib/row'
@@ -32,28 +34,33 @@ const styles = {
 
 function validate(values) {
   const errors = {}
+  const emailRegex = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   if (!values.name || values.name.trim() === '') {
-    errors.name = 'Campo nome é obrigatório!'
+    errors.name = 'Nome é obrigatório!'
   }
 
   if (!values.email || values.email.trim() === '') {
     errors.email = 'Campo email é obrigatório!'
+  } else if (!emailRegex.test(values.email)) {
+    errors.email = 'Email inválido!'
   }
 
   if (!values.doc || values.doc.trim() === '') {
-    errors.doc = 'Campo CPF é obrigatório!'
+    errors.doc = 'Documento é obrigatório!'
   }
 
   return errors
 }
 
 function formatFloatToMoney(value) {
-  return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return `R$ ${
+    value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+  }`
 }
 
 function parserMoneyToFloat(value) {
-  return value.replace(/\$\s?|(,*)/g, '')
+  return value.replace('R', '').replace(/\$\s?|(,*)/g, '')
 }
 
 class ContributorsForm extends Component {

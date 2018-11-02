@@ -54,11 +54,13 @@ function validate(values) {
 }
 
 function formatFloatToMoney(value) {
-  return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return `R$ ${
+    value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+  }`
 }
 
 function parserMoneyToFloat(value) {
-  return value.replace(/\$\s?|(,*)/g, '')
+  return value.replace('R', '').replace(/\$\s?|(,*)/g, '')
 }
 
 /**
@@ -75,7 +77,7 @@ function RolesForm(props) {
       {function({ handleSubmit, submitting, invalid, values }) {
         return (
           <>
-            <Card title="Papel" style={styles.card}>
+            <Card title="Dados Principais" style={styles.card}>
               <Row type="flex" justify="space-between">
                 <Col sm={24} md={11}>
                   <Field
