@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import moment from 'moment'
+
 import { Link } from 'react-router-dom'
 
 import gql from 'graphql-tag'
@@ -8,13 +10,14 @@ import { graphql, compose } from 'react-apollo'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
+import Loading from '../../components/Loading'
 
 import ContributorsForm from './ContributorsForm'
 
 class ContributorsEdit extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       visible: true
     }
@@ -31,14 +34,66 @@ class ContributorsEdit extends Component {
             name: values.name,
             email: values.email,
             doc: values.doc,
-            price: values.price
+            price: values.price,
+            experiences: {
+              upsert: values.experiences.map(function({
+                id = '',
+                ...experience
+              }) {
+                return {
+                  where: {
+                    id: id
+                  },
+                  create: {
+                    name: experience.name,
+                    company: experience.company,
+                    description: experience.description,
+                    startAt: experience.startAt.format(),
+                    endAt: experience.endAt.format()
+                  },
+                  update: {
+                    name: experience.name,
+                    company: experience.company,
+                    description: experience.description,
+                    startAt: experience.startAt.format(),
+                    endAt: experience.endAt.format()
+                  }
+                }
+              })
+            },
+            formations: {
+              upsert: values.formations.map(function({
+                id = '',
+                ...formation
+              }) {
+                return {
+                  where: {
+                    id: id
+                  },
+                  create: {
+                    name: formation.name,
+                    institution: formation.institution,
+                    description: formation.description,
+                    startAt: formation.startAt.format(),
+                    endAt: formation.endAt.format()
+                  },
+                  update: {
+                    name: formation.name,
+                    institution: formation.institution,
+                    description: formation.description,
+                    startAt: formation.startAt.format(),
+                    endAt: formation.endAt.format()
+                  }
+                }
+              })
+            }
           }
         },
-        refetchQueries: ['GetContributors']
+        refetchQueries: ['GetContributors', 'GetContributor']
       })
 
       // Exibe mensagem de sucesso
-      message.success(`Colaborador (${values.name}) criado com sucesso`)
+      message.success(`Colaborador (${values.name}) editado com sucesso`)
 
       // Redireciona para lista
       this.props.history.push('/admin/contributors')
@@ -55,22 +110,43 @@ class ContributorsEdit extends Component {
 
   render() {
     return (
-      <AdminLayout hasFooter={true}>
+      <>
         <Title>
           <h2>Editar Colaborador</h2>
 
           <Link to="/admin/contributors">Voltar</Link>
         </Title>
 
-        {this.props.data && this.props.data.loading && 'Loading'}
+        {this.props.data && this.props.data.loading && <Loading />}
+
         {this.props.data &&
           this.props.data.contributor && (
             <ContributorsForm
               onSubmit={this.handleSubmit}
-              initialValues={this.props.data.contributor}
+              initialValues={{
+                ...this.props.data.contributor,
+                experiences: this.props.data.contributor.experiences.map(
+                  function(experience) {
+                    return {
+                      ...experience,
+                      startAt: moment(experience.startAt),
+                      endAt: moment(experience.endAt)
+                    }
+                  }
+                ),
+                formations: this.props.data.contributor.formations.map(function(
+                  formation
+                ) {
+                  return {
+                    ...formation,
+                    startAt: moment(formation.startAt),
+                    endAt: moment(formation.endAt)
+                  }
+                })
+              }}
             />
           )}
-      </AdminLayout>
+      </>
     )
   }
 }

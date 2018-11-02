@@ -14,7 +14,6 @@ import ButtonGroup from 'antd/lib/button/button-group'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
 
 class ContributorsList extends Component {
   constructor(props) {
@@ -98,7 +97,7 @@ class ContributorsList extends Component {
 
   render() {
     return (
-      <AdminLayout>
+      <>
         <Title>
           <h2>Lista de Colaboradores</h2>
 
@@ -118,7 +117,7 @@ class ContributorsList extends Component {
             loading={this.props.data.loading}
           />
         </Card>
-      </AdminLayout>
+      </>
     )
   }
 }

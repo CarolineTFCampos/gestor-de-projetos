@@ -8,7 +8,6 @@ import { graphql } from 'react-apollo'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
 
 import ContributorsForm from './ContributorsForm'
 
@@ -35,10 +34,22 @@ class ContributorsCreate extends Component {
           data: {
             ...values,
             experiences: {
-              create: values.experiences
+              create: values.experiences.map(function(experience) {
+                return {
+                  ...experience,
+                  startAt: experience.startAt.format(),
+                  endAt: experience.endAt.format()
+                }
+              })
             },
             formations: {
-              create: values.formations
+              create: values.formations.map(function(formation) {
+                return {
+                  ...formation,
+                  startAt: formation.startAt.format(),
+                  endAt: formation.endAt.format()
+                }
+              })
             }
           }
         },
@@ -63,7 +74,7 @@ class ContributorsCreate extends Component {
 
   render() {
     return (
-      <AdminLayout hasFooter={true}>
+      <>
         <Title>
           <h2>Cadastro de Colaborador</h2>
 
@@ -74,7 +85,7 @@ class ContributorsCreate extends Component {
           onSubmit={this.handleSubmit}
           initialValues={initialValues}
         />
-      </AdminLayout>
+      </>
     )
   }
 }

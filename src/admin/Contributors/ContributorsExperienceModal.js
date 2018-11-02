@@ -12,19 +12,24 @@ function validate(values) {
   const errors = {}
 
   if (!values.name || values.name.trim() === '') {
-    errors.name = 'Campo nome é obrigatório!'
+    errors.name = 'Nome é obrigatório!'
   }
 
   if (!values.company || values.company.trim() === '') {
-    errors.company = 'Campo empresa é obrigatório!'
+    errors.company = 'Empresa é obrigatório!'
   }
 
-  if (!values.startAt || values.startAt.trim() === '') {
-    errors.startAt = 'Campo inicio é obrigatório!'
+  if (!values.startAt || !values.startAt.isValid()) {
+    errors.startAt = 'Data inicial é obrigatório!'
   }
 
-  if (!values.endAt || values.endAt.trim() === '') {
-    errors.endAt = 'Campo fim é obrigatório!'
+  if (!values.endAt || !values.endAt.isValid()) {
+    errors.endAt = 'Data final é obrigatório!'
+  }
+
+  if (values.startAt && values.endAt && values.startAt > values.endAt) {
+    errors.startAt = 'Data inicial deve ser anterior à Data final!'
+    errors.endAt = 'Data final deve ser posterior à Data inicial'
   }
 
   return errors
@@ -59,7 +64,9 @@ class ContributorsExperienceModal extends Component {
   render() {
     const { visible, onClose, item = {} } = this.props
 
-    if (!visible) return null
+    if (!visible) {
+      return null
+    }
 
     return (
       <Form
@@ -104,7 +111,7 @@ class ContributorsExperienceModal extends Component {
                 <Col xs={24} sm={11}>
                   <Field
                     name="startAt"
-                    type="date"
+                    type="datepicker"
                     label="Inicio"
                     placeholder="Inicio"
                     component={FormInput}
@@ -114,7 +121,7 @@ class ContributorsExperienceModal extends Component {
                 <Col xs={24} sm={11}>
                   <Field
                     name="endAt"
-                    type="date"
+                    type="datepicker"
                     label="Fim"
                     placeholder="Fim"
                     component={FormInput}

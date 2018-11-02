@@ -68,7 +68,10 @@ class ContributorsForm extends Component {
     super(props)
 
     this.state = {
+      formation: null,
       experience: null,
+      modalFormationEdit: false,
+      modalFormationVisible: false,
       modalExperienceEdit: false,
       modalExperienceVisible: false
     }
@@ -132,22 +135,16 @@ class ContributorsForm extends Component {
                       component={FormInput}
                     />
                   </Col>
-
                   <Col sm={24} md={8}>
                     <Field
-                      name="price"
-                      type="number"
-                      label="Valor p/ Hora"
-                      placeholder="0,00"
-                      formatter={formatFloatToMoney}
-                      parser={parserMoneyToFloat}
-                      style={styles.prices}
-                      min={0}
+                      name="doc"
+                      type="text"
+                      label="Documento"
+                      placeholder="Documento"
                       component={FormInput}
                     />
                   </Col>
                 </Row>
-
                 <Row type="flex" justify="space-between">
                   <Col sm={24} md={15}>
                     <Field
@@ -158,13 +155,16 @@ class ContributorsForm extends Component {
                       component={FormInput}
                     />
                   </Col>
-
                   <Col sm={24} md={8}>
                     <Field
-                      name="doc"
-                      type="text"
-                      label="CPF"
-                      placeholder="CPF"
+                      name="price"
+                      type="number"
+                      label="Valor p/ Hora"
+                      placeholder="0,00"
+                      formatter={formatFloatToMoney}
+                      parser={parserMoneyToFloat}
+                      style={styles.prices}
+                      min={0}
                       component={FormInput}
                     />
                   </Col>
@@ -188,9 +188,44 @@ class ContributorsForm extends Component {
                 }
               >
                 <Table
-                  rowKey="id"
+                  rowKey={function(record) {
+                    return (
+                      record.id ||
+                      Math.random()
+                        .toString(36)
+                        .substring(2) + new Date().getTime().toString(36)
+                    )
+                  }}
                   dataSource={values.experiences || []}
                   columns={[
+                    {
+                      key: 'startAt',
+                      title: 'Dt Início',
+                      dataIndex: 'startAt',
+                      align: 'center',
+                      width: '115px',
+                      defaultSortOrder: 'ascend',
+                      sorter: function(a, b) {
+                        return moment(a.startAt) - moment(b.startAt)
+                      },
+                      render: function(text) {
+                        return moment(text).format('DD/MM/YYYY')
+                      }
+                    },
+                    {
+                      key: 'endAt',
+                      title: 'Dt Fim',
+                      dataIndex: 'endAt',
+                      align: 'center',
+                      width: '115px',
+                      defaultSortOrder: 'ascend',
+                      sorter: function(a, b) {
+                        return moment(a.endAt) - moment(b.endAt)
+                      },
+                      render: function(text) {
+                        return moment(text).format('DD/MM/YYYY')
+                      }
+                    },
                     {
                       key: 'name',
                       title: 'Nome',
@@ -266,9 +301,44 @@ class ContributorsForm extends Component {
                 }
               >
                 <Table
-                  rowKey="id"
+                  rowKey={function(record) {
+                    return (
+                      record.id ||
+                      Math.random()
+                        .toString(36)
+                        .substring(2) + new Date().getTime().toString(36)
+                    )
+                  }}
                   dataSource={values.formations || []}
                   columns={[
+                    {
+                      key: 'startAt',
+                      title: 'Dt Início',
+                      dataIndex: 'startAt',
+                      align: 'center',
+                      width: '115px',
+                      defaultSortOrder: 'ascend',
+                      sorter: function(a, b) {
+                        return moment(a.startAt) - moment(b.startAt)
+                      },
+                      render: function(text) {
+                        return moment(text).format('DD/MM/YYYY')
+                      }
+                    },
+                    {
+                      key: 'endAt',
+                      title: 'Dt Fim',
+                      dataIndex: 'endAt',
+                      align: 'center',
+                      width: '115px',
+                      defaultSortOrder: 'ascend',
+                      sorter: function(a, b) {
+                        return moment(a.endAt) - moment(b.endAt)
+                      },
+                      render: function(text) {
+                        return moment(text).format('DD/MM/YYYY')
+                      }
+                    },
                     {
                       key: 'name',
                       title: 'Nome',

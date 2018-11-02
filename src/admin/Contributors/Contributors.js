@@ -7,7 +7,7 @@ import ContributorsList from './ContributorsList'
 import ContributorsEdit from './ContributorsEdit'
 import ContributorsCreate from './ContributorsCreate'
 
-function Admin() {
+function Contributors() {
   return (
     <Switch>
       <Route
@@ -30,4 +30,4 @@ function Admin() {
   )
 }
 
-export default Admin
+export default Contributors
