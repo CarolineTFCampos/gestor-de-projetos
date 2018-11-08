@@ -13,6 +13,8 @@ import Popconfirm from 'antd/lib/popconfirm'
 import ButtonGroup from 'antd/lib/button/button-group'
 // import message from 'antd/lib/message'
 
+import { formatFloatToMoney, parserMoneyToFloat, formatDate } from '../../utils'
+
 import FormInput from '../../components/FormInput'
 import FixedFooter from '../../components/FixedFooter'
 
@@ -24,9 +26,6 @@ const styles = {
     marginBottom: '10px',
     backgroundColor: '#fff'
   },
-  prices: {
-    width: '100%'
-  },
   headerCollapse: {
     fontWeight: '500'
   }
@@ -35,6 +34,7 @@ const styles = {
 function validate(values) {
   const errors = {}
   const emailRegex = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$/
 
   if (!values.name || values.name.trim() === '') {
     errors.name = 'Nome é obrigatório!'
@@ -50,17 +50,11 @@ function validate(values) {
     errors.doc = 'Documento é obrigatório!'
   }
 
+  if (!phoneRegex.test(values.phone)) {
+    errors.phone = 'Telefone inválido!'
+  }
+
   return errors
-}
-
-function formatFloatToMoney(value) {
-  return `R$ ${
-    value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
-  }`
-}
-
-function parserMoneyToFloat(value) {
-  return value.replace('R', '').replace(/\$\s?|(,*)/g, '')
 }
 
 class ContributorsForm extends Component {
@@ -145,6 +139,7 @@ class ContributorsForm extends Component {
                     />
                   </Col>
                 </Row>
+
                 <Row type="flex" justify="space-between">
                   <Col sm={24} md={15}>
                     <Field
@@ -163,8 +158,28 @@ class ContributorsForm extends Component {
                       placeholder="0,00"
                       formatter={formatFloatToMoney}
                       parser={parserMoneyToFloat}
-                      style={styles.prices}
                       min={0}
+                      component={FormInput}
+                    />
+                  </Col>
+                </Row>
+
+                <Row type="flex" justify="space-between">
+                  <Col sm={24} md={15}>
+                    <Field
+                      name="address"
+                      type="text"
+                      label="Endereço"
+                      placeholder="Endereço"
+                      component={FormInput}
+                    />
+                  </Col>
+                  <Col sm={24} md={8}>
+                    <Field
+                      name="phone"
+                      type="text"
+                      label="Telefone"
+                      placeholder="Telefone"
                       component={FormInput}
                     />
                   </Col>
@@ -209,7 +224,7 @@ class ContributorsForm extends Component {
                         return moment(a.startAt) - moment(b.startAt)
                       },
                       render: function(text) {
-                        return moment(text).format('DD/MM/YYYY')
+                        return formatDate(text)
                       }
                     },
                     {
@@ -223,7 +238,7 @@ class ContributorsForm extends Component {
                         return moment(a.endAt) - moment(b.endAt)
                       },
                       render: function(text) {
-                        return moment(text).format('DD/MM/YYYY')
+                        return formatDate(text)
                       }
                     },
                     {
@@ -322,7 +337,7 @@ class ContributorsForm extends Component {
                         return moment(a.startAt) - moment(b.startAt)
                       },
                       render: function(text) {
-                        return moment(text).format('DD/MM/YYYY')
+                        return formatDate(text)
                       }
                     },
                     {
@@ -336,7 +351,7 @@ class ContributorsForm extends Component {
                         return moment(a.endAt) - moment(b.endAt)
                       },
                       render: function(text) {
-                        return moment(text).format('DD/MM/YYYY')
+                        return formatDate(text)
                       }
                     },
                     {
@@ -346,7 +361,7 @@ class ContributorsForm extends Component {
                     },
                     {
                       key: 'institution',
-                      title: 'Instatituição',
+                      title: 'Instituição',
                       dataIndex: 'institution'
                     },
                     {
