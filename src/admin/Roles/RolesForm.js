@@ -8,6 +8,12 @@ import Card from 'antd/lib/card'
 import Button from 'antd/lib/button'
 import Collapse, { Panel } from 'antd/lib/collapse'
 
+import {
+  formatFloatToMoney,
+  parserMoneyToFloat,
+  roleLevelTypesTranslate
+} from '../../utils'
+
 import FormInput from '../../components/FormInput'
 import FixedFooter from '../../components/FixedFooter'
 
@@ -16,20 +22,9 @@ const styles = {
     marginBottom: '10px',
     backgroundColor: '#fff'
   },
-  prices: {
-    width: '100%'
-  },
   headerCollapse: {
     fontWeight: '500'
   }
-}
-
-const roleLevelTypesTranslate = {
-  TRAINEE: 'Trainee',
-  JUNIOR: 'Junior',
-  INTERMEDIATE: 'Pleno',
-  SENIOR: 'Sênior',
-  EXPERT: 'Especialista'
 }
 
 function validate(values) {
@@ -42,6 +37,18 @@ function validate(values) {
   }
 
   values.roleLevels.forEach(function(item, index) {
+    if (item.priceMin && item.priceMin < 0) {
+      errors.roleLevels[index] = {
+        priceMin: 'Valor Mínimo deve ser maior que 0!'
+      }
+    }
+
+    if (item.priceMax && item.priceMax < 0) {
+      errors.roleLevels[index] = {
+        priceMax: 'Valor Máximo deve ser maior que 0!'
+      }
+    }
+
     if (item.priceMin > item.priceMax) {
       errors.roleLevels[index] = {
         priceMin: 'Valor Mínimo deve ser menor que Valor Máximo!',
@@ -51,16 +58,6 @@ function validate(values) {
   })
 
   return errors
-}
-
-function formatFloatToMoney(value) {
-  return `R$ ${
-    value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
-  }`
-}
-
-function parserMoneyToFloat(value) {
-  return value.replace('R', '').replace(/\$\s?|(,*)/g, '')
 }
 
 /**
@@ -131,7 +128,6 @@ function RolesForm(props) {
                             placeholder="0,00"
                             formatter={formatFloatToMoney}
                             parser={parserMoneyToFloat}
-                            style={styles.prices}
                             min={0}
                             component={FormInput}
                           />
@@ -144,7 +140,6 @@ function RolesForm(props) {
                             placeholder="0,00"
                             formatter={formatFloatToMoney}
                             parser={parserMoneyToFloat}
-                            style={styles.prices}
                             min={0}
                             component={FormInput}
                           />

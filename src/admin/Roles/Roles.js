@@ -7,7 +7,7 @@ import RolesList from './RolesList'
 import RolesEdit from './RolesEdit'
 import RolesCreate from './RolesCreate'
 
-function Admin() {
+function Roles() {
   return (
     <Switch>
       <Route path="/admin/roles/create" exact={true} component={RolesCreate} />
@@ -18,4 +18,4 @@ function Admin() {
   )
 }
 
-export default Admin
+export default Roles

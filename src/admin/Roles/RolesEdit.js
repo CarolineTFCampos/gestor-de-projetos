@@ -8,7 +8,7 @@ import { graphql, compose } from 'react-apollo'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
+import Loading from '../../components/Loading'
 
 import RolesForm from './RolesForm'
 
@@ -72,14 +72,14 @@ class RolesEdit extends Component {
 
   render() {
     return (
-      <AdminLayout hasFooter={true}>
+      <>
         <Title>
-          <h2>Cadastro de Papeis</h2>
+          <h2>Editar Papel</h2>
 
           <Link to="/admin/roles">Voltar</Link>
         </Title>
 
-        {this.props.data && this.props.data.loading && 'Loading'}
+        {this.props.data && this.props.data.loading && <Loading />}
         {this.props.data &&
           this.props.data.role && (
             <RolesForm
@@ -87,7 +87,7 @@ class RolesEdit extends Component {
               initialValues={this.props.data.role}
             />
           )}
-      </AdminLayout>
+      </>
     )
   }
 }

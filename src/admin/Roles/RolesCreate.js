@@ -8,7 +8,6 @@ import { graphql } from 'react-apollo'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
 
 import RolesForm from './RolesForm'
 
@@ -69,7 +68,7 @@ class RolesCreate extends Component {
 
   render() {
     return (
-      <AdminLayout hasFooter={true}>
+      <>
         <Title>
           <h2>Cadastro de Papeis</h2>
 
@@ -77,7 +76,7 @@ class RolesCreate extends Component {
         </Title>
 
         <RolesForm onSubmit={this.handleSubmit} initialValues={initialValues} />
-      </AdminLayout>
+      </>
     )
   }
 }
