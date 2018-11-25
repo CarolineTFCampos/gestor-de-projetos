@@ -13,6 +13,12 @@ export const roleLevelTypesTranslate = {
   EXPERT: 'Especialista'
 }
 
+export const epicStatusTranslate = {
+  TODO: 'A fazer',
+  INPROGRESS: 'Em progresso',
+  DONE: 'Concluído'
+}
+
 export const milestoneStatusTranslate = {
   OPEN: 'Aberto',
   DONE: 'Concluído',

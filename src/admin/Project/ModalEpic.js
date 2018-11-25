@@ -11,6 +11,7 @@ import Tag from 'antd/lib/tag'
 import Row from 'antd/lib/row'
 import Col from 'antd/lib/col'
 import Modal from 'antd/lib/modal'
+import Radio from 'antd/lib/radio'
 import message from 'antd/lib/message'
 
 import { formatFloatToMoney, parserMoneyToFloat } from '../../utils'
@@ -22,6 +23,10 @@ function validate(values) {
 
   if (!values.name || values.name.trim() === '') {
     errors.name = 'Nome é obrigatório!'
+  }
+
+  if (!values.status) {
+    errors.status = 'Estado é obrigatório!'
   }
 
   if (values.estimateSize && values.estimateSize < 0) {
@@ -75,6 +80,7 @@ class ModalEpic extends Component {
               name: values.name,
               description: values.description,
               priority: values.priority,
+              status: values.status,
               estimateSize: values.estimateSize,
               estimatePrice: values.estimatePrice,
               estimateEffort: values.estimateEffort,
@@ -154,8 +160,8 @@ class ModalEpic extends Component {
               confirmLoading={submitting}
               width="80%"
             >
-              <Row type="flex">
-                <Col xs={24}>
+              <Row type="flex" justify="space-between">
+                <Col xs={24} sm={11}>
                   <Field
                     name="name"
                     type="text"
@@ -163,6 +169,19 @@ class ModalEpic extends Component {
                     placeholder="Nome"
                     component={FormInput}
                   />
+                </Col>
+
+                <Col xs={24} sm={11}>
+                  <Field
+                    name="status"
+                    type="radiobutton"
+                    label="Estado"
+                    component={FormInput}
+                  >
+                    <Radio.Button value="TODO">A fazer</Radio.Button>
+                    <Radio.Button value="INPROGRESS">Em progresso</Radio.Button>
+                    <Radio.Button value="DONE">Concluído</Radio.Button>
+                  </Field>
                 </Col>
               </Row>
 

@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Nov 25 2018 15:54:21 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 16:24:00 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -2245,6 +2245,7 @@ type Epic implements Node {
   name: String!
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2271,6 +2272,7 @@ input EpicCreateInput {
   name: String!
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2295,6 +2297,7 @@ input EpicCreateWithoutProjectInput {
   name: String!
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2308,6 +2311,7 @@ input EpicCreateWithoutUserStoriesInput {
   name: String!
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2335,6 +2339,8 @@ enum EpicOrderByInput {
   description_DESC
   priority_ASC
   priority_DESC
+  status_ASC
+  status_DESC
   estimateSize_ASC
   estimateSize_DESC
   estimatePrice_ASC
@@ -2358,6 +2364,7 @@ type EpicPreviousValues {
   name: String!
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2519,6 +2526,16 @@ input EpicScalarWhereInput {
 
   """All values greater than or equal the given value."""
   priority_gte: Int
+  status: EpicStatus
+
+  """All values that are not equal to given value."""
+  status_not: EpicStatus
+
+  """All values that are contained in given list."""
+  status_in: [EpicStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [EpicStatus!]
   estimateSize: Int
 
   """All values that are not equal to given value."""
@@ -2715,6 +2732,12 @@ input EpicScalarWhereInput {
   updatedAt_gte: DateTime
 }
 
+enum EpicStatus {
+  TODO
+  INPROGRESS
+  DONE
+}
+
 type EpicSubscriptionPayload {
   mutation: MutationType!
   node: Epic
@@ -2758,6 +2781,7 @@ input EpicUpdateInput {
   name: String
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2772,6 +2796,7 @@ input EpicUpdateManyDataInput {
   name: String
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2784,6 +2809,7 @@ input EpicUpdateManyMutationInput {
   name: String
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2819,6 +2845,7 @@ input EpicUpdateWithoutProjectDataInput {
   name: String
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -2832,6 +2859,7 @@ input EpicUpdateWithoutUserStoriesDataInput {
   name: String
   description: String
   priority: Int
+  status: EpicStatus
   estimateSize: Int
   estimatePrice: Float
   estimateEffort: Int
@@ -3008,6 +3036,16 @@ input EpicWhereInput {
 
   """All values greater than or equal the given value."""
   priority_gte: Int
+  status: EpicStatus
+
+  """All values that are not equal to given value."""
+  status_not: EpicStatus
+
+  """All values that are contained in given list."""
+  status_in: [EpicStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [EpicStatus!]
   estimateSize: Int
 
   """All values that are not equal to given value."""

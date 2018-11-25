@@ -165,11 +165,18 @@ type Lifecycle {
   projects: [Project!]! @relation(name: "LifecycleProjects")
 }
 
+enum EpicStatus {
+  TODO
+  INPROGRESS
+  DONE
+}
+
 type Epic {
   id: ID! @unique
   name: String!
   description: String
   priority: Int @default(value: 0)
+  status: EpicStatus @default(value: TODO)
   estimateSize: Int @default(value: 0)
   estimatePrice: Float @default(value: 0)
   estimateEffort: Int @default(value: 0)

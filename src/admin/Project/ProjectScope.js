@@ -11,7 +11,11 @@ import Popconfirm from 'antd/lib/popconfirm'
 import ButtonGroup from 'antd/lib/button/button-group'
 import message from 'antd/lib/message'
 
-import { formatMinutesToHour, formatMoney } from '../../utils'
+import {
+  epicStatusTranslate,
+  formatMinutesToHour,
+  formatMoney
+} from '../../utils'
 
 import ModalEpic from './ModalEpic'
 import ModalUserStory from './ModalUserStory'
@@ -102,7 +106,11 @@ class ProjectScope extends Component {
         title: 'Estado',
         align: 'center',
         render: function(text) {
-          return text ? <Tag color="blue">{text}</Tag> : ''
+          return text ? (
+            <Tag color="blue">{epicStatusTranslate[text] || text}</Tag>
+          ) : (
+            ''
+          )
         }
       },
       // {

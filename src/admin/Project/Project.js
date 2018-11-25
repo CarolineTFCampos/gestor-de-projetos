@@ -117,6 +117,7 @@ const GET_PROJECT = gql`
         name
         description
         priority
+        status
         estimateSize
         estimatePrice
         estimateEffort
