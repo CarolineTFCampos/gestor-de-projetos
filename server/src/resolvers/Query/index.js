@@ -12,5 +12,17 @@ module.exports = {
   contributors: forwardTo('db'),
 
   project: forwardTo('db'),
-  projects: forwardTo('db')
+  projects: forwardTo('db'),
+
+  feature: forwardTo('db'),
+  features: forwardTo('db'),
+
+  epic: forwardTo('db'),
+  epics: forwardTo('db'),
+
+  userStory: forwardTo('db'),
+  userStories: forwardTo('db'),
+
+  milestone: forwardTo('db'),
+  milestones: forwardTo('db')
 }
