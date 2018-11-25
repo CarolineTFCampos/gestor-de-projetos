@@ -13,8 +13,9 @@ import Popconfirm from 'antd/lib/popconfirm'
 import ButtonGroup from 'antd/lib/button/button-group'
 import message from 'antd/lib/message'
 
+import { formatDate } from '../../utils'
+
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
 
 class ProjectsList extends Component {
   constructor(props) {
@@ -32,13 +33,19 @@ class ProjectsList extends Component {
         key: 'startAt',
         title: 'Dt Início',
         dataIndex: 'startAt',
-        align: 'right'
+        align: 'right',
+        render: function(text) {
+          return formatDate(text)
+        }
       },
       {
         key: 'endAt',
         title: 'Dt Fim',
         dataIndex: 'endAt',
-        align: 'right'
+        align: 'right',
+        render: function(text) {
+          return formatDate(text)
+        }
       },
       {
         key: 'action',
@@ -105,7 +112,7 @@ class ProjectsList extends Component {
 
   render() {
     return (
-      <AdminLayout>
+      <>
         <Title>
           <h2>Lista de Projetos</h2>
 
@@ -125,7 +132,7 @@ class ProjectsList extends Component {
             loading={this.props.data.loading}
           />
         </Card>
-      </AdminLayout>
+      </>
     )
   }
 }

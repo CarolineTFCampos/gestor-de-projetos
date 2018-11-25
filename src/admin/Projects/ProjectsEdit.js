@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import moment from 'moment'
+
 import { Link } from 'react-router-dom'
 
 import gql from 'graphql-tag'
@@ -8,9 +10,9 @@ import { graphql, compose } from 'react-apollo'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
+import Loading from '../../components/Loading'
 
-import ProjectForm from './ProjectForm'
+import ProjectsForm from './ProjectsForm'
 
 /**
  * Componente responsável por exibir o crud de Projects
@@ -29,6 +31,7 @@ class ProjectsEdit extends Component {
     try {
       await this.props.mutate({
         variables: {
+          id: values.id,
           data: {
             name: values.name,
             sponsor: values.sponsor,
@@ -37,14 +40,14 @@ class ProjectsEdit extends Component {
             limitations: values.limitations,
             restrictions: values.restrictions,
             status: values.status,
-            startAt: values.startAt,
-            endAt: values.endAt,
+            startAt: values.startAt.format(),
+            endAt: values.endAt.format(),
             features: [],
             lifecycle: values.lifecycle,
             projectRoles: []
           }
         },
-        refetchQueries: ['GetProjects']
+        refetchQueries: ['GetProjects', 'GetProject']
       })
 
       // Exibe mensagem de sucesso
@@ -65,22 +68,26 @@ class ProjectsEdit extends Component {
 
   render() {
     return (
-      <AdminLayout hasFooter={true}>
+      <>
         <Title>
           <h2>Editar Projeto</h2>
 
           <Link to="/admin/projects">Voltar</Link>
         </Title>
 
-        {this.props.data && this.props.data.loading && 'Loading'}
+        {this.props.data && this.props.data.loading && <Loading />}
         {this.props.data &&
           this.props.data.project && (
-            <ProjectForm
+            <ProjectsForm
               onSubmit={this.handleSubmit}
-              initialValues={this.props.data.project}
+              initialValues={{
+                ...this.props.data.project,
+                startAt: moment(this.props.data.project.startAt),
+                endAt: moment(this.props.data.project.endAt)
+              }}
             />
           )}
-      </AdminLayout>
+      </>
     )
   }
 }
@@ -88,7 +95,7 @@ class ProjectsEdit extends Component {
 // Contem o script para realizar o login, retornar usuario e token de autenticação
 const GET_PROJECT = gql`
   query GetProject($id: ID!) {
-    Project(where: { id: $id }) {
+    project(where: { id: $id }) {
       id
       name
       sponsor

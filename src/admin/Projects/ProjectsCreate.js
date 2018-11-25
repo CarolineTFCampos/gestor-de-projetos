@@ -8,9 +8,8 @@ import { graphql } from 'react-apollo'
 import message from 'antd/lib/message'
 
 import Title from '../../components/Title'
-import AdminLayout from '../../components/AdminLayout'
 
-import ProjectForm from './ProjectForm'
+import ProjectsForm from './ProjectsForm'
 
 /**
  * Componente responsável por exibir o crud de Projects
@@ -41,8 +40,8 @@ class ProjectsCreate extends Component {
             limitations: values.limitations,
             restrictions: values.restrictions,
             status: values.status,
-            startAt: values.startAt,
-            endAt: values.endAt,
+            startAt: values.startAt.format(),
+            endAt: values.endAt.format(),
             features: [],
             lifecycle: values.lifecycle,
             projectRoles: []
@@ -55,7 +54,7 @@ class ProjectsCreate extends Component {
       message.success(`Projeto (${values.name}) criado com sucesso`)
 
       // Redireciona para lista
-      this.props.history.push('/admin/Projects')
+      this.props.history.push('/admin/projects')
     } catch (err) {
       // Mensagem de erro do graphql
       const error = err.graphQLErrors[0].message
@@ -69,15 +68,15 @@ class ProjectsCreate extends Component {
 
   render() {
     return (
-      <AdminLayout hasFooter={true}>
+      <>
         <Title>
           <h2>Cadastro de Projeto</h2>
 
-          <Link to="/admin/Projects">Voltar</Link>
+          <Link to="/admin/projects">Voltar</Link>
         </Title>
 
-        <ProjectForm onSubmit={this.handleSubmit} />
-      </AdminLayout>
+        <ProjectsForm onSubmit={this.handleSubmit} />
+      </>
     )
   }
 }
