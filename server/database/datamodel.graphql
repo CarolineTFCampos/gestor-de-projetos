@@ -11,15 +11,21 @@ type Contributor {
   id: ID! @unique
   name: String!
   email: String! @unique
+  emailPrivate: String
   doc: String! @unique
+  phone: String!
+  address: String!
   price: Float! @default(value: 0)
   active: Boolean! @default(value: true)
+  twPeopleId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesContributor")
+  projectRoles: [ProjectRoleContributor!]!
+    @relation(name: "ProjectRoleContributorContributor")
   experiences: [ContributorExperience!]!
     @relation(name: "ContributorExperiences")
   formations: [ContributorFormation!]! @relation(name: "ContributorFormations")
+  milestones: [Milestone!]! @relation(name: "ContributorMilestones")
 }
 
 type ContributorExperience {
@@ -66,24 +72,39 @@ type Project {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  features: [Feature!]! @relation(name: "ProjectFeatures")
   lifecycle: Lifecycle @relation(name: "LifecycleProjects")
-  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRoles")
+  features: [Feature!]! @relation(name: "ProjectFeatures")
+  milestones: [Milestone!]! @relation(name: "ProjectMilestones")
+  projectRoles: [ProjectRole!]! @relation(name: "ProjectProjectRoles")
 }
 
-type ProjectRoles {
+type ProjectRole {
   id: ID! @unique
-  role: Role! @relation(name: "ProjectRolesRole")
-  project: Project! @relation(name: "ProjectRoles")
-  contributor: Contributor @relation(name: "ProjectRolesContributor")
+  estimatePrice: Float @default(value: 0)
+  estimateEffort: Int @default(value: 0)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  role: Role! @relation(name: "ProjectRoleRole")
+  project: Project! @relation(name: "ProjectProjectRoles")
+  contributors: [ProjectRoleContributor!]!
+    @relation(name: "ProjectRoleContributors")
+}
+
+type ProjectRoleContributor {
+  id: ID! @unique
   price: Float! @default(value: 0)
-  hours: Int! @default(value: 0)
+  estimateEffort: Int! @default(value: 0)
   startAt: DateTime!
   endAt: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleLevel: RoleLevelType!
+  projectRole: ProjectRole! @relation(name: "ProjectRoleContributors")
+  contributor: Contributor! @relation(name: "ProjectRoleContributorContributor")
 }
 
 type Role {
@@ -94,7 +115,7 @@ type Role {
   createdAt: DateTime!
   updatedAt: DateTime!
   roleLevels: [RoleLevel!]! @relation(name: "RoleLevels", onDelete: CASCADE)
-  projectRoles: [ProjectRoles!]! @relation(name: "ProjectRolesRole")
+  projectRoles: [ProjectRole!]! @relation(name: "ProjectRoleRole")
 }
 
 enum RoleLevelType {
@@ -116,6 +137,24 @@ type RoleLevel {
   role: Role! @relation(name: "RoleLevels")
 }
 
+enum MilestoneStatus {
+  OPEN
+  DONE
+  CANCELED
+}
+
+type Milestone {
+  id: ID! @unique
+  name: String!
+  description: String
+  status: MilestoneStatus!
+  dueDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project! @relation(name: "ProjectMilestones")
+  contributor: Contributor! @relation(name: "ContributorMilestones")
+}
+
 type Lifecycle {
   id: ID! @unique
   name: String!
@@ -128,32 +167,61 @@ type Lifecycle {
 type Feature {
   id: ID! @unique
   name: String!
-  descriptions: String
-  userStory: [String!]!
-  priority: Int! @default(value: 0)
+  description: String
+  priority: Int @default(value: 0)
   estimateSize: Int @default(value: 0)
-  estimatePrice: Int @default(value: 0)
+  estimatePrice: Float @default(value: 0)
   estimateEffort: Int @default(value: 0)
   estimateStart: DateTime
   estimateEnd: DateTime
+  twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
   epics: [Epic!]! @relation(name: "FeatureEpics")
   project: Project! @relation(name: "ProjectFeatures")
+  #Effort = Somatoria de Horas dos Epics
+  #Price = Somatoria de custos dos Epics
+  #Estado
+  #Release
+  #Responsaveis  (ANALISAR)
 }
 
 type Epic {
   id: ID! @unique
   name: String!
-  descriptions: String
-  userStory: [String!]!
-  priority: Int! @default(value: 0)
+  description: String
+  priority: Int @default(value: 0)
   estimateSize: Int @default(value: 0)
-  estimatePrice: Int @default(value: 0)
+  estimatePrice: Float @default(value: 0)
   estimateEffort: Int @default(value: 0)
   estimateStart: DateTime
   estimateEnd: DateTime
+  twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
   feature: Feature! @relation(name: "FeatureEpics")
+  userStories: [UserStory!]! @relation(name: "EpicUserStories")
+  #Effort = Somatoria de Horas dos USs
+  #Price = Somatoria de custos dos USs
+  #Estado
+  #Release
+  #Responsaveis (ANALISAR)
+}
+
+type UserStory {
+  id: ID! @unique
+  name: String!
+  description: String
+  priority: Int @default(value: 0)
+  estimateEffort: Int @default(value: 0)
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  epic: Epic! @relation(name: "EpicUserStories")
+  #Effort = Somatoria de Horas lançadas nas tasks TW
+  #Estado
+  #Sprint
+  #Responsaveis (ANALISAR)
 }
