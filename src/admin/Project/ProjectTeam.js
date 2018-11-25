@@ -53,7 +53,7 @@ class ProjectTeam extends Component {
       {
         key: 'estimateEffort',
         dataIndex: 'estimateEffort',
-        title: 'Esforço Estimado / Atual',
+        title: 'Esforço Estimado / Realizado',
         render: function(text, record) {
           const effort = formatMinutesToHour(
             record.contributors.reduce(function(prev, current) {
@@ -68,7 +68,7 @@ class ProjectTeam extends Component {
       {
         key: 'total',
         dataIndex: 'total',
-        title: 'Custo Estimado / Atual',
+        title: 'Custo Estimado / Autal',
         render: function(text, record) {
           const price = formatMoney(
             record.contributors.reduce(function(prev, current) {
@@ -158,19 +158,21 @@ class ProjectTeam extends Component {
         }
       },
       {
-        key: 'estimateEffort',
-        dataIndex: 'estimateEffort',
-        title: 'Estimativa de Esforço',
+        key: 'price',
+        dataIndex: 'price',
+        title: 'Custo/hora',
         render: function(text) {
-          return formatMinutesToHour(text)
+          return formatMoney(text)
         }
       },
       {
-        key: 'effort',
-        dataIndex: 'effort',
-        title: 'Esforço Realizado',
-        render: function(text) {
-          return formatMinutesToHour(text)
+        key: 'estimateEffort',
+        dataIndex: 'estimateEffort',
+        title: 'Estimativa Esforço / Realizado',
+        render: function(text, record) {
+          return `${formatMinutesToHour(text)} / ${formatMinutesToHour(
+            record.effort
+          )}`
         }
       },
       {
