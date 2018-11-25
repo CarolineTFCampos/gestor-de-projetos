@@ -1,4 +1,4 @@
-# import Project,  ProjectCreateInput, ContributorOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput,  Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput, Role, RoleWhereInput, RoleOrderByInput, RoleWhereUniqueInput, RoleCreateInput, RoleUpdateInput from "./generated/prisma.graphql"
+# import Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Feature, FeatureWhereInput, FeatureOrderByInput, FeatureWhereUniqueInput, FeatureCreateInput, FeatureUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -46,6 +46,50 @@ type Query {
     first: Int
     last: Int
   ): [Project]!
+
+  feature(where: FeatureWhereUniqueInput!): Feature
+  features(
+    where: FeatureWhereInput
+    orderBy: FeatureOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Feature]!
+
+  epic(where: EpicWhereUniqueInput!): Epic
+  epics(
+    where: EpicWhereInput
+    orderBy: EpicOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Epic]!
+
+  userStory(where: UserStoryWhereUniqueInput!): UserStory
+  userStories(
+    where: UserStoryWhereInput
+    orderBy: UserStoryOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [UserStory]!
+
+  milestone(where: MilestoneWhereUniqueInput!): Milestone
+  milestones(
+    where: MilestoneWhereInput
+    orderBy: MilestoneOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Milestone]!
 }
 
 type Mutation {
@@ -63,10 +107,53 @@ type Mutation {
   ): Contributor
   deleteContributor(where: ContributorWhereUniqueInput!): Contributor
 
+  createProjectRole(data: ProjectRoleCreateInput!): ProjectRole!
+  updateProjectRole(
+    data: ProjectRoleUpdateInput!
+    where: ProjectRoleWhereUniqueInput!
+  ): ProjectRole
+  deleteProjectRole(where: ProjectRoleWhereUniqueInput!): ProjectRole
+
+  createProjectRoleContributor(
+    data: ProjectRoleContributorCreateInput!
+  ): ProjectRoleContributor!
+  updateProjectRoleContributor(
+    data: ProjectRoleContributorUpdateInput!
+    where: ProjectRoleContributorWhereUniqueInput!
+  ): ProjectRoleContributor
+  deleteProjectRoleContributor(
+    where: ProjectRoleContributorWhereUniqueInput!
+  ): ProjectRoleContributor
+
   createProject(data: ProjectCreateInput!): Project!
   updateProject(
     data: ProjectUpdateInput!
     where: ProjectWhereUniqueInput!
   ): Project
   deleteProject(where: ProjectWhereUniqueInput!): Project
+
+  createFeature(data: FeatureCreateInput!): Feature!
+  updateFeature(
+    data: FeatureUpdateInput!
+    where: FeatureWhereUniqueInput!
+  ): Feature
+  deleteFeature(where: FeatureWhereUniqueInput!): Feature
+
+  createEpic(data: EpicCreateInput!): Epic!
+  updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
+  deleteEpic(where: EpicWhereUniqueInput!): Epic
+
+  createUserStory(data: UserStoryCreateInput!): UserStory!
+  updateUserStory(
+    data: UserStoryUpdateInput!
+    where: UserStoryWhereUniqueInput!
+  ): UserStory
+  deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
+
+  createMilestone(data: MilestoneCreateInput!): Milestone!
+  updateMilestone(
+    data: MilestoneUpdateInput!
+    where: MilestoneWhereUniqueInput!
+  ): Milestone
+  deleteMilestone(where: MilestoneWhereUniqueInput!): Milestone
 }

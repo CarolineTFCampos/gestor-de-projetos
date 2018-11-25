@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Mon Oct 22 2018 16:59:09 GMT-0300 (-03)
+# timestamp: Sat Nov 24 2018 11:00:41 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -25,11 +25,19 @@ type AggregateLifecycle {
   count: Int!
 }
 
+type AggregateMilestone {
+  count: Int!
+}
+
 type AggregateProject {
   count: Int!
 }
 
-type AggregateProjectRoles {
+type AggregateProjectRole {
+  count: Int!
+}
+
+type AggregateProjectRoleContributor {
   count: Int!
 }
 
@@ -45,6 +53,10 @@ type AggregateUser {
   count: Int!
 }
 
+type AggregateUserStory {
+  count: Int!
+}
+
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
@@ -54,14 +66,19 @@ type Contributor implements Node {
   id: ID!
   name: String!
   email: String!
+  emailPrivate: String
   doc: String!
+  phone: String!
+  address: String!
   price: Float!
   active: Boolean!
+  twPeopleId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  projectRoles(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles!]
+  projectRoles(where: ProjectRoleContributorWhereInput, orderBy: ProjectRoleContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoleContributor!]
   experiences(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorExperience!]
   formations(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorFormation!]
+  milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone!]
 }
 
 """A connection to a list of items."""
@@ -77,12 +94,17 @@ type ContributorConnection {
 input ContributorCreateInput {
   name: String!
   email: String!
+  emailPrivate: String
   doc: String!
+  phone: String!
+  address: String!
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesCreateManyWithoutContributorInput
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorCreateManyWithoutContributorInput
   experiences: ContributorExperienceCreateManyWithoutContributorInput
   formations: ContributorFormationCreateManyWithoutContributorInput
+  milestones: MilestoneCreateManyWithoutContributorInput
 }
 
 input ContributorCreateOneWithoutExperiencesInput {
@@ -95,6 +117,11 @@ input ContributorCreateOneWithoutFormationsInput {
   connect: ContributorWhereUniqueInput
 }
 
+input ContributorCreateOneWithoutMilestonesInput {
+  create: ContributorCreateWithoutMilestonesInput
+  connect: ContributorWhereUniqueInput
+}
+
 input ContributorCreateOneWithoutProjectRolesInput {
   create: ContributorCreateWithoutProjectRolesInput
   connect: ContributorWhereUniqueInput
@@ -103,31 +130,61 @@ input ContributorCreateOneWithoutProjectRolesInput {
 input ContributorCreateWithoutExperiencesInput {
   name: String!
   email: String!
+  emailPrivate: String
   doc: String!
+  phone: String!
+  address: String!
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesCreateManyWithoutContributorInput
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorCreateManyWithoutContributorInput
   formations: ContributorFormationCreateManyWithoutContributorInput
+  milestones: MilestoneCreateManyWithoutContributorInput
 }
 
 input ContributorCreateWithoutFormationsInput {
   name: String!
   email: String!
+  emailPrivate: String
   doc: String!
+  phone: String!
+  address: String!
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesCreateManyWithoutContributorInput
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorCreateManyWithoutContributorInput
   experiences: ContributorExperienceCreateManyWithoutContributorInput
+  milestones: MilestoneCreateManyWithoutContributorInput
+}
+
+input ContributorCreateWithoutMilestonesInput {
+  name: String!
+  email: String!
+  emailPrivate: String
+  doc: String!
+  phone: String!
+  address: String!
+  price: Float
+  active: Boolean
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorCreateManyWithoutContributorInput
+  experiences: ContributorExperienceCreateManyWithoutContributorInput
+  formations: ContributorFormationCreateManyWithoutContributorInput
 }
 
 input ContributorCreateWithoutProjectRolesInput {
   name: String!
   email: String!
+  emailPrivate: String
   doc: String!
+  phone: String!
+  address: String!
   price: Float
   active: Boolean
+  twPeopleId: String
   experiences: ContributorExperienceCreateManyWithoutContributorInput
   formations: ContributorFormationCreateManyWithoutContributorInput
+  milestones: MilestoneCreateManyWithoutContributorInput
 }
 
 """An edge in a connection."""
@@ -222,6 +279,265 @@ type ContributorExperiencePreviousValues {
   updatedAt: DateTime!
 }
 
+input ContributorExperienceScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ContributorExperienceScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ContributorExperienceScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ContributorExperienceScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  company: String
+
+  """All values that are not equal to given value."""
+  company_not: String
+
+  """All values that are contained in given list."""
+  company_in: [String!]
+
+  """All values that are not contained in given list."""
+  company_not_in: [String!]
+
+  """All values less than the given value."""
+  company_lt: String
+
+  """All values less than or equal the given value."""
+  company_lte: String
+
+  """All values greater than the given value."""
+  company_gt: String
+
+  """All values greater than or equal the given value."""
+  company_gte: String
+
+  """All values containing the given string."""
+  company_contains: String
+
+  """All values not containing the given string."""
+  company_not_contains: String
+
+  """All values starting with the given string."""
+  company_starts_with: String
+
+  """All values not starting with the given string."""
+  company_not_starts_with: String
+
+  """All values ending with the given string."""
+  company_ends_with: String
+
+  """All values not ending with the given string."""
+  company_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
 type ContributorExperienceSubscriptionPayload {
   mutation: MutationType!
   node: ContributorExperience
@@ -270,13 +586,36 @@ input ContributorExperienceUpdateInput {
   contributor: ContributorUpdateOneRequiredWithoutExperiencesInput
 }
 
+input ContributorExperienceUpdateManyDataInput {
+  name: String
+  company: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input ContributorExperienceUpdateManyMutationInput {
+  name: String
+  company: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+}
+
 input ContributorExperienceUpdateManyWithoutContributorInput {
   create: [ContributorExperienceCreateWithoutContributorInput!]
   connect: [ContributorExperienceWhereUniqueInput!]
   disconnect: [ContributorExperienceWhereUniqueInput!]
   delete: [ContributorExperienceWhereUniqueInput!]
   update: [ContributorExperienceUpdateWithWhereUniqueWithoutContributorInput!]
+  updateMany: [ContributorExperienceUpdateManyWithWhereNestedInput!]
+  deleteMany: [ContributorExperienceScalarWhereInput!]
   upsert: [ContributorExperienceUpsertWithWhereUniqueWithoutContributorInput!]
+}
+
+input ContributorExperienceUpdateManyWithWhereNestedInput {
+  where: ContributorExperienceScalarWhereInput!
+  data: ContributorExperienceUpdateManyDataInput!
 }
 
 input ContributorExperienceUpdateWithoutContributorDataInput {
@@ -645,6 +984,265 @@ type ContributorFormationPreviousValues {
   updatedAt: DateTime!
 }
 
+input ContributorFormationScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ContributorFormationScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ContributorFormationScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ContributorFormationScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  institution: String
+
+  """All values that are not equal to given value."""
+  institution_not: String
+
+  """All values that are contained in given list."""
+  institution_in: [String!]
+
+  """All values that are not contained in given list."""
+  institution_not_in: [String!]
+
+  """All values less than the given value."""
+  institution_lt: String
+
+  """All values less than or equal the given value."""
+  institution_lte: String
+
+  """All values greater than the given value."""
+  institution_gt: String
+
+  """All values greater than or equal the given value."""
+  institution_gte: String
+
+  """All values containing the given string."""
+  institution_contains: String
+
+  """All values not containing the given string."""
+  institution_not_contains: String
+
+  """All values starting with the given string."""
+  institution_starts_with: String
+
+  """All values not starting with the given string."""
+  institution_not_starts_with: String
+
+  """All values ending with the given string."""
+  institution_ends_with: String
+
+  """All values not ending with the given string."""
+  institution_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
 type ContributorFormationSubscriptionPayload {
   mutation: MutationType!
   node: ContributorFormation
@@ -693,13 +1291,36 @@ input ContributorFormationUpdateInput {
   contributor: ContributorUpdateOneRequiredWithoutFormationsInput
 }
 
+input ContributorFormationUpdateManyDataInput {
+  name: String
+  institution: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input ContributorFormationUpdateManyMutationInput {
+  name: String
+  institution: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+}
+
 input ContributorFormationUpdateManyWithoutContributorInput {
   create: [ContributorFormationCreateWithoutContributorInput!]
   connect: [ContributorFormationWhereUniqueInput!]
   disconnect: [ContributorFormationWhereUniqueInput!]
   delete: [ContributorFormationWhereUniqueInput!]
   update: [ContributorFormationUpdateWithWhereUniqueWithoutContributorInput!]
+  updateMany: [ContributorFormationUpdateManyWithWhereNestedInput!]
+  deleteMany: [ContributorFormationScalarWhereInput!]
   upsert: [ContributorFormationUpsertWithWhereUniqueWithoutContributorInput!]
+}
+
+input ContributorFormationUpdateManyWithWhereNestedInput {
+  where: ContributorFormationScalarWhereInput!
+  data: ContributorFormationUpdateManyDataInput!
 }
 
 input ContributorFormationUpdateWithoutContributorDataInput {
@@ -992,12 +1613,20 @@ enum ContributorOrderByInput {
   name_DESC
   email_ASC
   email_DESC
+  emailPrivate_ASC
+  emailPrivate_DESC
   doc_ASC
   doc_DESC
+  phone_ASC
+  phone_DESC
+  address_ASC
+  address_DESC
   price_ASC
   price_DESC
   active_ASC
   active_DESC
+  twPeopleId_ASC
+  twPeopleId_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1008,9 +1637,13 @@ type ContributorPreviousValues {
   id: ID!
   name: String!
   email: String!
+  emailPrivate: String
   doc: String!
+  phone: String!
+  address: String!
   price: Float!
   active: Boolean!
+  twPeopleId: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1057,12 +1690,29 @@ input ContributorSubscriptionWhereInput {
 input ContributorUpdateInput {
   name: String
   email: String
+  emailPrivate: String
   doc: String
+  phone: String
+  address: String
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesUpdateManyWithoutContributorInput
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorUpdateManyWithoutContributorInput
   experiences: ContributorExperienceUpdateManyWithoutContributorInput
   formations: ContributorFormationUpdateManyWithoutContributorInput
+  milestones: MilestoneUpdateManyWithoutContributorInput
+}
+
+input ContributorUpdateManyMutationInput {
+  name: String
+  email: String
+  emailPrivate: String
+  doc: String
+  phone: String
+  address: String
+  price: Float
+  active: Boolean
+  twPeopleId: String
 }
 
 input ContributorUpdateOneRequiredWithoutExperiencesInput {
@@ -1079,11 +1729,16 @@ input ContributorUpdateOneRequiredWithoutFormationsInput {
   upsert: ContributorUpsertWithoutFormationsInput
 }
 
-input ContributorUpdateOneWithoutProjectRolesInput {
+input ContributorUpdateOneRequiredWithoutMilestonesInput {
+  create: ContributorCreateWithoutMilestonesInput
+  connect: ContributorWhereUniqueInput
+  update: ContributorUpdateWithoutMilestonesDataInput
+  upsert: ContributorUpsertWithoutMilestonesInput
+}
+
+input ContributorUpdateOneRequiredWithoutProjectRolesInput {
   create: ContributorCreateWithoutProjectRolesInput
   connect: ContributorWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
   update: ContributorUpdateWithoutProjectRolesDataInput
   upsert: ContributorUpsertWithoutProjectRolesInput
 }
@@ -1091,31 +1746,61 @@ input ContributorUpdateOneWithoutProjectRolesInput {
 input ContributorUpdateWithoutExperiencesDataInput {
   name: String
   email: String
+  emailPrivate: String
   doc: String
+  phone: String
+  address: String
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesUpdateManyWithoutContributorInput
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorUpdateManyWithoutContributorInput
   formations: ContributorFormationUpdateManyWithoutContributorInput
+  milestones: MilestoneUpdateManyWithoutContributorInput
 }
 
 input ContributorUpdateWithoutFormationsDataInput {
   name: String
   email: String
+  emailPrivate: String
   doc: String
+  phone: String
+  address: String
   price: Float
   active: Boolean
-  projectRoles: ProjectRolesUpdateManyWithoutContributorInput
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorUpdateManyWithoutContributorInput
   experiences: ContributorExperienceUpdateManyWithoutContributorInput
+  milestones: MilestoneUpdateManyWithoutContributorInput
+}
+
+input ContributorUpdateWithoutMilestonesDataInput {
+  name: String
+  email: String
+  emailPrivate: String
+  doc: String
+  phone: String
+  address: String
+  price: Float
+  active: Boolean
+  twPeopleId: String
+  projectRoles: ProjectRoleContributorUpdateManyWithoutContributorInput
+  experiences: ContributorExperienceUpdateManyWithoutContributorInput
+  formations: ContributorFormationUpdateManyWithoutContributorInput
 }
 
 input ContributorUpdateWithoutProjectRolesDataInput {
   name: String
   email: String
+  emailPrivate: String
   doc: String
+  phone: String
+  address: String
   price: Float
   active: Boolean
+  twPeopleId: String
   experiences: ContributorExperienceUpdateManyWithoutContributorInput
   formations: ContributorFormationUpdateManyWithoutContributorInput
+  milestones: MilestoneUpdateManyWithoutContributorInput
 }
 
 input ContributorUpsertWithoutExperiencesInput {
@@ -1126,6 +1811,11 @@ input ContributorUpsertWithoutExperiencesInput {
 input ContributorUpsertWithoutFormationsInput {
   update: ContributorUpdateWithoutFormationsDataInput!
   create: ContributorCreateWithoutFormationsInput!
+}
+
+input ContributorUpsertWithoutMilestonesInput {
+  update: ContributorUpdateWithoutMilestonesDataInput!
+  create: ContributorCreateWithoutMilestonesInput!
 }
 
 input ContributorUpsertWithoutProjectRolesInput {
@@ -1262,6 +1952,46 @@ input ContributorWhereInput {
 
   """All values not ending with the given string."""
   email_not_ends_with: String
+  emailPrivate: String
+
+  """All values that are not equal to given value."""
+  emailPrivate_not: String
+
+  """All values that are contained in given list."""
+  emailPrivate_in: [String!]
+
+  """All values that are not contained in given list."""
+  emailPrivate_not_in: [String!]
+
+  """All values less than the given value."""
+  emailPrivate_lt: String
+
+  """All values less than or equal the given value."""
+  emailPrivate_lte: String
+
+  """All values greater than the given value."""
+  emailPrivate_gt: String
+
+  """All values greater than or equal the given value."""
+  emailPrivate_gte: String
+
+  """All values containing the given string."""
+  emailPrivate_contains: String
+
+  """All values not containing the given string."""
+  emailPrivate_not_contains: String
+
+  """All values starting with the given string."""
+  emailPrivate_starts_with: String
+
+  """All values not starting with the given string."""
+  emailPrivate_not_starts_with: String
+
+  """All values ending with the given string."""
+  emailPrivate_ends_with: String
+
+  """All values not ending with the given string."""
+  emailPrivate_not_ends_with: String
   doc: String
 
   """All values that are not equal to given value."""
@@ -1302,6 +2032,86 @@ input ContributorWhereInput {
 
   """All values not ending with the given string."""
   doc_not_ends_with: String
+  phone: String
+
+  """All values that are not equal to given value."""
+  phone_not: String
+
+  """All values that are contained in given list."""
+  phone_in: [String!]
+
+  """All values that are not contained in given list."""
+  phone_not_in: [String!]
+
+  """All values less than the given value."""
+  phone_lt: String
+
+  """All values less than or equal the given value."""
+  phone_lte: String
+
+  """All values greater than the given value."""
+  phone_gt: String
+
+  """All values greater than or equal the given value."""
+  phone_gte: String
+
+  """All values containing the given string."""
+  phone_contains: String
+
+  """All values not containing the given string."""
+  phone_not_contains: String
+
+  """All values starting with the given string."""
+  phone_starts_with: String
+
+  """All values not starting with the given string."""
+  phone_not_starts_with: String
+
+  """All values ending with the given string."""
+  phone_ends_with: String
+
+  """All values not ending with the given string."""
+  phone_not_ends_with: String
+  address: String
+
+  """All values that are not equal to given value."""
+  address_not: String
+
+  """All values that are contained in given list."""
+  address_in: [String!]
+
+  """All values that are not contained in given list."""
+  address_not_in: [String!]
+
+  """All values less than the given value."""
+  address_lt: String
+
+  """All values less than or equal the given value."""
+  address_lte: String
+
+  """All values greater than the given value."""
+  address_gt: String
+
+  """All values greater than or equal the given value."""
+  address_gte: String
+
+  """All values containing the given string."""
+  address_contains: String
+
+  """All values not containing the given string."""
+  address_not_contains: String
+
+  """All values starting with the given string."""
+  address_starts_with: String
+
+  """All values not starting with the given string."""
+  address_not_starts_with: String
+
+  """All values ending with the given string."""
+  address_ends_with: String
+
+  """All values not ending with the given string."""
+  address_not_ends_with: String
   price: Float
 
   """All values that are not equal to given value."""
@@ -1328,6 +2138,46 @@ input ContributorWhereInput {
 
   """All values that are not equal to given value."""
   active_not: Boolean
+  twPeopleId: String
+
+  """All values that are not equal to given value."""
+  twPeopleId_not: String
+
+  """All values that are contained in given list."""
+  twPeopleId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twPeopleId_not_in: [String!]
+
+  """All values less than the given value."""
+  twPeopleId_lt: String
+
+  """All values less than or equal the given value."""
+  twPeopleId_lte: String
+
+  """All values greater than the given value."""
+  twPeopleId_gt: String
+
+  """All values greater than or equal the given value."""
+  twPeopleId_gte: String
+
+  """All values containing the given string."""
+  twPeopleId_contains: String
+
+  """All values not containing the given string."""
+  twPeopleId_not_contains: String
+
+  """All values starting with the given string."""
+  twPeopleId_starts_with: String
+
+  """All values not starting with the given string."""
+  twPeopleId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twPeopleId_ends_with: String
+
+  """All values not ending with the given string."""
+  twPeopleId_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -1372,15 +2222,18 @@ input ContributorWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  projectRoles_every: ProjectRolesWhereInput
-  projectRoles_some: ProjectRolesWhereInput
-  projectRoles_none: ProjectRolesWhereInput
+  projectRoles_every: ProjectRoleContributorWhereInput
+  projectRoles_some: ProjectRoleContributorWhereInput
+  projectRoles_none: ProjectRoleContributorWhereInput
   experiences_every: ContributorExperienceWhereInput
   experiences_some: ContributorExperienceWhereInput
   experiences_none: ContributorExperienceWhereInput
   formations_every: ContributorFormationWhereInput
   formations_some: ContributorFormationWhereInput
   formations_none: ContributorFormationWhereInput
+  milestones_every: MilestoneWhereInput
+  milestones_some: MilestoneWhereInput
+  milestones_none: MilestoneWhereInput
 }
 
 input ContributorWhereUniqueInput {
@@ -1394,17 +2247,18 @@ scalar DateTime
 type Epic implements Node {
   id: ID!
   name: String!
-  descriptions: String
-  userStory: [String!]!
-  priority: Int!
+  description: String
+  priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
+  twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
   feature: Feature!
+  userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory!]
 }
 
 """A connection to a list of items."""
@@ -1419,15 +2273,16 @@ type EpicConnection {
 
 input EpicCreateInput {
   name: String!
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: EpicCreateuserStoryInput
+  twTaskId: String
   feature: FeatureCreateOneWithoutEpicsInput!
+  userStories: UserStoryCreateManyWithoutEpicInput
 }
 
 input EpicCreateManyWithoutFeatureInput {
@@ -1435,20 +2290,35 @@ input EpicCreateManyWithoutFeatureInput {
   connect: [EpicWhereUniqueInput!]
 }
 
-input EpicCreateuserStoryInput {
-  set: [String!]
+input EpicCreateOneWithoutUserStoriesInput {
+  create: EpicCreateWithoutUserStoriesInput
+  connect: EpicWhereUniqueInput
 }
 
 input EpicCreateWithoutFeatureInput {
   name: String!
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: EpicCreateuserStoryInput
+  twTaskId: String
+  userStories: UserStoryCreateManyWithoutEpicInput
+}
+
+input EpicCreateWithoutUserStoriesInput {
+  name: String!
+  description: String
+  priority: Int
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  feature: FeatureCreateOneWithoutEpicsInput!
 }
 
 """An edge in a connection."""
@@ -1465,8 +2335,8 @@ enum EpicOrderByInput {
   id_DESC
   name_ASC
   name_DESC
-  descriptions_ASC
-  descriptions_DESC
+  description_ASC
+  description_DESC
   priority_ASC
   priority_DESC
   estimateSize_ASC
@@ -1479,6 +2349,8 @@ enum EpicOrderByInput {
   estimateStart_DESC
   estimateEnd_ASC
   estimateEnd_DESC
+  twTaskId_ASC
+  twTaskId_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1488,16 +2360,363 @@ enum EpicOrderByInput {
 type EpicPreviousValues {
   id: ID!
   name: String!
-  descriptions: String
-  userStory: [String!]!
-  priority: Int!
+  description: String
+  priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
+  twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input EpicScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EpicScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EpicScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EpicScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  priority: Int
+
+  """All values that are not equal to given value."""
+  priority_not: Int
+
+  """All values that are contained in given list."""
+  priority_in: [Int!]
+
+  """All values that are not contained in given list."""
+  priority_not_in: [Int!]
+
+  """All values less than the given value."""
+  priority_lt: Int
+
+  """All values less than or equal the given value."""
+  priority_lte: Int
+
+  """All values greater than the given value."""
+  priority_gt: Int
+
+  """All values greater than or equal the given value."""
+  priority_gte: Int
+  estimateSize: Int
+
+  """All values that are not equal to given value."""
+  estimateSize_not: Int
+
+  """All values that are contained in given list."""
+  estimateSize_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateSize_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateSize_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateSize_lte: Int
+
+  """All values greater than the given value."""
+  estimateSize_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateSize_gte: Int
+  estimatePrice: Float
+
+  """All values that are not equal to given value."""
+  estimatePrice_not: Float
+
+  """All values that are contained in given list."""
+  estimatePrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  estimatePrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  estimatePrice_lt: Float
+
+  """All values less than or equal the given value."""
+  estimatePrice_lte: Float
+
+  """All values greater than the given value."""
+  estimatePrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  estimatePrice_gte: Float
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  estimateStart: DateTime
+
+  """All values that are not equal to given value."""
+  estimateStart_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateStart_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateStart_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateStart_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateStart_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateStart_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateStart_gte: DateTime
+  estimateEnd: DateTime
+
+  """All values that are not equal to given value."""
+  estimateEnd_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateEnd_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateEnd_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateEnd_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateEnd_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateEnd_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateEnd_gte: DateTime
+  twTaskId: String
+
+  """All values that are not equal to given value."""
+  twTaskId_not: String
+
+  """All values that are contained in given list."""
+  twTaskId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskId_lte: String
+
+  """All values greater than the given value."""
+  twTaskId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskId_gte: String
+
+  """All values containing the given string."""
+  twTaskId_contains: String
+
+  """All values not containing the given string."""
+  twTaskId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskId_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
 }
 
 type EpicSubscriptionPayload {
@@ -1541,15 +2760,40 @@ input EpicSubscriptionWhereInput {
 
 input EpicUpdateInput {
   name: String
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: EpicUpdateuserStoryInput
+  twTaskId: String
   feature: FeatureUpdateOneRequiredWithoutEpicsInput
+  userStories: UserStoryUpdateManyWithoutEpicInput
+}
+
+input EpicUpdateManyDataInput {
+  name: String
+  description: String
+  priority: Int
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+}
+
+input EpicUpdateManyMutationInput {
+  name: String
+  description: String
+  priority: Int
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
 }
 
 input EpicUpdateManyWithoutFeatureInput {
@@ -1558,28 +2802,57 @@ input EpicUpdateManyWithoutFeatureInput {
   disconnect: [EpicWhereUniqueInput!]
   delete: [EpicWhereUniqueInput!]
   update: [EpicUpdateWithWhereUniqueWithoutFeatureInput!]
+  updateMany: [EpicUpdateManyWithWhereNestedInput!]
+  deleteMany: [EpicScalarWhereInput!]
   upsert: [EpicUpsertWithWhereUniqueWithoutFeatureInput!]
 }
 
-input EpicUpdateuserStoryInput {
-  set: [String!]
+input EpicUpdateManyWithWhereNestedInput {
+  where: EpicScalarWhereInput!
+  data: EpicUpdateManyDataInput!
+}
+
+input EpicUpdateOneRequiredWithoutUserStoriesInput {
+  create: EpicCreateWithoutUserStoriesInput
+  connect: EpicWhereUniqueInput
+  update: EpicUpdateWithoutUserStoriesDataInput
+  upsert: EpicUpsertWithoutUserStoriesInput
 }
 
 input EpicUpdateWithoutFeatureDataInput {
   name: String
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: EpicUpdateuserStoryInput
+  twTaskId: String
+  userStories: UserStoryUpdateManyWithoutEpicInput
+}
+
+input EpicUpdateWithoutUserStoriesDataInput {
+  name: String
+  description: String
+  priority: Int
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  feature: FeatureUpdateOneRequiredWithoutEpicsInput
 }
 
 input EpicUpdateWithWhereUniqueWithoutFeatureInput {
   where: EpicWhereUniqueInput!
   data: EpicUpdateWithoutFeatureDataInput!
+}
+
+input EpicUpsertWithoutUserStoriesInput {
+  update: EpicUpdateWithoutUserStoriesDataInput!
+  create: EpicCreateWithoutUserStoriesInput!
 }
 
 input EpicUpsertWithWhereUniqueWithoutFeatureInput {
@@ -1677,46 +2950,46 @@ input EpicWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  descriptions: String
+  description: String
 
   """All values that are not equal to given value."""
-  descriptions_not: String
+  description_not: String
 
   """All values that are contained in given list."""
-  descriptions_in: [String!]
+  description_in: [String!]
 
   """All values that are not contained in given list."""
-  descriptions_not_in: [String!]
+  description_not_in: [String!]
 
   """All values less than the given value."""
-  descriptions_lt: String
+  description_lt: String
 
   """All values less than or equal the given value."""
-  descriptions_lte: String
+  description_lte: String
 
   """All values greater than the given value."""
-  descriptions_gt: String
+  description_gt: String
 
   """All values greater than or equal the given value."""
-  descriptions_gte: String
+  description_gte: String
 
   """All values containing the given string."""
-  descriptions_contains: String
+  description_contains: String
 
   """All values not containing the given string."""
-  descriptions_not_contains: String
+  description_not_contains: String
 
   """All values starting with the given string."""
-  descriptions_starts_with: String
+  description_starts_with: String
 
   """All values not starting with the given string."""
-  descriptions_not_starts_with: String
+  description_not_starts_with: String
 
   """All values ending with the given string."""
-  descriptions_ends_with: String
+  description_ends_with: String
 
   """All values not ending with the given string."""
-  descriptions_not_ends_with: String
+  description_not_ends_with: String
   priority: Int
 
   """All values that are not equal to given value."""
@@ -1761,28 +3034,28 @@ input EpicWhereInput {
 
   """All values greater than or equal the given value."""
   estimateSize_gte: Int
-  estimatePrice: Int
+  estimatePrice: Float
 
   """All values that are not equal to given value."""
-  estimatePrice_not: Int
+  estimatePrice_not: Float
 
   """All values that are contained in given list."""
-  estimatePrice_in: [Int!]
+  estimatePrice_in: [Float!]
 
   """All values that are not contained in given list."""
-  estimatePrice_not_in: [Int!]
+  estimatePrice_not_in: [Float!]
 
   """All values less than the given value."""
-  estimatePrice_lt: Int
+  estimatePrice_lt: Float
 
   """All values less than or equal the given value."""
-  estimatePrice_lte: Int
+  estimatePrice_lte: Float
 
   """All values greater than the given value."""
-  estimatePrice_gt: Int
+  estimatePrice_gt: Float
 
   """All values greater than or equal the given value."""
-  estimatePrice_gte: Int
+  estimatePrice_gte: Float
   estimateEffort: Int
 
   """All values that are not equal to given value."""
@@ -1849,6 +3122,46 @@ input EpicWhereInput {
 
   """All values greater than or equal the given value."""
   estimateEnd_gte: DateTime
+  twTaskId: String
+
+  """All values that are not equal to given value."""
+  twTaskId_not: String
+
+  """All values that are contained in given list."""
+  twTaskId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskId_lte: String
+
+  """All values greater than the given value."""
+  twTaskId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskId_gte: String
+
+  """All values containing the given string."""
+  twTaskId_contains: String
+
+  """All values not containing the given string."""
+  twTaskId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskId_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -1894,6 +3207,9 @@ input EpicWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   feature: FeatureWhereInput
+  userStories_every: UserStoryWhereInput
+  userStories_some: UserStoryWhereInput
+  userStories_none: UserStoryWhereInput
 }
 
 input EpicWhereUniqueInput {
@@ -1903,14 +3219,14 @@ input EpicWhereUniqueInput {
 type Feature implements Node {
   id: ID!
   name: String!
-  descriptions: String
-  userStory: [String!]!
-  priority: Int!
+  description: String
+  priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
+  twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
@@ -1929,14 +3245,14 @@ type FeatureConnection {
 
 input FeatureCreateInput {
   name: String!
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: FeatureCreateuserStoryInput
+  twTaskId: String
   epics: EpicCreateManyWithoutFeatureInput
   project: ProjectCreateOneWithoutFeaturesInput!
 }
@@ -1951,33 +3267,29 @@ input FeatureCreateOneWithoutEpicsInput {
   connect: FeatureWhereUniqueInput
 }
 
-input FeatureCreateuserStoryInput {
-  set: [String!]
-}
-
 input FeatureCreateWithoutEpicsInput {
   name: String!
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: FeatureCreateuserStoryInput
+  twTaskId: String
   project: ProjectCreateOneWithoutFeaturesInput!
 }
 
 input FeatureCreateWithoutProjectInput {
   name: String!
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: FeatureCreateuserStoryInput
+  twTaskId: String
   epics: EpicCreateManyWithoutFeatureInput
 }
 
@@ -1995,8 +3307,8 @@ enum FeatureOrderByInput {
   id_DESC
   name_ASC
   name_DESC
-  descriptions_ASC
-  descriptions_DESC
+  description_ASC
+  description_DESC
   priority_ASC
   priority_DESC
   estimateSize_ASC
@@ -2009,6 +3321,8 @@ enum FeatureOrderByInput {
   estimateStart_DESC
   estimateEnd_ASC
   estimateEnd_DESC
+  twTaskId_ASC
+  twTaskId_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -2018,16 +3332,363 @@ enum FeatureOrderByInput {
 type FeaturePreviousValues {
   id: ID!
   name: String!
-  descriptions: String
-  userStory: [String!]!
-  priority: Int!
+  description: String
+  priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
+  twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input FeatureScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FeatureScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FeatureScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FeatureScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  priority: Int
+
+  """All values that are not equal to given value."""
+  priority_not: Int
+
+  """All values that are contained in given list."""
+  priority_in: [Int!]
+
+  """All values that are not contained in given list."""
+  priority_not_in: [Int!]
+
+  """All values less than the given value."""
+  priority_lt: Int
+
+  """All values less than or equal the given value."""
+  priority_lte: Int
+
+  """All values greater than the given value."""
+  priority_gt: Int
+
+  """All values greater than or equal the given value."""
+  priority_gte: Int
+  estimateSize: Int
+
+  """All values that are not equal to given value."""
+  estimateSize_not: Int
+
+  """All values that are contained in given list."""
+  estimateSize_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateSize_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateSize_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateSize_lte: Int
+
+  """All values greater than the given value."""
+  estimateSize_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateSize_gte: Int
+  estimatePrice: Float
+
+  """All values that are not equal to given value."""
+  estimatePrice_not: Float
+
+  """All values that are contained in given list."""
+  estimatePrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  estimatePrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  estimatePrice_lt: Float
+
+  """All values less than or equal the given value."""
+  estimatePrice_lte: Float
+
+  """All values greater than the given value."""
+  estimatePrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  estimatePrice_gte: Float
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  estimateStart: DateTime
+
+  """All values that are not equal to given value."""
+  estimateStart_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateStart_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateStart_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateStart_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateStart_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateStart_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateStart_gte: DateTime
+  estimateEnd: DateTime
+
+  """All values that are not equal to given value."""
+  estimateEnd_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateEnd_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateEnd_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateEnd_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateEnd_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateEnd_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateEnd_gte: DateTime
+  twTaskId: String
+
+  """All values that are not equal to given value."""
+  twTaskId_not: String
+
+  """All values that are contained in given list."""
+  twTaskId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskId_lte: String
+
+  """All values greater than the given value."""
+  twTaskId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskId_gte: String
+
+  """All values containing the given string."""
+  twTaskId_contains: String
+
+  """All values not containing the given string."""
+  twTaskId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskId_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
 }
 
 type FeatureSubscriptionPayload {
@@ -2071,16 +3732,40 @@ input FeatureSubscriptionWhereInput {
 
 input FeatureUpdateInput {
   name: String
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: FeatureUpdateuserStoryInput
+  twTaskId: String
   epics: EpicUpdateManyWithoutFeatureInput
   project: ProjectUpdateOneRequiredWithoutFeaturesInput
+}
+
+input FeatureUpdateManyDataInput {
+  name: String
+  description: String
+  priority: Int
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+}
+
+input FeatureUpdateManyMutationInput {
+  name: String
+  description: String
+  priority: Int
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
 }
 
 input FeatureUpdateManyWithoutProjectInput {
@@ -2089,7 +3774,14 @@ input FeatureUpdateManyWithoutProjectInput {
   disconnect: [FeatureWhereUniqueInput!]
   delete: [FeatureWhereUniqueInput!]
   update: [FeatureUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [FeatureUpdateManyWithWhereNestedInput!]
+  deleteMany: [FeatureScalarWhereInput!]
   upsert: [FeatureUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input FeatureUpdateManyWithWhereNestedInput {
+  where: FeatureScalarWhereInput!
+  data: FeatureUpdateManyDataInput!
 }
 
 input FeatureUpdateOneRequiredWithoutEpicsInput {
@@ -2099,33 +3791,29 @@ input FeatureUpdateOneRequiredWithoutEpicsInput {
   upsert: FeatureUpsertWithoutEpicsInput
 }
 
-input FeatureUpdateuserStoryInput {
-  set: [String!]
-}
-
 input FeatureUpdateWithoutEpicsDataInput {
   name: String
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: FeatureUpdateuserStoryInput
+  twTaskId: String
   project: ProjectUpdateOneRequiredWithoutFeaturesInput
 }
 
 input FeatureUpdateWithoutProjectDataInput {
   name: String
-  descriptions: String
+  description: String
   priority: Int
   estimateSize: Int
-  estimatePrice: Int
+  estimatePrice: Float
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
-  userStory: FeatureUpdateuserStoryInput
+  twTaskId: String
   epics: EpicUpdateManyWithoutFeatureInput
 }
 
@@ -2234,46 +3922,46 @@ input FeatureWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  descriptions: String
+  description: String
 
   """All values that are not equal to given value."""
-  descriptions_not: String
+  description_not: String
 
   """All values that are contained in given list."""
-  descriptions_in: [String!]
+  description_in: [String!]
 
   """All values that are not contained in given list."""
-  descriptions_not_in: [String!]
+  description_not_in: [String!]
 
   """All values less than the given value."""
-  descriptions_lt: String
+  description_lt: String
 
   """All values less than or equal the given value."""
-  descriptions_lte: String
+  description_lte: String
 
   """All values greater than the given value."""
-  descriptions_gt: String
+  description_gt: String
 
   """All values greater than or equal the given value."""
-  descriptions_gte: String
+  description_gte: String
 
   """All values containing the given string."""
-  descriptions_contains: String
+  description_contains: String
 
   """All values not containing the given string."""
-  descriptions_not_contains: String
+  description_not_contains: String
 
   """All values starting with the given string."""
-  descriptions_starts_with: String
+  description_starts_with: String
 
   """All values not starting with the given string."""
-  descriptions_not_starts_with: String
+  description_not_starts_with: String
 
   """All values ending with the given string."""
-  descriptions_ends_with: String
+  description_ends_with: String
 
   """All values not ending with the given string."""
-  descriptions_not_ends_with: String
+  description_not_ends_with: String
   priority: Int
 
   """All values that are not equal to given value."""
@@ -2318,28 +4006,28 @@ input FeatureWhereInput {
 
   """All values greater than or equal the given value."""
   estimateSize_gte: Int
-  estimatePrice: Int
+  estimatePrice: Float
 
   """All values that are not equal to given value."""
-  estimatePrice_not: Int
+  estimatePrice_not: Float
 
   """All values that are contained in given list."""
-  estimatePrice_in: [Int!]
+  estimatePrice_in: [Float!]
 
   """All values that are not contained in given list."""
-  estimatePrice_not_in: [Int!]
+  estimatePrice_not_in: [Float!]
 
   """All values less than the given value."""
-  estimatePrice_lt: Int
+  estimatePrice_lt: Float
 
   """All values less than or equal the given value."""
-  estimatePrice_lte: Int
+  estimatePrice_lte: Float
 
   """All values greater than the given value."""
-  estimatePrice_gt: Int
+  estimatePrice_gt: Float
 
   """All values greater than or equal the given value."""
-  estimatePrice_gte: Int
+  estimatePrice_gte: Float
   estimateEffort: Int
 
   """All values that are not equal to given value."""
@@ -2406,6 +4094,46 @@ input FeatureWhereInput {
 
   """All values greater than or equal the given value."""
   estimateEnd_gte: DateTime
+  twTaskId: String
+
+  """All values that are not equal to given value."""
+  twTaskId_not: String
+
+  """All values that are contained in given list."""
+  twTaskId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskId_lte: String
+
+  """All values greater than the given value."""
+  twTaskId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskId_gte: String
+
+  """All values containing the given string."""
+  twTaskId_contains: String
+
+  """All values not containing the given string."""
+  twTaskId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskId_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -2570,6 +4298,11 @@ input LifecycleUpdateInput {
   name: String
   phase: LifecycleUpdatephaseInput
   projects: ProjectUpdateManyWithoutLifecycleInput
+}
+
+input LifecycleUpdateManyMutationInput {
+  name: String
+  phase: LifecycleUpdatephaseInput
 }
 
 input LifecycleUpdateOneWithoutProjectsInput {
@@ -2743,73 +4476,737 @@ Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
 
+type Milestone implements Node {
+  id: ID!
+  name: String!
+  description: String
+  status: MilestoneStatus!
+  dueDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project!
+  contributor: Contributor!
+}
+
+"""A connection to a list of items."""
+type MilestoneConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [MilestoneEdge]!
+  aggregate: AggregateMilestone!
+}
+
+input MilestoneCreateInput {
+  name: String!
+  description: String
+  status: MilestoneStatus!
+  dueDate: DateTime!
+  project: ProjectCreateOneWithoutMilestonesInput!
+  contributor: ContributorCreateOneWithoutMilestonesInput!
+}
+
+input MilestoneCreateManyWithoutContributorInput {
+  create: [MilestoneCreateWithoutContributorInput!]
+  connect: [MilestoneWhereUniqueInput!]
+}
+
+input MilestoneCreateManyWithoutProjectInput {
+  create: [MilestoneCreateWithoutProjectInput!]
+  connect: [MilestoneWhereUniqueInput!]
+}
+
+input MilestoneCreateWithoutContributorInput {
+  name: String!
+  description: String
+  status: MilestoneStatus!
+  dueDate: DateTime!
+  project: ProjectCreateOneWithoutMilestonesInput!
+}
+
+input MilestoneCreateWithoutProjectInput {
+  name: String!
+  description: String
+  status: MilestoneStatus!
+  dueDate: DateTime!
+  contributor: ContributorCreateOneWithoutMilestonesInput!
+}
+
+"""An edge in a connection."""
+type MilestoneEdge {
+  """The item at the end of the edge."""
+  node: Milestone!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum MilestoneOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  status_ASC
+  status_DESC
+  dueDate_ASC
+  dueDate_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type MilestonePreviousValues {
+  id: ID!
+  name: String!
+  description: String
+  status: MilestoneStatus!
+  dueDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input MilestoneScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MilestoneScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MilestoneScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MilestoneScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  status: MilestoneStatus
+
+  """All values that are not equal to given value."""
+  status_not: MilestoneStatus
+
+  """All values that are contained in given list."""
+  status_in: [MilestoneStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [MilestoneStatus!]
+  dueDate: DateTime
+
+  """All values that are not equal to given value."""
+  dueDate_not: DateTime
+
+  """All values that are contained in given list."""
+  dueDate_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  dueDate_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  dueDate_lt: DateTime
+
+  """All values less than or equal the given value."""
+  dueDate_lte: DateTime
+
+  """All values greater than the given value."""
+  dueDate_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  dueDate_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+enum MilestoneStatus {
+  OPEN
+  DONE
+  CANCELED
+}
+
+type MilestoneSubscriptionPayload {
+  mutation: MutationType!
+  node: Milestone
+  updatedFields: [String!]
+  previousValues: MilestonePreviousValues
+}
+
+input MilestoneSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MilestoneSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MilestoneSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MilestoneSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: MilestoneWhereInput
+}
+
+input MilestoneUpdateInput {
+  name: String
+  description: String
+  status: MilestoneStatus
+  dueDate: DateTime
+  project: ProjectUpdateOneRequiredWithoutMilestonesInput
+  contributor: ContributorUpdateOneRequiredWithoutMilestonesInput
+}
+
+input MilestoneUpdateManyDataInput {
+  name: String
+  description: String
+  status: MilestoneStatus
+  dueDate: DateTime
+}
+
+input MilestoneUpdateManyMutationInput {
+  name: String
+  description: String
+  status: MilestoneStatus
+  dueDate: DateTime
+}
+
+input MilestoneUpdateManyWithoutContributorInput {
+  create: [MilestoneCreateWithoutContributorInput!]
+  connect: [MilestoneWhereUniqueInput!]
+  disconnect: [MilestoneWhereUniqueInput!]
+  delete: [MilestoneWhereUniqueInput!]
+  update: [MilestoneUpdateWithWhereUniqueWithoutContributorInput!]
+  updateMany: [MilestoneUpdateManyWithWhereNestedInput!]
+  deleteMany: [MilestoneScalarWhereInput!]
+  upsert: [MilestoneUpsertWithWhereUniqueWithoutContributorInput!]
+}
+
+input MilestoneUpdateManyWithoutProjectInput {
+  create: [MilestoneCreateWithoutProjectInput!]
+  connect: [MilestoneWhereUniqueInput!]
+  disconnect: [MilestoneWhereUniqueInput!]
+  delete: [MilestoneWhereUniqueInput!]
+  update: [MilestoneUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [MilestoneUpdateManyWithWhereNestedInput!]
+  deleteMany: [MilestoneScalarWhereInput!]
+  upsert: [MilestoneUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input MilestoneUpdateManyWithWhereNestedInput {
+  where: MilestoneScalarWhereInput!
+  data: MilestoneUpdateManyDataInput!
+}
+
+input MilestoneUpdateWithoutContributorDataInput {
+  name: String
+  description: String
+  status: MilestoneStatus
+  dueDate: DateTime
+  project: ProjectUpdateOneRequiredWithoutMilestonesInput
+}
+
+input MilestoneUpdateWithoutProjectDataInput {
+  name: String
+  description: String
+  status: MilestoneStatus
+  dueDate: DateTime
+  contributor: ContributorUpdateOneRequiredWithoutMilestonesInput
+}
+
+input MilestoneUpdateWithWhereUniqueWithoutContributorInput {
+  where: MilestoneWhereUniqueInput!
+  data: MilestoneUpdateWithoutContributorDataInput!
+}
+
+input MilestoneUpdateWithWhereUniqueWithoutProjectInput {
+  where: MilestoneWhereUniqueInput!
+  data: MilestoneUpdateWithoutProjectDataInput!
+}
+
+input MilestoneUpsertWithWhereUniqueWithoutContributorInput {
+  where: MilestoneWhereUniqueInput!
+  update: MilestoneUpdateWithoutContributorDataInput!
+  create: MilestoneCreateWithoutContributorInput!
+}
+
+input MilestoneUpsertWithWhereUniqueWithoutProjectInput {
+  where: MilestoneWhereUniqueInput!
+  update: MilestoneUpdateWithoutProjectDataInput!
+  create: MilestoneCreateWithoutProjectInput!
+}
+
+input MilestoneWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MilestoneWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MilestoneWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MilestoneWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  status: MilestoneStatus
+
+  """All values that are not equal to given value."""
+  status_not: MilestoneStatus
+
+  """All values that are contained in given list."""
+  status_in: [MilestoneStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [MilestoneStatus!]
+  dueDate: DateTime
+
+  """All values that are not equal to given value."""
+  dueDate_not: DateTime
+
+  """All values that are contained in given list."""
+  dueDate_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  dueDate_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  dueDate_lt: DateTime
+
+  """All values less than or equal the given value."""
+  dueDate_lte: DateTime
+
+  """All values greater than the given value."""
+  dueDate_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  dueDate_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  project: ProjectWhereInput
+  contributor: ContributorWhereInput
+}
+
+input MilestoneWhereUniqueInput {
+  id: ID
+}
+
 type Mutation {
   createUser(data: UserCreateInput!): User!
   createContributor(data: ContributorCreateInput!): Contributor!
   createContributorExperience(data: ContributorExperienceCreateInput!): ContributorExperience!
   createContributorFormation(data: ContributorFormationCreateInput!): ContributorFormation!
   createProject(data: ProjectCreateInput!): Project!
-  createProjectRoles(data: ProjectRolesCreateInput!): ProjectRoles!
+  createProjectRole(data: ProjectRoleCreateInput!): ProjectRole!
+  createProjectRoleContributor(data: ProjectRoleContributorCreateInput!): ProjectRoleContributor!
   createRole(data: RoleCreateInput!): Role!
   createRoleLevel(data: RoleLevelCreateInput!): RoleLevel!
+  createMilestone(data: MilestoneCreateInput!): Milestone!
   createLifecycle(data: LifecycleCreateInput!): Lifecycle!
   createFeature(data: FeatureCreateInput!): Feature!
   createEpic(data: EpicCreateInput!): Epic!
+  createUserStory(data: UserStoryCreateInput!): UserStory!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateContributor(data: ContributorUpdateInput!, where: ContributorWhereUniqueInput!): Contributor
   updateContributorExperience(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereUniqueInput!): ContributorExperience
   updateContributorFormation(data: ContributorFormationUpdateInput!, where: ContributorFormationWhereUniqueInput!): ContributorFormation
   updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
-  updateProjectRoles(data: ProjectRolesUpdateInput!, where: ProjectRolesWhereUniqueInput!): ProjectRoles
+  updateProjectRole(data: ProjectRoleUpdateInput!, where: ProjectRoleWhereUniqueInput!): ProjectRole
+  updateProjectRoleContributor(data: ProjectRoleContributorUpdateInput!, where: ProjectRoleContributorWhereUniqueInput!): ProjectRoleContributor
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateRoleLevel(data: RoleLevelUpdateInput!, where: RoleLevelWhereUniqueInput!): RoleLevel
+  updateMilestone(data: MilestoneUpdateInput!, where: MilestoneWhereUniqueInput!): Milestone
   updateLifecycle(data: LifecycleUpdateInput!, where: LifecycleWhereUniqueInput!): Lifecycle
   updateFeature(data: FeatureUpdateInput!, where: FeatureWhereUniqueInput!): Feature
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
+  updateUserStory(data: UserStoryUpdateInput!, where: UserStoryWhereUniqueInput!): UserStory
   deleteUser(where: UserWhereUniqueInput!): User
   deleteContributor(where: ContributorWhereUniqueInput!): Contributor
   deleteContributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
   deleteContributorFormation(where: ContributorFormationWhereUniqueInput!): ContributorFormation
   deleteProject(where: ProjectWhereUniqueInput!): Project
-  deleteProjectRoles(where: ProjectRolesWhereUniqueInput!): ProjectRoles
+  deleteProjectRole(where: ProjectRoleWhereUniqueInput!): ProjectRole
+  deleteProjectRoleContributor(where: ProjectRoleContributorWhereUniqueInput!): ProjectRoleContributor
   deleteRole(where: RoleWhereUniqueInput!): Role
   deleteRoleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
+  deleteMilestone(where: MilestoneWhereUniqueInput!): Milestone
   deleteLifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   deleteFeature(where: FeatureWhereUniqueInput!): Feature
   deleteEpic(where: EpicWhereUniqueInput!): Epic
+  deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertContributor(where: ContributorWhereUniqueInput!, create: ContributorCreateInput!, update: ContributorUpdateInput!): Contributor!
   upsertContributorExperience(where: ContributorExperienceWhereUniqueInput!, create: ContributorExperienceCreateInput!, update: ContributorExperienceUpdateInput!): ContributorExperience!
   upsertContributorFormation(where: ContributorFormationWhereUniqueInput!, create: ContributorFormationCreateInput!, update: ContributorFormationUpdateInput!): ContributorFormation!
   upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
-  upsertProjectRoles(where: ProjectRolesWhereUniqueInput!, create: ProjectRolesCreateInput!, update: ProjectRolesUpdateInput!): ProjectRoles!
+  upsertProjectRole(where: ProjectRoleWhereUniqueInput!, create: ProjectRoleCreateInput!, update: ProjectRoleUpdateInput!): ProjectRole!
+  upsertProjectRoleContributor(where: ProjectRoleContributorWhereUniqueInput!, create: ProjectRoleContributorCreateInput!, update: ProjectRoleContributorUpdateInput!): ProjectRoleContributor!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   upsertRoleLevel(where: RoleLevelWhereUniqueInput!, create: RoleLevelCreateInput!, update: RoleLevelUpdateInput!): RoleLevel!
+  upsertMilestone(where: MilestoneWhereUniqueInput!, create: MilestoneCreateInput!, update: MilestoneUpdateInput!): Milestone!
   upsertLifecycle(where: LifecycleWhereUniqueInput!, create: LifecycleCreateInput!, update: LifecycleUpdateInput!): Lifecycle!
   upsertFeature(where: FeatureWhereUniqueInput!, create: FeatureCreateInput!, update: FeatureUpdateInput!): Feature!
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
-  updateManyContributors(data: ContributorUpdateInput!, where: ContributorWhereInput): BatchPayload!
-  updateManyContributorExperiences(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereInput): BatchPayload!
-  updateManyContributorFormations(data: ContributorFormationUpdateInput!, where: ContributorFormationWhereInput): BatchPayload!
-  updateManyProjects(data: ProjectUpdateInput!, where: ProjectWhereInput): BatchPayload!
-  updateManyProjectRoleses(data: ProjectRolesUpdateInput!, where: ProjectRolesWhereInput): BatchPayload!
-  updateManyRoles(data: RoleUpdateInput!, where: RoleWhereInput): BatchPayload!
-  updateManyRoleLevels(data: RoleLevelUpdateInput!, where: RoleLevelWhereInput): BatchPayload!
-  updateManyLifecycles(data: LifecycleUpdateInput!, where: LifecycleWhereInput): BatchPayload!
-  updateManyFeatures(data: FeatureUpdateInput!, where: FeatureWhereInput): BatchPayload!
-  updateManyEpics(data: EpicUpdateInput!, where: EpicWhereInput): BatchPayload!
+  upsertUserStory(where: UserStoryWhereUniqueInput!, create: UserStoryCreateInput!, update: UserStoryUpdateInput!): UserStory!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyContributors(data: ContributorUpdateManyMutationInput!, where: ContributorWhereInput): BatchPayload!
+  updateManyContributorExperiences(data: ContributorExperienceUpdateManyMutationInput!, where: ContributorExperienceWhereInput): BatchPayload!
+  updateManyContributorFormations(data: ContributorFormationUpdateManyMutationInput!, where: ContributorFormationWhereInput): BatchPayload!
+  updateManyProjects(data: ProjectUpdateManyMutationInput!, where: ProjectWhereInput): BatchPayload!
+  updateManyProjectRoles(data: ProjectRoleUpdateManyMutationInput!, where: ProjectRoleWhereInput): BatchPayload!
+  updateManyProjectRoleContributors(data: ProjectRoleContributorUpdateManyMutationInput!, where: ProjectRoleContributorWhereInput): BatchPayload!
+  updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
+  updateManyRoleLevels(data: RoleLevelUpdateManyMutationInput!, where: RoleLevelWhereInput): BatchPayload!
+  updateManyMilestones(data: MilestoneUpdateManyMutationInput!, where: MilestoneWhereInput): BatchPayload!
+  updateManyLifecycles(data: LifecycleUpdateManyMutationInput!, where: LifecycleWhereInput): BatchPayload!
+  updateManyFeatures(data: FeatureUpdateManyMutationInput!, where: FeatureWhereInput): BatchPayload!
+  updateManyEpics(data: EpicUpdateManyMutationInput!, where: EpicWhereInput): BatchPayload!
+  updateManyUserStories(data: UserStoryUpdateManyMutationInput!, where: UserStoryWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyContributors(where: ContributorWhereInput): BatchPayload!
   deleteManyContributorExperiences(where: ContributorExperienceWhereInput): BatchPayload!
   deleteManyContributorFormations(where: ContributorFormationWhereInput): BatchPayload!
   deleteManyProjects(where: ProjectWhereInput): BatchPayload!
-  deleteManyProjectRoleses(where: ProjectRolesWhereInput): BatchPayload!
+  deleteManyProjectRoles(where: ProjectRoleWhereInput): BatchPayload!
+  deleteManyProjectRoleContributors(where: ProjectRoleContributorWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
   deleteManyRoleLevels(where: RoleLevelWhereInput): BatchPayload!
+  deleteManyMilestones(where: MilestoneWhereInput): BatchPayload!
   deleteManyLifecycles(where: LifecycleWhereInput): BatchPayload!
   deleteManyFeatures(where: FeatureWhereInput): BatchPayload!
   deleteManyEpics(where: EpicWhereInput): BatchPayload!
+  deleteManyUserStories(where: UserStoryWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -2850,11 +5247,14 @@ type Project implements Node {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature!]
   lifecycle: Lifecycle
-  projectRoles(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles!]
+  features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature!]
+  milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone!]
+  projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole!]
 }
 
 """A connection to a list of items."""
@@ -2877,9 +5277,12 @@ input ProjectCreateInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
-  features: FeatureCreateManyWithoutProjectInput
+  twProjectId: String
+  twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
-  projectRoles: ProjectRolesCreateManyWithoutProjectInput
+  features: FeatureCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
 input ProjectCreateManyWithoutLifecycleInput {
@@ -2889,6 +5292,11 @@ input ProjectCreateManyWithoutLifecycleInput {
 
 input ProjectCreateOneWithoutFeaturesInput {
   create: ProjectCreateWithoutFeaturesInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutMilestonesInput {
+  create: ProjectCreateWithoutMilestonesInput
   connect: ProjectWhereUniqueInput
 }
 
@@ -2907,8 +5315,11 @@ input ProjectCreateWithoutFeaturesInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
-  projectRoles: ProjectRolesCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutLifecycleInput {
@@ -2921,8 +5332,28 @@ input ProjectCreateWithoutLifecycleInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   features: FeatureCreateManyWithoutProjectInput
-  projectRoles: ProjectRolesCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutMilestonesInput {
+  name: String!
+  sponsor: String!
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
+  features: FeatureCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutProjectRolesInput {
@@ -2935,8 +5366,11 @@ input ProjectCreateWithoutProjectRolesInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
-  features: FeatureCreateManyWithoutProjectInput
+  twProjectId: String
+  twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  features: FeatureCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
 }
 
 """An edge in a connection."""
@@ -2969,6 +5403,10 @@ enum ProjectOrderByInput {
   startAt_DESC
   endAt_ASC
   endAt_DESC
+  twProjectId_ASC
+  twProjectId_DESC
+  twTaskListId_ASC
+  twTaskListId_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -2986,101 +5424,110 @@ type ProjectPreviousValues {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type ProjectRoles implements Node {
+type ProjectRole implements Node {
   id: ID!
-  role: Role!
-  project: Project!
-  contributor: Contributor
-  price: Float!
-  hours: Int!
-  startAt: DateTime!
-  endAt: DateTime!
+  estimatePrice: Float
+  estimateEffort: Int
   createdAt: DateTime!
   updatedAt: DateTime!
+  role: Role!
+  project: Project!
+  contributors(where: ProjectRoleContributorWhereInput, orderBy: ProjectRoleContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoleContributor!]
 }
 
 """A connection to a list of items."""
-type ProjectRolesConnection {
+type ProjectRoleConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [ProjectRolesEdge]!
-  aggregate: AggregateProjectRoles!
+  edges: [ProjectRoleEdge]!
+  aggregate: AggregateProjectRole!
 }
 
-input ProjectRolesCreateInput {
-  price: Float
-  hours: Int
+type ProjectRoleContributor implements Node {
+  id: ID!
+  price: Float!
+  estimateEffort: Int!
   startAt: DateTime!
   endAt: DateTime!
-  role: RoleCreateOneWithoutProjectRolesInput!
-  project: ProjectCreateOneWithoutProjectRolesInput!
-  contributor: ContributorCreateOneWithoutProjectRolesInput
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  roleLevel: RoleLevelType!
+  projectRole: ProjectRole!
+  contributor: Contributor!
 }
 
-input ProjectRolesCreateManyWithoutContributorInput {
-  create: [ProjectRolesCreateWithoutContributorInput!]
-  connect: [ProjectRolesWhereUniqueInput!]
+"""A connection to a list of items."""
+type ProjectRoleContributorConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProjectRoleContributorEdge]!
+  aggregate: AggregateProjectRoleContributor!
 }
 
-input ProjectRolesCreateManyWithoutProjectInput {
-  create: [ProjectRolesCreateWithoutProjectInput!]
-  connect: [ProjectRolesWhereUniqueInput!]
-}
-
-input ProjectRolesCreateManyWithoutRoleInput {
-  create: [ProjectRolesCreateWithoutRoleInput!]
-  connect: [ProjectRolesWhereUniqueInput!]
-}
-
-input ProjectRolesCreateWithoutContributorInput {
+input ProjectRoleContributorCreateInput {
   price: Float
-  hours: Int
+  estimateEffort: Int
   startAt: DateTime!
   endAt: DateTime!
-  role: RoleCreateOneWithoutProjectRolesInput!
-  project: ProjectCreateOneWithoutProjectRolesInput!
+  roleLevel: RoleLevelType!
+  projectRole: ProjectRoleCreateOneWithoutContributorsInput!
+  contributor: ContributorCreateOneWithoutProjectRolesInput!
 }
 
-input ProjectRolesCreateWithoutProjectInput {
-  price: Float
-  hours: Int
-  startAt: DateTime!
-  endAt: DateTime!
-  role: RoleCreateOneWithoutProjectRolesInput!
-  contributor: ContributorCreateOneWithoutProjectRolesInput
+input ProjectRoleContributorCreateManyWithoutContributorInput {
+  create: [ProjectRoleContributorCreateWithoutContributorInput!]
+  connect: [ProjectRoleContributorWhereUniqueInput!]
 }
 
-input ProjectRolesCreateWithoutRoleInput {
+input ProjectRoleContributorCreateManyWithoutProjectRoleInput {
+  create: [ProjectRoleContributorCreateWithoutProjectRoleInput!]
+  connect: [ProjectRoleContributorWhereUniqueInput!]
+}
+
+input ProjectRoleContributorCreateWithoutContributorInput {
   price: Float
-  hours: Int
+  estimateEffort: Int
   startAt: DateTime!
   endAt: DateTime!
-  project: ProjectCreateOneWithoutProjectRolesInput!
-  contributor: ContributorCreateOneWithoutProjectRolesInput
+  roleLevel: RoleLevelType!
+  projectRole: ProjectRoleCreateOneWithoutContributorsInput!
+}
+
+input ProjectRoleContributorCreateWithoutProjectRoleInput {
+  price: Float
+  estimateEffort: Int
+  startAt: DateTime!
+  endAt: DateTime!
+  roleLevel: RoleLevelType!
+  contributor: ContributorCreateOneWithoutProjectRolesInput!
 }
 
 """An edge in a connection."""
-type ProjectRolesEdge {
+type ProjectRoleContributorEdge {
   """The item at the end of the edge."""
-  node: ProjectRoles!
+  node: ProjectRoleContributor!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum ProjectRolesOrderByInput {
+enum ProjectRoleContributorOrderByInput {
   id_ASC
   id_DESC
   price_ASC
   price_DESC
-  hours_ASC
-  hours_DESC
+  estimateEffort_ASC
+  estimateEffort_DESC
   startAt_ASC
   startAt_DESC
   endAt_ASC
@@ -3089,163 +5536,30 @@ enum ProjectRolesOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  roleLevel_ASC
+  roleLevel_DESC
 }
 
-type ProjectRolesPreviousValues {
+type ProjectRoleContributorPreviousValues {
   id: ID!
   price: Float!
-  hours: Int!
+  estimateEffort: Int!
   startAt: DateTime!
   endAt: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleLevel: RoleLevelType!
 }
 
-type ProjectRolesSubscriptionPayload {
-  mutation: MutationType!
-  node: ProjectRoles
-  updatedFields: [String!]
-  previousValues: ProjectRolesPreviousValues
-}
-
-input ProjectRolesSubscriptionWhereInput {
+input ProjectRoleContributorScalarWhereInput {
   """Logical AND on all given filters."""
-  AND: [ProjectRolesSubscriptionWhereInput!]
+  AND: [ProjectRoleContributorScalarWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [ProjectRolesSubscriptionWhereInput!]
+  OR: [ProjectRoleContributorScalarWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [ProjectRolesSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: ProjectRolesWhereInput
-}
-
-input ProjectRolesUpdateInput {
-  price: Float
-  hours: Int
-  startAt: DateTime
-  endAt: DateTime
-  role: RoleUpdateOneRequiredWithoutProjectRolesInput
-  project: ProjectUpdateOneRequiredWithoutProjectRolesInput
-  contributor: ContributorUpdateOneWithoutProjectRolesInput
-}
-
-input ProjectRolesUpdateManyWithoutContributorInput {
-  create: [ProjectRolesCreateWithoutContributorInput!]
-  connect: [ProjectRolesWhereUniqueInput!]
-  disconnect: [ProjectRolesWhereUniqueInput!]
-  delete: [ProjectRolesWhereUniqueInput!]
-  update: [ProjectRolesUpdateWithWhereUniqueWithoutContributorInput!]
-  upsert: [ProjectRolesUpsertWithWhereUniqueWithoutContributorInput!]
-}
-
-input ProjectRolesUpdateManyWithoutProjectInput {
-  create: [ProjectRolesCreateWithoutProjectInput!]
-  connect: [ProjectRolesWhereUniqueInput!]
-  disconnect: [ProjectRolesWhereUniqueInput!]
-  delete: [ProjectRolesWhereUniqueInput!]
-  update: [ProjectRolesUpdateWithWhereUniqueWithoutProjectInput!]
-  upsert: [ProjectRolesUpsertWithWhereUniqueWithoutProjectInput!]
-}
-
-input ProjectRolesUpdateManyWithoutRoleInput {
-  create: [ProjectRolesCreateWithoutRoleInput!]
-  connect: [ProjectRolesWhereUniqueInput!]
-  disconnect: [ProjectRolesWhereUniqueInput!]
-  delete: [ProjectRolesWhereUniqueInput!]
-  update: [ProjectRolesUpdateWithWhereUniqueWithoutRoleInput!]
-  upsert: [ProjectRolesUpsertWithWhereUniqueWithoutRoleInput!]
-}
-
-input ProjectRolesUpdateWithoutContributorDataInput {
-  price: Float
-  hours: Int
-  startAt: DateTime
-  endAt: DateTime
-  role: RoleUpdateOneRequiredWithoutProjectRolesInput
-  project: ProjectUpdateOneRequiredWithoutProjectRolesInput
-}
-
-input ProjectRolesUpdateWithoutProjectDataInput {
-  price: Float
-  hours: Int
-  startAt: DateTime
-  endAt: DateTime
-  role: RoleUpdateOneRequiredWithoutProjectRolesInput
-  contributor: ContributorUpdateOneWithoutProjectRolesInput
-}
-
-input ProjectRolesUpdateWithoutRoleDataInput {
-  price: Float
-  hours: Int
-  startAt: DateTime
-  endAt: DateTime
-  project: ProjectUpdateOneRequiredWithoutProjectRolesInput
-  contributor: ContributorUpdateOneWithoutProjectRolesInput
-}
-
-input ProjectRolesUpdateWithWhereUniqueWithoutContributorInput {
-  where: ProjectRolesWhereUniqueInput!
-  data: ProjectRolesUpdateWithoutContributorDataInput!
-}
-
-input ProjectRolesUpdateWithWhereUniqueWithoutProjectInput {
-  where: ProjectRolesWhereUniqueInput!
-  data: ProjectRolesUpdateWithoutProjectDataInput!
-}
-
-input ProjectRolesUpdateWithWhereUniqueWithoutRoleInput {
-  where: ProjectRolesWhereUniqueInput!
-  data: ProjectRolesUpdateWithoutRoleDataInput!
-}
-
-input ProjectRolesUpsertWithWhereUniqueWithoutContributorInput {
-  where: ProjectRolesWhereUniqueInput!
-  update: ProjectRolesUpdateWithoutContributorDataInput!
-  create: ProjectRolesCreateWithoutContributorInput!
-}
-
-input ProjectRolesUpsertWithWhereUniqueWithoutProjectInput {
-  where: ProjectRolesWhereUniqueInput!
-  update: ProjectRolesUpdateWithoutProjectDataInput!
-  create: ProjectRolesCreateWithoutProjectInput!
-}
-
-input ProjectRolesUpsertWithWhereUniqueWithoutRoleInput {
-  where: ProjectRolesWhereUniqueInput!
-  update: ProjectRolesUpdateWithoutRoleDataInput!
-  create: ProjectRolesCreateWithoutRoleInput!
-}
-
-input ProjectRolesWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ProjectRolesWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ProjectRolesWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProjectRolesWhereInput!]
+  NOT: [ProjectRoleContributorScalarWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -3308,28 +5622,28 @@ input ProjectRolesWhereInput {
 
   """All values greater than or equal the given value."""
   price_gte: Float
-  hours: Int
+  estimateEffort: Int
 
   """All values that are not equal to given value."""
-  hours_not: Int
+  estimateEffort_not: Int
 
   """All values that are contained in given list."""
-  hours_in: [Int!]
+  estimateEffort_in: [Int!]
 
   """All values that are not contained in given list."""
-  hours_not_in: [Int!]
+  estimateEffort_not_in: [Int!]
 
   """All values less than the given value."""
-  hours_lt: Int
+  estimateEffort_lt: Int
 
   """All values less than or equal the given value."""
-  hours_lte: Int
+  estimateEffort_lte: Int
 
   """All values greater than the given value."""
-  hours_gt: Int
+  estimateEffort_gt: Int
 
   """All values greater than or equal the given value."""
-  hours_gte: Int
+  estimateEffort_gte: Int
   startAt: DateTime
 
   """All values that are not equal to given value."""
@@ -3418,13 +5732,1316 @@ input ProjectRolesWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  role: RoleWhereInput
-  project: ProjectWhereInput
+  roleLevel: RoleLevelType
+
+  """All values that are not equal to given value."""
+  roleLevel_not: RoleLevelType
+
+  """All values that are contained in given list."""
+  roleLevel_in: [RoleLevelType!]
+
+  """All values that are not contained in given list."""
+  roleLevel_not_in: [RoleLevelType!]
+}
+
+type ProjectRoleContributorSubscriptionPayload {
+  mutation: MutationType!
+  node: ProjectRoleContributor
+  updatedFields: [String!]
+  previousValues: ProjectRoleContributorPreviousValues
+}
+
+input ProjectRoleContributorSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectRoleContributorSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectRoleContributorSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectRoleContributorSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProjectRoleContributorWhereInput
+}
+
+input ProjectRoleContributorUpdateInput {
+  price: Float
+  estimateEffort: Int
+  startAt: DateTime
+  endAt: DateTime
+  roleLevel: RoleLevelType
+  projectRole: ProjectRoleUpdateOneRequiredWithoutContributorsInput
+  contributor: ContributorUpdateOneRequiredWithoutProjectRolesInput
+}
+
+input ProjectRoleContributorUpdateManyDataInput {
+  price: Float
+  estimateEffort: Int
+  startAt: DateTime
+  endAt: DateTime
+  roleLevel: RoleLevelType
+}
+
+input ProjectRoleContributorUpdateManyMutationInput {
+  price: Float
+  estimateEffort: Int
+  startAt: DateTime
+  endAt: DateTime
+  roleLevel: RoleLevelType
+}
+
+input ProjectRoleContributorUpdateManyWithoutContributorInput {
+  create: [ProjectRoleContributorCreateWithoutContributorInput!]
+  connect: [ProjectRoleContributorWhereUniqueInput!]
+  disconnect: [ProjectRoleContributorWhereUniqueInput!]
+  delete: [ProjectRoleContributorWhereUniqueInput!]
+  update: [ProjectRoleContributorUpdateWithWhereUniqueWithoutContributorInput!]
+  updateMany: [ProjectRoleContributorUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectRoleContributorScalarWhereInput!]
+  upsert: [ProjectRoleContributorUpsertWithWhereUniqueWithoutContributorInput!]
+}
+
+input ProjectRoleContributorUpdateManyWithoutProjectRoleInput {
+  create: [ProjectRoleContributorCreateWithoutProjectRoleInput!]
+  connect: [ProjectRoleContributorWhereUniqueInput!]
+  disconnect: [ProjectRoleContributorWhereUniqueInput!]
+  delete: [ProjectRoleContributorWhereUniqueInput!]
+  update: [ProjectRoleContributorUpdateWithWhereUniqueWithoutProjectRoleInput!]
+  updateMany: [ProjectRoleContributorUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectRoleContributorScalarWhereInput!]
+  upsert: [ProjectRoleContributorUpsertWithWhereUniqueWithoutProjectRoleInput!]
+}
+
+input ProjectRoleContributorUpdateManyWithWhereNestedInput {
+  where: ProjectRoleContributorScalarWhereInput!
+  data: ProjectRoleContributorUpdateManyDataInput!
+}
+
+input ProjectRoleContributorUpdateWithoutContributorDataInput {
+  price: Float
+  estimateEffort: Int
+  startAt: DateTime
+  endAt: DateTime
+  roleLevel: RoleLevelType
+  projectRole: ProjectRoleUpdateOneRequiredWithoutContributorsInput
+}
+
+input ProjectRoleContributorUpdateWithoutProjectRoleDataInput {
+  price: Float
+  estimateEffort: Int
+  startAt: DateTime
+  endAt: DateTime
+  roleLevel: RoleLevelType
+  contributor: ContributorUpdateOneRequiredWithoutProjectRolesInput
+}
+
+input ProjectRoleContributorUpdateWithWhereUniqueWithoutContributorInput {
+  where: ProjectRoleContributorWhereUniqueInput!
+  data: ProjectRoleContributorUpdateWithoutContributorDataInput!
+}
+
+input ProjectRoleContributorUpdateWithWhereUniqueWithoutProjectRoleInput {
+  where: ProjectRoleContributorWhereUniqueInput!
+  data: ProjectRoleContributorUpdateWithoutProjectRoleDataInput!
+}
+
+input ProjectRoleContributorUpsertWithWhereUniqueWithoutContributorInput {
+  where: ProjectRoleContributorWhereUniqueInput!
+  update: ProjectRoleContributorUpdateWithoutContributorDataInput!
+  create: ProjectRoleContributorCreateWithoutContributorInput!
+}
+
+input ProjectRoleContributorUpsertWithWhereUniqueWithoutProjectRoleInput {
+  where: ProjectRoleContributorWhereUniqueInput!
+  update: ProjectRoleContributorUpdateWithoutProjectRoleDataInput!
+  create: ProjectRoleContributorCreateWithoutProjectRoleInput!
+}
+
+input ProjectRoleContributorWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectRoleContributorWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectRoleContributorWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectRoleContributorWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  price: Float
+
+  """All values that are not equal to given value."""
+  price_not: Float
+
+  """All values that are contained in given list."""
+  price_in: [Float!]
+
+  """All values that are not contained in given list."""
+  price_not_in: [Float!]
+
+  """All values less than the given value."""
+  price_lt: Float
+
+  """All values less than or equal the given value."""
+  price_lte: Float
+
+  """All values greater than the given value."""
+  price_gt: Float
+
+  """All values greater than or equal the given value."""
+  price_gte: Float
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  roleLevel: RoleLevelType
+
+  """All values that are not equal to given value."""
+  roleLevel_not: RoleLevelType
+
+  """All values that are contained in given list."""
+  roleLevel_in: [RoleLevelType!]
+
+  """All values that are not contained in given list."""
+  roleLevel_not_in: [RoleLevelType!]
+  projectRole: ProjectRoleWhereInput
   contributor: ContributorWhereInput
 }
 
-input ProjectRolesWhereUniqueInput {
+input ProjectRoleContributorWhereUniqueInput {
   id: ID
+}
+
+input ProjectRoleCreateInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  role: RoleCreateOneWithoutProjectRolesInput!
+  project: ProjectCreateOneWithoutProjectRolesInput!
+  contributors: ProjectRoleContributorCreateManyWithoutProjectRoleInput
+}
+
+input ProjectRoleCreateManyWithoutProjectInput {
+  create: [ProjectRoleCreateWithoutProjectInput!]
+  connect: [ProjectRoleWhereUniqueInput!]
+}
+
+input ProjectRoleCreateManyWithoutRoleInput {
+  create: [ProjectRoleCreateWithoutRoleInput!]
+  connect: [ProjectRoleWhereUniqueInput!]
+}
+
+input ProjectRoleCreateOneWithoutContributorsInput {
+  create: ProjectRoleCreateWithoutContributorsInput
+  connect: ProjectRoleWhereUniqueInput
+}
+
+input ProjectRoleCreateWithoutContributorsInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  role: RoleCreateOneWithoutProjectRolesInput!
+  project: ProjectCreateOneWithoutProjectRolesInput!
+}
+
+input ProjectRoleCreateWithoutProjectInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  role: RoleCreateOneWithoutProjectRolesInput!
+  contributors: ProjectRoleContributorCreateManyWithoutProjectRoleInput
+}
+
+input ProjectRoleCreateWithoutRoleInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  project: ProjectCreateOneWithoutProjectRolesInput!
+  contributors: ProjectRoleContributorCreateManyWithoutProjectRoleInput
+}
+
+"""An edge in a connection."""
+type ProjectRoleEdge {
+  """The item at the end of the edge."""
+  node: ProjectRole!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ProjectRoleOrderByInput {
+  id_ASC
+  id_DESC
+  estimatePrice_ASC
+  estimatePrice_DESC
+  estimateEffort_ASC
+  estimateEffort_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ProjectRolePreviousValues {
+  id: ID!
+  estimatePrice: Float
+  estimateEffort: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input ProjectRoleScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectRoleScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectRoleScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectRoleScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  estimatePrice: Float
+
+  """All values that are not equal to given value."""
+  estimatePrice_not: Float
+
+  """All values that are contained in given list."""
+  estimatePrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  estimatePrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  estimatePrice_lt: Float
+
+  """All values less than or equal the given value."""
+  estimatePrice_lte: Float
+
+  """All values greater than the given value."""
+  estimatePrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  estimatePrice_gte: Float
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type ProjectRoleSubscriptionPayload {
+  mutation: MutationType!
+  node: ProjectRole
+  updatedFields: [String!]
+  previousValues: ProjectRolePreviousValues
+}
+
+input ProjectRoleSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectRoleSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectRoleSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectRoleSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProjectRoleWhereInput
+}
+
+input ProjectRoleUpdateInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  role: RoleUpdateOneRequiredWithoutProjectRolesInput
+  project: ProjectUpdateOneRequiredWithoutProjectRolesInput
+  contributors: ProjectRoleContributorUpdateManyWithoutProjectRoleInput
+}
+
+input ProjectRoleUpdateManyDataInput {
+  estimatePrice: Float
+  estimateEffort: Int
+}
+
+input ProjectRoleUpdateManyMutationInput {
+  estimatePrice: Float
+  estimateEffort: Int
+}
+
+input ProjectRoleUpdateManyWithoutProjectInput {
+  create: [ProjectRoleCreateWithoutProjectInput!]
+  connect: [ProjectRoleWhereUniqueInput!]
+  disconnect: [ProjectRoleWhereUniqueInput!]
+  delete: [ProjectRoleWhereUniqueInput!]
+  update: [ProjectRoleUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [ProjectRoleUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectRoleScalarWhereInput!]
+  upsert: [ProjectRoleUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input ProjectRoleUpdateManyWithoutRoleInput {
+  create: [ProjectRoleCreateWithoutRoleInput!]
+  connect: [ProjectRoleWhereUniqueInput!]
+  disconnect: [ProjectRoleWhereUniqueInput!]
+  delete: [ProjectRoleWhereUniqueInput!]
+  update: [ProjectRoleUpdateWithWhereUniqueWithoutRoleInput!]
+  updateMany: [ProjectRoleUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectRoleScalarWhereInput!]
+  upsert: [ProjectRoleUpsertWithWhereUniqueWithoutRoleInput!]
+}
+
+input ProjectRoleUpdateManyWithWhereNestedInput {
+  where: ProjectRoleScalarWhereInput!
+  data: ProjectRoleUpdateManyDataInput!
+}
+
+input ProjectRoleUpdateOneRequiredWithoutContributorsInput {
+  create: ProjectRoleCreateWithoutContributorsInput
+  connect: ProjectRoleWhereUniqueInput
+  update: ProjectRoleUpdateWithoutContributorsDataInput
+  upsert: ProjectRoleUpsertWithoutContributorsInput
+}
+
+input ProjectRoleUpdateWithoutContributorsDataInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  role: RoleUpdateOneRequiredWithoutProjectRolesInput
+  project: ProjectUpdateOneRequiredWithoutProjectRolesInput
+}
+
+input ProjectRoleUpdateWithoutProjectDataInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  role: RoleUpdateOneRequiredWithoutProjectRolesInput
+  contributors: ProjectRoleContributorUpdateManyWithoutProjectRoleInput
+}
+
+input ProjectRoleUpdateWithoutRoleDataInput {
+  estimatePrice: Float
+  estimateEffort: Int
+  project: ProjectUpdateOneRequiredWithoutProjectRolesInput
+  contributors: ProjectRoleContributorUpdateManyWithoutProjectRoleInput
+}
+
+input ProjectRoleUpdateWithWhereUniqueWithoutProjectInput {
+  where: ProjectRoleWhereUniqueInput!
+  data: ProjectRoleUpdateWithoutProjectDataInput!
+}
+
+input ProjectRoleUpdateWithWhereUniqueWithoutRoleInput {
+  where: ProjectRoleWhereUniqueInput!
+  data: ProjectRoleUpdateWithoutRoleDataInput!
+}
+
+input ProjectRoleUpsertWithoutContributorsInput {
+  update: ProjectRoleUpdateWithoutContributorsDataInput!
+  create: ProjectRoleCreateWithoutContributorsInput!
+}
+
+input ProjectRoleUpsertWithWhereUniqueWithoutProjectInput {
+  where: ProjectRoleWhereUniqueInput!
+  update: ProjectRoleUpdateWithoutProjectDataInput!
+  create: ProjectRoleCreateWithoutProjectInput!
+}
+
+input ProjectRoleUpsertWithWhereUniqueWithoutRoleInput {
+  where: ProjectRoleWhereUniqueInput!
+  update: ProjectRoleUpdateWithoutRoleDataInput!
+  create: ProjectRoleCreateWithoutRoleInput!
+}
+
+input ProjectRoleWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectRoleWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectRoleWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectRoleWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  estimatePrice: Float
+
+  """All values that are not equal to given value."""
+  estimatePrice_not: Float
+
+  """All values that are contained in given list."""
+  estimatePrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  estimatePrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  estimatePrice_lt: Float
+
+  """All values less than or equal the given value."""
+  estimatePrice_lte: Float
+
+  """All values greater than the given value."""
+  estimatePrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  estimatePrice_gte: Float
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  role: RoleWhereInput
+  project: ProjectWhereInput
+  contributors_every: ProjectRoleContributorWhereInput
+  contributors_some: ProjectRoleContributorWhereInput
+  contributors_none: ProjectRoleContributorWhereInput
+}
+
+input ProjectRoleWhereUniqueInput {
+  id: ID
+}
+
+input ProjectScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  sponsor: String
+
+  """All values that are not equal to given value."""
+  sponsor_not: String
+
+  """All values that are contained in given list."""
+  sponsor_in: [String!]
+
+  """All values that are not contained in given list."""
+  sponsor_not_in: [String!]
+
+  """All values less than the given value."""
+  sponsor_lt: String
+
+  """All values less than or equal the given value."""
+  sponsor_lte: String
+
+  """All values greater than the given value."""
+  sponsor_gt: String
+
+  """All values greater than or equal the given value."""
+  sponsor_gte: String
+
+  """All values containing the given string."""
+  sponsor_contains: String
+
+  """All values not containing the given string."""
+  sponsor_not_contains: String
+
+  """All values starting with the given string."""
+  sponsor_starts_with: String
+
+  """All values not starting with the given string."""
+  sponsor_not_starts_with: String
+
+  """All values ending with the given string."""
+  sponsor_ends_with: String
+
+  """All values not ending with the given string."""
+  sponsor_not_ends_with: String
+  objectives: String
+
+  """All values that are not equal to given value."""
+  objectives_not: String
+
+  """All values that are contained in given list."""
+  objectives_in: [String!]
+
+  """All values that are not contained in given list."""
+  objectives_not_in: [String!]
+
+  """All values less than the given value."""
+  objectives_lt: String
+
+  """All values less than or equal the given value."""
+  objectives_lte: String
+
+  """All values greater than the given value."""
+  objectives_gt: String
+
+  """All values greater than or equal the given value."""
+  objectives_gte: String
+
+  """All values containing the given string."""
+  objectives_contains: String
+
+  """All values not containing the given string."""
+  objectives_not_contains: String
+
+  """All values starting with the given string."""
+  objectives_starts_with: String
+
+  """All values not starting with the given string."""
+  objectives_not_starts_with: String
+
+  """All values ending with the given string."""
+  objectives_ends_with: String
+
+  """All values not ending with the given string."""
+  objectives_not_ends_with: String
+  motivations: String
+
+  """All values that are not equal to given value."""
+  motivations_not: String
+
+  """All values that are contained in given list."""
+  motivations_in: [String!]
+
+  """All values that are not contained in given list."""
+  motivations_not_in: [String!]
+
+  """All values less than the given value."""
+  motivations_lt: String
+
+  """All values less than or equal the given value."""
+  motivations_lte: String
+
+  """All values greater than the given value."""
+  motivations_gt: String
+
+  """All values greater than or equal the given value."""
+  motivations_gte: String
+
+  """All values containing the given string."""
+  motivations_contains: String
+
+  """All values not containing the given string."""
+  motivations_not_contains: String
+
+  """All values starting with the given string."""
+  motivations_starts_with: String
+
+  """All values not starting with the given string."""
+  motivations_not_starts_with: String
+
+  """All values ending with the given string."""
+  motivations_ends_with: String
+
+  """All values not ending with the given string."""
+  motivations_not_ends_with: String
+  limitations: String
+
+  """All values that are not equal to given value."""
+  limitations_not: String
+
+  """All values that are contained in given list."""
+  limitations_in: [String!]
+
+  """All values that are not contained in given list."""
+  limitations_not_in: [String!]
+
+  """All values less than the given value."""
+  limitations_lt: String
+
+  """All values less than or equal the given value."""
+  limitations_lte: String
+
+  """All values greater than the given value."""
+  limitations_gt: String
+
+  """All values greater than or equal the given value."""
+  limitations_gte: String
+
+  """All values containing the given string."""
+  limitations_contains: String
+
+  """All values not containing the given string."""
+  limitations_not_contains: String
+
+  """All values starting with the given string."""
+  limitations_starts_with: String
+
+  """All values not starting with the given string."""
+  limitations_not_starts_with: String
+
+  """All values ending with the given string."""
+  limitations_ends_with: String
+
+  """All values not ending with the given string."""
+  limitations_not_ends_with: String
+  restrictions: String
+
+  """All values that are not equal to given value."""
+  restrictions_not: String
+
+  """All values that are contained in given list."""
+  restrictions_in: [String!]
+
+  """All values that are not contained in given list."""
+  restrictions_not_in: [String!]
+
+  """All values less than the given value."""
+  restrictions_lt: String
+
+  """All values less than or equal the given value."""
+  restrictions_lte: String
+
+  """All values greater than the given value."""
+  restrictions_gt: String
+
+  """All values greater than or equal the given value."""
+  restrictions_gte: String
+
+  """All values containing the given string."""
+  restrictions_contains: String
+
+  """All values not containing the given string."""
+  restrictions_not_contains: String
+
+  """All values starting with the given string."""
+  restrictions_starts_with: String
+
+  """All values not starting with the given string."""
+  restrictions_not_starts_with: String
+
+  """All values ending with the given string."""
+  restrictions_ends_with: String
+
+  """All values not ending with the given string."""
+  restrictions_not_ends_with: String
+  status: ProjectStatus
+
+  """All values that are not equal to given value."""
+  status_not: ProjectStatus
+
+  """All values that are contained in given list."""
+  status_in: [ProjectStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [ProjectStatus!]
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  twProjectId: String
+
+  """All values that are not equal to given value."""
+  twProjectId_not: String
+
+  """All values that are contained in given list."""
+  twProjectId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twProjectId_not_in: [String!]
+
+  """All values less than the given value."""
+  twProjectId_lt: String
+
+  """All values less than or equal the given value."""
+  twProjectId_lte: String
+
+  """All values greater than the given value."""
+  twProjectId_gt: String
+
+  """All values greater than or equal the given value."""
+  twProjectId_gte: String
+
+  """All values containing the given string."""
+  twProjectId_contains: String
+
+  """All values not containing the given string."""
+  twProjectId_not_contains: String
+
+  """All values starting with the given string."""
+  twProjectId_starts_with: String
+
+  """All values not starting with the given string."""
+  twProjectId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twProjectId_ends_with: String
+
+  """All values not ending with the given string."""
+  twProjectId_not_ends_with: String
+  twTaskListId: String
+
+  """All values that are not equal to given value."""
+  twTaskListId_not: String
+
+  """All values that are contained in given list."""
+  twTaskListId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskListId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskListId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskListId_lte: String
+
+  """All values greater than the given value."""
+  twTaskListId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskListId_gte: String
+
+  """All values containing the given string."""
+  twTaskListId_contains: String
+
+  """All values not containing the given string."""
+  twTaskListId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskListId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskListId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskListId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskListId_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
 }
 
 enum ProjectStatus {
@@ -3485,9 +7102,40 @@ input ProjectUpdateInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
-  features: FeatureUpdateManyWithoutProjectInput
+  twProjectId: String
+  twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
-  projectRoles: ProjectRolesUpdateManyWithoutProjectInput
+  features: FeatureUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateManyDataInput {
+  name: String
+  sponsor: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+}
+
+input ProjectUpdateManyMutationInput {
+  name: String
+  sponsor: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
 }
 
 input ProjectUpdateManyWithoutLifecycleInput {
@@ -3496,7 +7144,14 @@ input ProjectUpdateManyWithoutLifecycleInput {
   disconnect: [ProjectWhereUniqueInput!]
   delete: [ProjectWhereUniqueInput!]
   update: [ProjectUpdateWithWhereUniqueWithoutLifecycleInput!]
+  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectScalarWhereInput!]
   upsert: [ProjectUpsertWithWhereUniqueWithoutLifecycleInput!]
+}
+
+input ProjectUpdateManyWithWhereNestedInput {
+  where: ProjectScalarWhereInput!
+  data: ProjectUpdateManyDataInput!
 }
 
 input ProjectUpdateOneRequiredWithoutFeaturesInput {
@@ -3504,6 +7159,13 @@ input ProjectUpdateOneRequiredWithoutFeaturesInput {
   connect: ProjectWhereUniqueInput
   update: ProjectUpdateWithoutFeaturesDataInput
   upsert: ProjectUpsertWithoutFeaturesInput
+}
+
+input ProjectUpdateOneRequiredWithoutMilestonesInput {
+  create: ProjectCreateWithoutMilestonesInput
+  connect: ProjectWhereUniqueInput
+  update: ProjectUpdateWithoutMilestonesDataInput
+  upsert: ProjectUpsertWithoutMilestonesInput
 }
 
 input ProjectUpdateOneRequiredWithoutProjectRolesInput {
@@ -3523,8 +7185,11 @@ input ProjectUpdateWithoutFeaturesDataInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
-  projectRoles: ProjectRolesUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateWithoutLifecycleDataInput {
@@ -3537,8 +7202,28 @@ input ProjectUpdateWithoutLifecycleDataInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
   features: FeatureUpdateManyWithoutProjectInput
-  projectRoles: ProjectRolesUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutMilestonesDataInput {
+  name: String
+  sponsor: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  features: FeatureUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateWithoutProjectRolesDataInput {
@@ -3551,8 +7236,11 @@ input ProjectUpdateWithoutProjectRolesDataInput {
   status: ProjectStatus
   startAt: DateTime
   endAt: DateTime
-  features: FeatureUpdateManyWithoutProjectInput
+  twProjectId: String
+  twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  features: FeatureUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
@@ -3563,6 +7251,11 @@ input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
 input ProjectUpsertWithoutFeaturesInput {
   update: ProjectUpdateWithoutFeaturesDataInput!
   create: ProjectCreateWithoutFeaturesInput!
+}
+
+input ProjectUpsertWithoutMilestonesInput {
+  update: ProjectUpdateWithoutMilestonesDataInput!
+  create: ProjectCreateWithoutMilestonesInput!
 }
 
 input ProjectUpsertWithoutProjectRolesInput {
@@ -3919,6 +7612,86 @@ input ProjectWhereInput {
 
   """All values greater than or equal the given value."""
   endAt_gte: DateTime
+  twProjectId: String
+
+  """All values that are not equal to given value."""
+  twProjectId_not: String
+
+  """All values that are contained in given list."""
+  twProjectId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twProjectId_not_in: [String!]
+
+  """All values less than the given value."""
+  twProjectId_lt: String
+
+  """All values less than or equal the given value."""
+  twProjectId_lte: String
+
+  """All values greater than the given value."""
+  twProjectId_gt: String
+
+  """All values greater than or equal the given value."""
+  twProjectId_gte: String
+
+  """All values containing the given string."""
+  twProjectId_contains: String
+
+  """All values not containing the given string."""
+  twProjectId_not_contains: String
+
+  """All values starting with the given string."""
+  twProjectId_starts_with: String
+
+  """All values not starting with the given string."""
+  twProjectId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twProjectId_ends_with: String
+
+  """All values not ending with the given string."""
+  twProjectId_not_ends_with: String
+  twTaskListId: String
+
+  """All values that are not equal to given value."""
+  twTaskListId_not: String
+
+  """All values that are contained in given list."""
+  twTaskListId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskListId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskListId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskListId_lte: String
+
+  """All values greater than the given value."""
+  twTaskListId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskListId_gte: String
+
+  """All values containing the given string."""
+  twTaskListId_contains: String
+
+  """All values not containing the given string."""
+  twTaskListId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskListId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskListId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskListId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskListId_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -3963,13 +7736,16 @@ input ProjectWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  lifecycle: LifecycleWhereInput
   features_every: FeatureWhereInput
   features_some: FeatureWhereInput
   features_none: FeatureWhereInput
-  lifecycle: LifecycleWhereInput
-  projectRoles_every: ProjectRolesWhereInput
-  projectRoles_some: ProjectRolesWhereInput
-  projectRoles_none: ProjectRolesWhereInput
+  milestones_every: MilestoneWhereInput
+  milestones_some: MilestoneWhereInput
+  milestones_none: MilestoneWhereInput
+  projectRoles_every: ProjectRoleWhereInput
+  projectRoles_some: ProjectRoleWhereInput
+  projectRoles_none: ProjectRoleWhereInput
 }
 
 input ProjectWhereUniqueInput {
@@ -3982,34 +7758,43 @@ type Query {
   contributorExperiences(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorExperience]!
   contributorFormations(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorFormation]!
   projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
-  projectRoleses(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles]!
+  projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole]!
+  projectRoleContributors(where: ProjectRoleContributorWhereInput, orderBy: ProjectRoleContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoleContributor]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   roleLevels(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleLevel]!
+  milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone]!
   lifecycles(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Lifecycle]!
   features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature]!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
+  userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory]!
   user(where: UserWhereUniqueInput!): User
   contributor(where: ContributorWhereUniqueInput!): Contributor
   contributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
   contributorFormation(where: ContributorFormationWhereUniqueInput!): ContributorFormation
   project(where: ProjectWhereUniqueInput!): Project
-  projectRoles(where: ProjectRolesWhereUniqueInput!): ProjectRoles
+  projectRole(where: ProjectRoleWhereUniqueInput!): ProjectRole
+  projectRoleContributor(where: ProjectRoleContributorWhereUniqueInput!): ProjectRoleContributor
   role(where: RoleWhereUniqueInput!): Role
   roleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
+  milestone(where: MilestoneWhereUniqueInput!): Milestone
   lifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   feature(where: FeatureWhereUniqueInput!): Feature
   epic(where: EpicWhereUniqueInput!): Epic
+  userStory(where: UserStoryWhereUniqueInput!): UserStory
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   contributorsConnection(where: ContributorWhereInput, orderBy: ContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorConnection!
   contributorExperiencesConnection(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorExperienceConnection!
   contributorFormationsConnection(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorFormationConnection!
   projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
-  projectRolesesConnection(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRolesConnection!
+  projectRolesConnection(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRoleConnection!
+  projectRoleContributorsConnection(where: ProjectRoleContributorWhereInput, orderBy: ProjectRoleContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRoleContributorConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   roleLevelsConnection(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleLevelConnection!
+  milestonesConnection(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MilestoneConnection!
   lifecyclesConnection(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LifecycleConnection!
   featuresConnection(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeatureConnection!
   epicsConnection(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EpicConnection!
+  userStoriesConnection(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserStoryConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -4026,7 +7811,7 @@ type Role implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   roleLevels(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleLevel!]
-  projectRoles(where: ProjectRolesWhereInput, orderBy: ProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoles!]
+  projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole!]
 }
 
 """A connection to a list of items."""
@@ -4044,7 +7829,7 @@ input RoleCreateInput {
   description: String
   department: String
   roleLevels: RoleLevelCreateManyWithoutRoleInput
-  projectRoles: ProjectRolesCreateManyWithoutRoleInput
+  projectRoles: ProjectRoleCreateManyWithoutRoleInput
 }
 
 input RoleCreateOneWithoutProjectRolesInput {
@@ -4068,7 +7853,7 @@ input RoleCreateWithoutRoleLevelsInput {
   name: String!
   description: String
   department: String
-  projectRoles: ProjectRolesCreateManyWithoutRoleInput
+  projectRoles: ProjectRoleCreateManyWithoutRoleInput
 }
 
 """An edge in a connection."""
@@ -4157,6 +7942,195 @@ type RoleLevelPreviousValues {
   updatedAt: DateTime!
 }
 
+input RoleLevelScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoleLevelScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoleLevelScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoleLevelScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  level: RoleLevelType
+
+  """All values that are not equal to given value."""
+  level_not: RoleLevelType
+
+  """All values that are contained in given list."""
+  level_in: [RoleLevelType!]
+
+  """All values that are not contained in given list."""
+  level_not_in: [RoleLevelType!]
+  experience: String
+
+  """All values that are not equal to given value."""
+  experience_not: String
+
+  """All values that are contained in given list."""
+  experience_in: [String!]
+
+  """All values that are not contained in given list."""
+  experience_not_in: [String!]
+
+  """All values less than the given value."""
+  experience_lt: String
+
+  """All values less than or equal the given value."""
+  experience_lte: String
+
+  """All values greater than the given value."""
+  experience_gt: String
+
+  """All values greater than or equal the given value."""
+  experience_gte: String
+
+  """All values containing the given string."""
+  experience_contains: String
+
+  """All values not containing the given string."""
+  experience_not_contains: String
+
+  """All values starting with the given string."""
+  experience_starts_with: String
+
+  """All values not starting with the given string."""
+  experience_not_starts_with: String
+
+  """All values ending with the given string."""
+  experience_ends_with: String
+
+  """All values not ending with the given string."""
+  experience_not_ends_with: String
+  priceMin: Float
+
+  """All values that are not equal to given value."""
+  priceMin_not: Float
+
+  """All values that are contained in given list."""
+  priceMin_in: [Float!]
+
+  """All values that are not contained in given list."""
+  priceMin_not_in: [Float!]
+
+  """All values less than the given value."""
+  priceMin_lt: Float
+
+  """All values less than or equal the given value."""
+  priceMin_lte: Float
+
+  """All values greater than the given value."""
+  priceMin_gt: Float
+
+  """All values greater than or equal the given value."""
+  priceMin_gte: Float
+  priceMax: Float
+
+  """All values that are not equal to given value."""
+  priceMax_not: Float
+
+  """All values that are contained in given list."""
+  priceMax_in: [Float!]
+
+  """All values that are not contained in given list."""
+  priceMax_not_in: [Float!]
+
+  """All values less than the given value."""
+  priceMax_lt: Float
+
+  """All values less than or equal the given value."""
+  priceMax_lte: Float
+
+  """All values greater than the given value."""
+  priceMax_gt: Float
+
+  """All values greater than or equal the given value."""
+  priceMax_gte: Float
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
 type RoleLevelSubscriptionPayload {
   mutation: MutationType!
   node: RoleLevel
@@ -4212,13 +8186,34 @@ input RoleLevelUpdateInput {
   role: RoleUpdateOneRequiredWithoutRoleLevelsInput
 }
 
+input RoleLevelUpdateManyDataInput {
+  level: RoleLevelType
+  experience: String
+  priceMin: Float
+  priceMax: Float
+}
+
+input RoleLevelUpdateManyMutationInput {
+  level: RoleLevelType
+  experience: String
+  priceMin: Float
+  priceMax: Float
+}
+
 input RoleLevelUpdateManyWithoutRoleInput {
   create: [RoleLevelCreateWithoutRoleInput!]
   connect: [RoleLevelWhereUniqueInput!]
   disconnect: [RoleLevelWhereUniqueInput!]
   delete: [RoleLevelWhereUniqueInput!]
   update: [RoleLevelUpdateWithWhereUniqueWithoutRoleInput!]
+  updateMany: [RoleLevelUpdateManyWithWhereNestedInput!]
+  deleteMany: [RoleLevelScalarWhereInput!]
   upsert: [RoleLevelUpsertWithWhereUniqueWithoutRoleInput!]
+}
+
+input RoleLevelUpdateManyWithWhereNestedInput {
+  where: RoleLevelScalarWhereInput!
+  data: RoleLevelUpdateManyDataInput!
 }
 
 input RoleLevelUpdateWithoutRoleDataInput {
@@ -4501,7 +8496,13 @@ input RoleUpdateInput {
   description: String
   department: String
   roleLevels: RoleLevelUpdateManyWithoutRoleInput
-  projectRoles: ProjectRolesUpdateManyWithoutRoleInput
+  projectRoles: ProjectRoleUpdateManyWithoutRoleInput
+}
+
+input RoleUpdateManyMutationInput {
+  name: String
+  description: String
+  department: String
 }
 
 input RoleUpdateOneRequiredWithoutProjectRolesInput {
@@ -4529,7 +8530,7 @@ input RoleUpdateWithoutRoleLevelsDataInput {
   name: String
   description: String
   department: String
-  projectRoles: ProjectRolesUpdateManyWithoutRoleInput
+  projectRoles: ProjectRoleUpdateManyWithoutRoleInput
 }
 
 input RoleUpsertWithoutProjectRolesInput {
@@ -4758,9 +8759,9 @@ input RoleWhereInput {
   roleLevels_every: RoleLevelWhereInput
   roleLevels_some: RoleLevelWhereInput
   roleLevels_none: RoleLevelWhereInput
-  projectRoles_every: ProjectRolesWhereInput
-  projectRoles_some: ProjectRolesWhereInput
-  projectRoles_none: ProjectRolesWhereInput
+  projectRoles_every: ProjectRoleWhereInput
+  projectRoles_some: ProjectRoleWhereInput
+  projectRoles_none: ProjectRoleWhereInput
 }
 
 input RoleWhereUniqueInput {
@@ -4773,12 +8774,15 @@ type Subscription {
   contributorExperience(where: ContributorExperienceSubscriptionWhereInput): ContributorExperienceSubscriptionPayload
   contributorFormation(where: ContributorFormationSubscriptionWhereInput): ContributorFormationSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
-  projectRoles(where: ProjectRolesSubscriptionWhereInput): ProjectRolesSubscriptionPayload
+  projectRole(where: ProjectRoleSubscriptionWhereInput): ProjectRoleSubscriptionPayload
+  projectRoleContributor(where: ProjectRoleContributorSubscriptionWhereInput): ProjectRoleContributorSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
   roleLevel(where: RoleLevelSubscriptionWhereInput): RoleLevelSubscriptionPayload
+  milestone(where: MilestoneSubscriptionWhereInput): MilestoneSubscriptionPayload
   lifecycle(where: LifecycleSubscriptionWhereInput): LifecycleSubscriptionPayload
   feature(where: FeatureSubscriptionWhereInput): FeatureSubscriptionPayload
   epic(where: EpicSubscriptionWhereInput): EpicSubscriptionPayload
+  userStory(where: UserStorySubscriptionWhereInput): UserStorySubscriptionPayload
 }
 
 type User implements Node {
@@ -4839,6 +8843,819 @@ type UserPreviousValues {
   updatedAt: DateTime!
 }
 
+type UserStory implements Node {
+  id: ID!
+  name: String!
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  epic: Epic!
+}
+
+"""A connection to a list of items."""
+type UserStoryConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [UserStoryEdge]!
+  aggregate: AggregateUserStory!
+}
+
+input UserStoryCreateInput {
+  name: String!
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  epic: EpicCreateOneWithoutUserStoriesInput!
+}
+
+input UserStoryCreateManyWithoutEpicInput {
+  create: [UserStoryCreateWithoutEpicInput!]
+  connect: [UserStoryWhereUniqueInput!]
+}
+
+input UserStoryCreateWithoutEpicInput {
+  name: String!
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+}
+
+"""An edge in a connection."""
+type UserStoryEdge {
+  """The item at the end of the edge."""
+  node: UserStory!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum UserStoryOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  priority_ASC
+  priority_DESC
+  estimateEffort_ASC
+  estimateEffort_DESC
+  estimateStart_ASC
+  estimateStart_DESC
+  estimateEnd_ASC
+  estimateEnd_DESC
+  twTaskId_ASC
+  twTaskId_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type UserStoryPreviousValues {
+  id: ID!
+  name: String!
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input UserStoryScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserStoryScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserStoryScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserStoryScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  priority: Int
+
+  """All values that are not equal to given value."""
+  priority_not: Int
+
+  """All values that are contained in given list."""
+  priority_in: [Int!]
+
+  """All values that are not contained in given list."""
+  priority_not_in: [Int!]
+
+  """All values less than the given value."""
+  priority_lt: Int
+
+  """All values less than or equal the given value."""
+  priority_lte: Int
+
+  """All values greater than the given value."""
+  priority_gt: Int
+
+  """All values greater than or equal the given value."""
+  priority_gte: Int
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  estimateStart: DateTime
+
+  """All values that are not equal to given value."""
+  estimateStart_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateStart_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateStart_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateStart_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateStart_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateStart_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateStart_gte: DateTime
+  estimateEnd: DateTime
+
+  """All values that are not equal to given value."""
+  estimateEnd_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateEnd_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateEnd_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateEnd_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateEnd_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateEnd_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateEnd_gte: DateTime
+  twTaskId: String
+
+  """All values that are not equal to given value."""
+  twTaskId_not: String
+
+  """All values that are contained in given list."""
+  twTaskId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskId_lte: String
+
+  """All values greater than the given value."""
+  twTaskId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskId_gte: String
+
+  """All values containing the given string."""
+  twTaskId_contains: String
+
+  """All values not containing the given string."""
+  twTaskId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskId_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type UserStorySubscriptionPayload {
+  mutation: MutationType!
+  node: UserStory
+  updatedFields: [String!]
+  previousValues: UserStoryPreviousValues
+}
+
+input UserStorySubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserStorySubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserStorySubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserStorySubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: UserStoryWhereInput
+}
+
+input UserStoryUpdateInput {
+  name: String
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  epic: EpicUpdateOneRequiredWithoutUserStoriesInput
+}
+
+input UserStoryUpdateManyDataInput {
+  name: String
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+}
+
+input UserStoryUpdateManyMutationInput {
+  name: String
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+}
+
+input UserStoryUpdateManyWithoutEpicInput {
+  create: [UserStoryCreateWithoutEpicInput!]
+  connect: [UserStoryWhereUniqueInput!]
+  disconnect: [UserStoryWhereUniqueInput!]
+  delete: [UserStoryWhereUniqueInput!]
+  update: [UserStoryUpdateWithWhereUniqueWithoutEpicInput!]
+  updateMany: [UserStoryUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserStoryScalarWhereInput!]
+  upsert: [UserStoryUpsertWithWhereUniqueWithoutEpicInput!]
+}
+
+input UserStoryUpdateManyWithWhereNestedInput {
+  where: UserStoryScalarWhereInput!
+  data: UserStoryUpdateManyDataInput!
+}
+
+input UserStoryUpdateWithoutEpicDataInput {
+  name: String
+  description: String
+  priority: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+}
+
+input UserStoryUpdateWithWhereUniqueWithoutEpicInput {
+  where: UserStoryWhereUniqueInput!
+  data: UserStoryUpdateWithoutEpicDataInput!
+}
+
+input UserStoryUpsertWithWhereUniqueWithoutEpicInput {
+  where: UserStoryWhereUniqueInput!
+  update: UserStoryUpdateWithoutEpicDataInput!
+  create: UserStoryCreateWithoutEpicInput!
+}
+
+input UserStoryWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserStoryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserStoryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserStoryWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  priority: Int
+
+  """All values that are not equal to given value."""
+  priority_not: Int
+
+  """All values that are contained in given list."""
+  priority_in: [Int!]
+
+  """All values that are not contained in given list."""
+  priority_not_in: [Int!]
+
+  """All values less than the given value."""
+  priority_lt: Int
+
+  """All values less than or equal the given value."""
+  priority_lte: Int
+
+  """All values greater than the given value."""
+  priority_gt: Int
+
+  """All values greater than or equal the given value."""
+  priority_gte: Int
+  estimateEffort: Int
+
+  """All values that are not equal to given value."""
+  estimateEffort_not: Int
+
+  """All values that are contained in given list."""
+  estimateEffort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  estimateEffort_not_in: [Int!]
+
+  """All values less than the given value."""
+  estimateEffort_lt: Int
+
+  """All values less than or equal the given value."""
+  estimateEffort_lte: Int
+
+  """All values greater than the given value."""
+  estimateEffort_gt: Int
+
+  """All values greater than or equal the given value."""
+  estimateEffort_gte: Int
+  estimateStart: DateTime
+
+  """All values that are not equal to given value."""
+  estimateStart_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateStart_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateStart_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateStart_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateStart_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateStart_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateStart_gte: DateTime
+  estimateEnd: DateTime
+
+  """All values that are not equal to given value."""
+  estimateEnd_not: DateTime
+
+  """All values that are contained in given list."""
+  estimateEnd_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  estimateEnd_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  estimateEnd_lt: DateTime
+
+  """All values less than or equal the given value."""
+  estimateEnd_lte: DateTime
+
+  """All values greater than the given value."""
+  estimateEnd_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  estimateEnd_gte: DateTime
+  twTaskId: String
+
+  """All values that are not equal to given value."""
+  twTaskId_not: String
+
+  """All values that are contained in given list."""
+  twTaskId_in: [String!]
+
+  """All values that are not contained in given list."""
+  twTaskId_not_in: [String!]
+
+  """All values less than the given value."""
+  twTaskId_lt: String
+
+  """All values less than or equal the given value."""
+  twTaskId_lte: String
+
+  """All values greater than the given value."""
+  twTaskId_gt: String
+
+  """All values greater than or equal the given value."""
+  twTaskId_gte: String
+
+  """All values containing the given string."""
+  twTaskId_contains: String
+
+  """All values not containing the given string."""
+  twTaskId_not_contains: String
+
+  """All values starting with the given string."""
+  twTaskId_starts_with: String
+
+  """All values not starting with the given string."""
+  twTaskId_not_starts_with: String
+
+  """All values ending with the given string."""
+  twTaskId_ends_with: String
+
+  """All values not ending with the given string."""
+  twTaskId_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  epic: EpicWhereInput
+}
+
+input UserStoryWhereUniqueInput {
+  id: ID
+}
+
 type UserSubscriptionPayload {
   mutation: MutationType!
   node: User
@@ -4879,6 +9696,12 @@ input UserSubscriptionWhereInput {
 }
 
 input UserUpdateInput {
+  name: String
+  email: String
+  password: String
+}
+
+input UserUpdateManyMutationInput {
   name: String
   email: String
   password: String
