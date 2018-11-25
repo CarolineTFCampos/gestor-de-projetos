@@ -33,6 +33,7 @@ class ContributorsEdit extends Component {
           data: {
             name: values.name,
             email: values.email,
+            emailPrivate: values.emailPrivate,
             doc: values.doc,
             price: values.price,
             experiences: {
@@ -119,33 +120,32 @@ class ContributorsEdit extends Component {
 
         {this.props.data && this.props.data.loading && <Loading />}
 
-        {this.props.data &&
-          this.props.data.contributor && (
-            <ContributorsForm
-              onSubmit={this.handleSubmit}
-              initialValues={{
-                ...this.props.data.contributor,
-                experiences: this.props.data.contributor.experiences.map(
-                  function(experience) {
-                    return {
-                      ...experience,
-                      startAt: moment(experience.startAt),
-                      endAt: moment(experience.endAt)
-                    }
-                  }
-                ),
-                formations: this.props.data.contributor.formations.map(function(
-                  formation
-                ) {
-                  return {
-                    ...formation,
-                    startAt: moment(formation.startAt),
-                    endAt: moment(formation.endAt)
-                  }
-                })
-              }}
-            />
-          )}
+        {this.props.data && this.props.data.contributor && (
+          <ContributorsForm
+            onSubmit={this.handleSubmit}
+            initialValues={{
+              ...this.props.data.contributor,
+              experiences: this.props.data.contributor.experiences.map(function(
+                experience
+              ) {
+                return {
+                  ...experience,
+                  startAt: moment(experience.startAt),
+                  endAt: moment(experience.endAt)
+                }
+              }),
+              formations: this.props.data.contributor.formations.map(function(
+                formation
+              ) {
+                return {
+                  ...formation,
+                  startAt: moment(formation.startAt),
+                  endAt: moment(formation.endAt)
+                }
+              })
+            }}
+          />
+        )}
       </>
     )
   }
@@ -157,6 +157,7 @@ const GET_CONTRIBUTOR = gql`
       id
       name
       email
+      emailPrivate
       doc
       price
       active
@@ -193,6 +194,7 @@ const UPDATE_CONTRIBUTOR = gql`
       name
       doc
       email
+      emailPrivate
       price
       createdAt
       updatedAt

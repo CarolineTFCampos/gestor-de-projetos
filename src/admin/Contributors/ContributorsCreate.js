@@ -97,6 +97,7 @@ const CREATE_CONTRIBUTOR = gql`
       id
       name
       email
+      emailPrivate
       doc
       price
       active

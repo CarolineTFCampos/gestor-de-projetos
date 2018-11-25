@@ -46,6 +46,10 @@ function validate(values) {
     errors.email = 'Email inválido!'
   }
 
+  if (values.emailPrivate && !emailRegex.test(values.emailPrivate)) {
+    errors.emailPrivate = 'Email inválido!'
+  }
+
   if (!values.doc || values.doc.trim() === '') {
     errors.doc = 'Documento é obrigatório!'
   }
@@ -141,16 +145,26 @@ class ContributorsForm extends Component {
                 </Row>
 
                 <Row type="flex" justify="space-between">
-                  <Col sm={24} md={15}>
+                  <Col sm={24} md={8}>
                     <Field
                       name="email"
                       type="text"
                       label="Email"
-                      placeholder="Email"
+                      placeholder="Email corporativo"
                       component={FormInput}
+                      disabled={!!self.props.initialValues.id}
                     />
                   </Col>
                   <Col sm={24} md={8}>
+                    <Field
+                      name="emailPrivate"
+                      type="text"
+                      label="Email pessoal"
+                      placeholder="Email pessoal"
+                      component={FormInput}
+                    />
+                  </Col>
+                  <Col sm={24} md={7}>
                     <Field
                       name="price"
                       type="number"
