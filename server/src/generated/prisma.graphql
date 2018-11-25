@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Nov 25 2018 01:11:18 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 02:30:26 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -14,10 +14,6 @@ type AggregateContributorFormation {
 }
 
 type AggregateEpic {
-  count: Int!
-}
-
-type AggregateFeature {
   count: Int!
 }
 
@@ -2257,7 +2253,7 @@ type Epic implements Node {
   twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  feature: Feature!
+  project: Project!
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory!]
 }
 
@@ -2281,12 +2277,12 @@ input EpicCreateInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  feature: FeatureCreateOneWithoutEpicsInput!
+  project: ProjectCreateOneWithoutEpicsInput!
   userStories: UserStoryCreateManyWithoutEpicInput
 }
 
-input EpicCreateManyWithoutFeatureInput {
-  create: [EpicCreateWithoutFeatureInput!]
+input EpicCreateManyWithoutProjectInput {
+  create: [EpicCreateWithoutProjectInput!]
   connect: [EpicWhereUniqueInput!]
 }
 
@@ -2295,7 +2291,7 @@ input EpicCreateOneWithoutUserStoriesInput {
   connect: EpicWhereUniqueInput
 }
 
-input EpicCreateWithoutFeatureInput {
+input EpicCreateWithoutProjectInput {
   name: String!
   description: String
   priority: Int
@@ -2318,7 +2314,7 @@ input EpicCreateWithoutUserStoriesInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  feature: FeatureCreateOneWithoutEpicsInput!
+  project: ProjectCreateOneWithoutEpicsInput!
 }
 
 """An edge in a connection."""
@@ -2768,7 +2764,7 @@ input EpicUpdateInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  feature: FeatureUpdateOneRequiredWithoutEpicsInput
+  project: ProjectUpdateOneRequiredWithoutEpicsInput
   userStories: UserStoryUpdateManyWithoutEpicInput
 }
 
@@ -2796,15 +2792,15 @@ input EpicUpdateManyMutationInput {
   twTaskId: String
 }
 
-input EpicUpdateManyWithoutFeatureInput {
-  create: [EpicCreateWithoutFeatureInput!]
+input EpicUpdateManyWithoutProjectInput {
+  create: [EpicCreateWithoutProjectInput!]
   connect: [EpicWhereUniqueInput!]
   disconnect: [EpicWhereUniqueInput!]
   delete: [EpicWhereUniqueInput!]
-  update: [EpicUpdateWithWhereUniqueWithoutFeatureInput!]
+  update: [EpicUpdateWithWhereUniqueWithoutProjectInput!]
   updateMany: [EpicUpdateManyWithWhereNestedInput!]
   deleteMany: [EpicScalarWhereInput!]
-  upsert: [EpicUpsertWithWhereUniqueWithoutFeatureInput!]
+  upsert: [EpicUpsertWithWhereUniqueWithoutProjectInput!]
 }
 
 input EpicUpdateManyWithWhereNestedInput {
@@ -2819,7 +2815,7 @@ input EpicUpdateOneRequiredWithoutUserStoriesInput {
   upsert: EpicUpsertWithoutUserStoriesInput
 }
 
-input EpicUpdateWithoutFeatureDataInput {
+input EpicUpdateWithoutProjectDataInput {
   name: String
   description: String
   priority: Int
@@ -2842,12 +2838,12 @@ input EpicUpdateWithoutUserStoriesDataInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  feature: FeatureUpdateOneRequiredWithoutEpicsInput
+  project: ProjectUpdateOneRequiredWithoutEpicsInput
 }
 
-input EpicUpdateWithWhereUniqueWithoutFeatureInput {
+input EpicUpdateWithWhereUniqueWithoutProjectInput {
   where: EpicWhereUniqueInput!
-  data: EpicUpdateWithoutFeatureDataInput!
+  data: EpicUpdateWithoutProjectDataInput!
 }
 
 input EpicUpsertWithoutUserStoriesInput {
@@ -2855,10 +2851,10 @@ input EpicUpsertWithoutUserStoriesInput {
   create: EpicCreateWithoutUserStoriesInput!
 }
 
-input EpicUpsertWithWhereUniqueWithoutFeatureInput {
+input EpicUpsertWithWhereUniqueWithoutProjectInput {
   where: EpicWhereUniqueInput!
-  update: EpicUpdateWithoutFeatureDataInput!
-  create: EpicCreateWithoutFeatureInput!
+  update: EpicUpdateWithoutProjectDataInput!
+  create: EpicCreateWithoutProjectInput!
 }
 
 input EpicWhereInput {
@@ -3206,985 +3202,13 @@ input EpicWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  feature: FeatureWhereInput
+  project: ProjectWhereInput
   userStories_every: UserStoryWhereInput
   userStories_some: UserStoryWhereInput
   userStories_none: UserStoryWhereInput
 }
 
 input EpicWhereUniqueInput {
-  id: ID
-}
-
-type Feature implements Node {
-  id: ID!
-  name: String!
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
-  project: Project!
-}
-
-"""A connection to a list of items."""
-type FeatureConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [FeatureEdge]!
-  aggregate: AggregateFeature!
-}
-
-input FeatureCreateInput {
-  name: String!
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  epics: EpicCreateManyWithoutFeatureInput
-  project: ProjectCreateOneWithoutFeaturesInput!
-}
-
-input FeatureCreateManyWithoutProjectInput {
-  create: [FeatureCreateWithoutProjectInput!]
-  connect: [FeatureWhereUniqueInput!]
-}
-
-input FeatureCreateOneWithoutEpicsInput {
-  create: FeatureCreateWithoutEpicsInput
-  connect: FeatureWhereUniqueInput
-}
-
-input FeatureCreateWithoutEpicsInput {
-  name: String!
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  project: ProjectCreateOneWithoutFeaturesInput!
-}
-
-input FeatureCreateWithoutProjectInput {
-  name: String!
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  epics: EpicCreateManyWithoutFeatureInput
-}
-
-"""An edge in a connection."""
-type FeatureEdge {
-  """The item at the end of the edge."""
-  node: Feature!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum FeatureOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  description_ASC
-  description_DESC
-  priority_ASC
-  priority_DESC
-  estimateSize_ASC
-  estimateSize_DESC
-  estimatePrice_ASC
-  estimatePrice_DESC
-  estimateEffort_ASC
-  estimateEffort_DESC
-  estimateStart_ASC
-  estimateStart_DESC
-  estimateEnd_ASC
-  estimateEnd_DESC
-  twTaskId_ASC
-  twTaskId_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type FeaturePreviousValues {
-  id: ID!
-  name: String!
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input FeatureScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FeatureScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FeatureScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FeatureScalarWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
-  description: String
-
-  """All values that are not equal to given value."""
-  description_not: String
-
-  """All values that are contained in given list."""
-  description_in: [String!]
-
-  """All values that are not contained in given list."""
-  description_not_in: [String!]
-
-  """All values less than the given value."""
-  description_lt: String
-
-  """All values less than or equal the given value."""
-  description_lte: String
-
-  """All values greater than the given value."""
-  description_gt: String
-
-  """All values greater than or equal the given value."""
-  description_gte: String
-
-  """All values containing the given string."""
-  description_contains: String
-
-  """All values not containing the given string."""
-  description_not_contains: String
-
-  """All values starting with the given string."""
-  description_starts_with: String
-
-  """All values not starting with the given string."""
-  description_not_starts_with: String
-
-  """All values ending with the given string."""
-  description_ends_with: String
-
-  """All values not ending with the given string."""
-  description_not_ends_with: String
-  priority: Int
-
-  """All values that are not equal to given value."""
-  priority_not: Int
-
-  """All values that are contained in given list."""
-  priority_in: [Int!]
-
-  """All values that are not contained in given list."""
-  priority_not_in: [Int!]
-
-  """All values less than the given value."""
-  priority_lt: Int
-
-  """All values less than or equal the given value."""
-  priority_lte: Int
-
-  """All values greater than the given value."""
-  priority_gt: Int
-
-  """All values greater than or equal the given value."""
-  priority_gte: Int
-  estimateSize: Int
-
-  """All values that are not equal to given value."""
-  estimateSize_not: Int
-
-  """All values that are contained in given list."""
-  estimateSize_in: [Int!]
-
-  """All values that are not contained in given list."""
-  estimateSize_not_in: [Int!]
-
-  """All values less than the given value."""
-  estimateSize_lt: Int
-
-  """All values less than or equal the given value."""
-  estimateSize_lte: Int
-
-  """All values greater than the given value."""
-  estimateSize_gt: Int
-
-  """All values greater than or equal the given value."""
-  estimateSize_gte: Int
-  estimatePrice: Float
-
-  """All values that are not equal to given value."""
-  estimatePrice_not: Float
-
-  """All values that are contained in given list."""
-  estimatePrice_in: [Float!]
-
-  """All values that are not contained in given list."""
-  estimatePrice_not_in: [Float!]
-
-  """All values less than the given value."""
-  estimatePrice_lt: Float
-
-  """All values less than or equal the given value."""
-  estimatePrice_lte: Float
-
-  """All values greater than the given value."""
-  estimatePrice_gt: Float
-
-  """All values greater than or equal the given value."""
-  estimatePrice_gte: Float
-  estimateEffort: Int
-
-  """All values that are not equal to given value."""
-  estimateEffort_not: Int
-
-  """All values that are contained in given list."""
-  estimateEffort_in: [Int!]
-
-  """All values that are not contained in given list."""
-  estimateEffort_not_in: [Int!]
-
-  """All values less than the given value."""
-  estimateEffort_lt: Int
-
-  """All values less than or equal the given value."""
-  estimateEffort_lte: Int
-
-  """All values greater than the given value."""
-  estimateEffort_gt: Int
-
-  """All values greater than or equal the given value."""
-  estimateEffort_gte: Int
-  estimateStart: DateTime
-
-  """All values that are not equal to given value."""
-  estimateStart_not: DateTime
-
-  """All values that are contained in given list."""
-  estimateStart_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  estimateStart_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  estimateStart_lt: DateTime
-
-  """All values less than or equal the given value."""
-  estimateStart_lte: DateTime
-
-  """All values greater than the given value."""
-  estimateStart_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  estimateStart_gte: DateTime
-  estimateEnd: DateTime
-
-  """All values that are not equal to given value."""
-  estimateEnd_not: DateTime
-
-  """All values that are contained in given list."""
-  estimateEnd_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  estimateEnd_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  estimateEnd_lt: DateTime
-
-  """All values less than or equal the given value."""
-  estimateEnd_lte: DateTime
-
-  """All values greater than the given value."""
-  estimateEnd_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  estimateEnd_gte: DateTime
-  twTaskId: String
-
-  """All values that are not equal to given value."""
-  twTaskId_not: String
-
-  """All values that are contained in given list."""
-  twTaskId_in: [String!]
-
-  """All values that are not contained in given list."""
-  twTaskId_not_in: [String!]
-
-  """All values less than the given value."""
-  twTaskId_lt: String
-
-  """All values less than or equal the given value."""
-  twTaskId_lte: String
-
-  """All values greater than the given value."""
-  twTaskId_gt: String
-
-  """All values greater than or equal the given value."""
-  twTaskId_gte: String
-
-  """All values containing the given string."""
-  twTaskId_contains: String
-
-  """All values not containing the given string."""
-  twTaskId_not_contains: String
-
-  """All values starting with the given string."""
-  twTaskId_starts_with: String
-
-  """All values not starting with the given string."""
-  twTaskId_not_starts_with: String
-
-  """All values ending with the given string."""
-  twTaskId_ends_with: String
-
-  """All values not ending with the given string."""
-  twTaskId_not_ends_with: String
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-}
-
-type FeatureSubscriptionPayload {
-  mutation: MutationType!
-  node: Feature
-  updatedFields: [String!]
-  previousValues: FeaturePreviousValues
-}
-
-input FeatureSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FeatureSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FeatureSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FeatureSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: FeatureWhereInput
-}
-
-input FeatureUpdateInput {
-  name: String
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  epics: EpicUpdateManyWithoutFeatureInput
-  project: ProjectUpdateOneRequiredWithoutFeaturesInput
-}
-
-input FeatureUpdateManyDataInput {
-  name: String
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-}
-
-input FeatureUpdateManyMutationInput {
-  name: String
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-}
-
-input FeatureUpdateManyWithoutProjectInput {
-  create: [FeatureCreateWithoutProjectInput!]
-  connect: [FeatureWhereUniqueInput!]
-  disconnect: [FeatureWhereUniqueInput!]
-  delete: [FeatureWhereUniqueInput!]
-  update: [FeatureUpdateWithWhereUniqueWithoutProjectInput!]
-  updateMany: [FeatureUpdateManyWithWhereNestedInput!]
-  deleteMany: [FeatureScalarWhereInput!]
-  upsert: [FeatureUpsertWithWhereUniqueWithoutProjectInput!]
-}
-
-input FeatureUpdateManyWithWhereNestedInput {
-  where: FeatureScalarWhereInput!
-  data: FeatureUpdateManyDataInput!
-}
-
-input FeatureUpdateOneRequiredWithoutEpicsInput {
-  create: FeatureCreateWithoutEpicsInput
-  connect: FeatureWhereUniqueInput
-  update: FeatureUpdateWithoutEpicsDataInput
-  upsert: FeatureUpsertWithoutEpicsInput
-}
-
-input FeatureUpdateWithoutEpicsDataInput {
-  name: String
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  project: ProjectUpdateOneRequiredWithoutFeaturesInput
-}
-
-input FeatureUpdateWithoutProjectDataInput {
-  name: String
-  description: String
-  priority: Int
-  estimateSize: Int
-  estimatePrice: Float
-  estimateEffort: Int
-  estimateStart: DateTime
-  estimateEnd: DateTime
-  twTaskId: String
-  epics: EpicUpdateManyWithoutFeatureInput
-}
-
-input FeatureUpdateWithWhereUniqueWithoutProjectInput {
-  where: FeatureWhereUniqueInput!
-  data: FeatureUpdateWithoutProjectDataInput!
-}
-
-input FeatureUpsertWithoutEpicsInput {
-  update: FeatureUpdateWithoutEpicsDataInput!
-  create: FeatureCreateWithoutEpicsInput!
-}
-
-input FeatureUpsertWithWhereUniqueWithoutProjectInput {
-  where: FeatureWhereUniqueInput!
-  update: FeatureUpdateWithoutProjectDataInput!
-  create: FeatureCreateWithoutProjectInput!
-}
-
-input FeatureWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FeatureWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FeatureWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FeatureWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
-  description: String
-
-  """All values that are not equal to given value."""
-  description_not: String
-
-  """All values that are contained in given list."""
-  description_in: [String!]
-
-  """All values that are not contained in given list."""
-  description_not_in: [String!]
-
-  """All values less than the given value."""
-  description_lt: String
-
-  """All values less than or equal the given value."""
-  description_lte: String
-
-  """All values greater than the given value."""
-  description_gt: String
-
-  """All values greater than or equal the given value."""
-  description_gte: String
-
-  """All values containing the given string."""
-  description_contains: String
-
-  """All values not containing the given string."""
-  description_not_contains: String
-
-  """All values starting with the given string."""
-  description_starts_with: String
-
-  """All values not starting with the given string."""
-  description_not_starts_with: String
-
-  """All values ending with the given string."""
-  description_ends_with: String
-
-  """All values not ending with the given string."""
-  description_not_ends_with: String
-  priority: Int
-
-  """All values that are not equal to given value."""
-  priority_not: Int
-
-  """All values that are contained in given list."""
-  priority_in: [Int!]
-
-  """All values that are not contained in given list."""
-  priority_not_in: [Int!]
-
-  """All values less than the given value."""
-  priority_lt: Int
-
-  """All values less than or equal the given value."""
-  priority_lte: Int
-
-  """All values greater than the given value."""
-  priority_gt: Int
-
-  """All values greater than or equal the given value."""
-  priority_gte: Int
-  estimateSize: Int
-
-  """All values that are not equal to given value."""
-  estimateSize_not: Int
-
-  """All values that are contained in given list."""
-  estimateSize_in: [Int!]
-
-  """All values that are not contained in given list."""
-  estimateSize_not_in: [Int!]
-
-  """All values less than the given value."""
-  estimateSize_lt: Int
-
-  """All values less than or equal the given value."""
-  estimateSize_lte: Int
-
-  """All values greater than the given value."""
-  estimateSize_gt: Int
-
-  """All values greater than or equal the given value."""
-  estimateSize_gte: Int
-  estimatePrice: Float
-
-  """All values that are not equal to given value."""
-  estimatePrice_not: Float
-
-  """All values that are contained in given list."""
-  estimatePrice_in: [Float!]
-
-  """All values that are not contained in given list."""
-  estimatePrice_not_in: [Float!]
-
-  """All values less than the given value."""
-  estimatePrice_lt: Float
-
-  """All values less than or equal the given value."""
-  estimatePrice_lte: Float
-
-  """All values greater than the given value."""
-  estimatePrice_gt: Float
-
-  """All values greater than or equal the given value."""
-  estimatePrice_gte: Float
-  estimateEffort: Int
-
-  """All values that are not equal to given value."""
-  estimateEffort_not: Int
-
-  """All values that are contained in given list."""
-  estimateEffort_in: [Int!]
-
-  """All values that are not contained in given list."""
-  estimateEffort_not_in: [Int!]
-
-  """All values less than the given value."""
-  estimateEffort_lt: Int
-
-  """All values less than or equal the given value."""
-  estimateEffort_lte: Int
-
-  """All values greater than the given value."""
-  estimateEffort_gt: Int
-
-  """All values greater than or equal the given value."""
-  estimateEffort_gte: Int
-  estimateStart: DateTime
-
-  """All values that are not equal to given value."""
-  estimateStart_not: DateTime
-
-  """All values that are contained in given list."""
-  estimateStart_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  estimateStart_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  estimateStart_lt: DateTime
-
-  """All values less than or equal the given value."""
-  estimateStart_lte: DateTime
-
-  """All values greater than the given value."""
-  estimateStart_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  estimateStart_gte: DateTime
-  estimateEnd: DateTime
-
-  """All values that are not equal to given value."""
-  estimateEnd_not: DateTime
-
-  """All values that are contained in given list."""
-  estimateEnd_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  estimateEnd_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  estimateEnd_lt: DateTime
-
-  """All values less than or equal the given value."""
-  estimateEnd_lte: DateTime
-
-  """All values greater than the given value."""
-  estimateEnd_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  estimateEnd_gte: DateTime
-  twTaskId: String
-
-  """All values that are not equal to given value."""
-  twTaskId_not: String
-
-  """All values that are contained in given list."""
-  twTaskId_in: [String!]
-
-  """All values that are not contained in given list."""
-  twTaskId_not_in: [String!]
-
-  """All values less than the given value."""
-  twTaskId_lt: String
-
-  """All values less than or equal the given value."""
-  twTaskId_lte: String
-
-  """All values greater than the given value."""
-  twTaskId_gt: String
-
-  """All values greater than or equal the given value."""
-  twTaskId_gte: String
-
-  """All values containing the given string."""
-  twTaskId_contains: String
-
-  """All values not containing the given string."""
-  twTaskId_not_contains: String
-
-  """All values starting with the given string."""
-  twTaskId_starts_with: String
-
-  """All values not starting with the given string."""
-  twTaskId_not_starts_with: String
-
-  """All values ending with the given string."""
-  twTaskId_ends_with: String
-
-  """All values not ending with the given string."""
-  twTaskId_not_ends_with: String
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-  epics_every: EpicWhereInput
-  epics_some: EpicWhereInput
-  epics_none: EpicWhereInput
-  project: ProjectWhereInput
-}
-
-input FeatureWhereUniqueInput {
   id: ID
 }
 
@@ -5134,7 +4158,6 @@ type Mutation {
   createRoleLevel(data: RoleLevelCreateInput!): RoleLevel!
   createMilestone(data: MilestoneCreateInput!): Milestone!
   createLifecycle(data: LifecycleCreateInput!): Lifecycle!
-  createFeature(data: FeatureCreateInput!): Feature!
   createEpic(data: EpicCreateInput!): Epic!
   createUserStory(data: UserStoryCreateInput!): UserStory!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
@@ -5148,7 +4171,6 @@ type Mutation {
   updateRoleLevel(data: RoleLevelUpdateInput!, where: RoleLevelWhereUniqueInput!): RoleLevel
   updateMilestone(data: MilestoneUpdateInput!, where: MilestoneWhereUniqueInput!): Milestone
   updateLifecycle(data: LifecycleUpdateInput!, where: LifecycleWhereUniqueInput!): Lifecycle
-  updateFeature(data: FeatureUpdateInput!, where: FeatureWhereUniqueInput!): Feature
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
   updateUserStory(data: UserStoryUpdateInput!, where: UserStoryWhereUniqueInput!): UserStory
   deleteUser(where: UserWhereUniqueInput!): User
@@ -5162,7 +4184,6 @@ type Mutation {
   deleteRoleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
   deleteMilestone(where: MilestoneWhereUniqueInput!): Milestone
   deleteLifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
-  deleteFeature(where: FeatureWhereUniqueInput!): Feature
   deleteEpic(where: EpicWhereUniqueInput!): Epic
   deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
@@ -5176,7 +4197,6 @@ type Mutation {
   upsertRoleLevel(where: RoleLevelWhereUniqueInput!, create: RoleLevelCreateInput!, update: RoleLevelUpdateInput!): RoleLevel!
   upsertMilestone(where: MilestoneWhereUniqueInput!, create: MilestoneCreateInput!, update: MilestoneUpdateInput!): Milestone!
   upsertLifecycle(where: LifecycleWhereUniqueInput!, create: LifecycleCreateInput!, update: LifecycleUpdateInput!): Lifecycle!
-  upsertFeature(where: FeatureWhereUniqueInput!, create: FeatureCreateInput!, update: FeatureUpdateInput!): Feature!
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
   upsertUserStory(where: UserStoryWhereUniqueInput!, create: UserStoryCreateInput!, update: UserStoryUpdateInput!): UserStory!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -5190,7 +4210,6 @@ type Mutation {
   updateManyRoleLevels(data: RoleLevelUpdateManyMutationInput!, where: RoleLevelWhereInput): BatchPayload!
   updateManyMilestones(data: MilestoneUpdateManyMutationInput!, where: MilestoneWhereInput): BatchPayload!
   updateManyLifecycles(data: LifecycleUpdateManyMutationInput!, where: LifecycleWhereInput): BatchPayload!
-  updateManyFeatures(data: FeatureUpdateManyMutationInput!, where: FeatureWhereInput): BatchPayload!
   updateManyEpics(data: EpicUpdateManyMutationInput!, where: EpicWhereInput): BatchPayload!
   updateManyUserStories(data: UserStoryUpdateManyMutationInput!, where: UserStoryWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
@@ -5204,7 +4223,6 @@ type Mutation {
   deleteManyRoleLevels(where: RoleLevelWhereInput): BatchPayload!
   deleteManyMilestones(where: MilestoneWhereInput): BatchPayload!
   deleteManyLifecycles(where: LifecycleWhereInput): BatchPayload!
-  deleteManyFeatures(where: FeatureWhereInput): BatchPayload!
   deleteManyEpics(where: EpicWhereInput): BatchPayload!
   deleteManyUserStories(where: UserStoryWhereInput): BatchPayload!
 }
@@ -5252,7 +4270,7 @@ type Project implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   lifecycle: Lifecycle
-  features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature!]
+  epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
   milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone!]
   projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole!]
 }
@@ -5280,7 +4298,7 @@ input ProjectCreateInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
-  features: FeatureCreateManyWithoutProjectInput
+  epics: EpicCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -5290,8 +4308,8 @@ input ProjectCreateManyWithoutLifecycleInput {
   connect: [ProjectWhereUniqueInput!]
 }
 
-input ProjectCreateOneWithoutFeaturesInput {
-  create: ProjectCreateWithoutFeaturesInput
+input ProjectCreateOneWithoutEpicsInput {
+  create: ProjectCreateWithoutEpicsInput
   connect: ProjectWhereUniqueInput
 }
 
@@ -5305,7 +4323,7 @@ input ProjectCreateOneWithoutProjectRolesInput {
   connect: ProjectWhereUniqueInput
 }
 
-input ProjectCreateWithoutFeaturesInput {
+input ProjectCreateWithoutEpicsInput {
   name: String!
   sponsor: String!
   objectives: String
@@ -5334,7 +4352,7 @@ input ProjectCreateWithoutLifecycleInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  features: FeatureCreateManyWithoutProjectInput
+  epics: EpicCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -5352,7 +4370,7 @@ input ProjectCreateWithoutMilestonesInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
-  features: FeatureCreateManyWithoutProjectInput
+  epics: EpicCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
@@ -5369,7 +4387,7 @@ input ProjectCreateWithoutProjectRolesInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
-  features: FeatureCreateManyWithoutProjectInput
+  epics: EpicCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
 }
 
@@ -7161,7 +6179,7 @@ input ProjectUpdateInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
-  features: FeatureUpdateManyWithoutProjectInput
+  epics: EpicUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -7210,11 +6228,11 @@ input ProjectUpdateManyWithWhereNestedInput {
   data: ProjectUpdateManyDataInput!
 }
 
-input ProjectUpdateOneRequiredWithoutFeaturesInput {
-  create: ProjectCreateWithoutFeaturesInput
+input ProjectUpdateOneRequiredWithoutEpicsInput {
+  create: ProjectCreateWithoutEpicsInput
   connect: ProjectWhereUniqueInput
-  update: ProjectUpdateWithoutFeaturesDataInput
-  upsert: ProjectUpsertWithoutFeaturesInput
+  update: ProjectUpdateWithoutEpicsDataInput
+  upsert: ProjectUpsertWithoutEpicsInput
 }
 
 input ProjectUpdateOneRequiredWithoutMilestonesInput {
@@ -7231,7 +6249,7 @@ input ProjectUpdateOneRequiredWithoutProjectRolesInput {
   upsert: ProjectUpsertWithoutProjectRolesInput
 }
 
-input ProjectUpdateWithoutFeaturesDataInput {
+input ProjectUpdateWithoutEpicsDataInput {
   name: String
   sponsor: String
   objectives: String
@@ -7260,7 +6278,7 @@ input ProjectUpdateWithoutLifecycleDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  features: FeatureUpdateManyWithoutProjectInput
+  epics: EpicUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -7278,7 +6296,7 @@ input ProjectUpdateWithoutMilestonesDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
-  features: FeatureUpdateManyWithoutProjectInput
+  epics: EpicUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
@@ -7295,7 +6313,7 @@ input ProjectUpdateWithoutProjectRolesDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
-  features: FeatureUpdateManyWithoutProjectInput
+  epics: EpicUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
 }
 
@@ -7304,9 +6322,9 @@ input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
   data: ProjectUpdateWithoutLifecycleDataInput!
 }
 
-input ProjectUpsertWithoutFeaturesInput {
-  update: ProjectUpdateWithoutFeaturesDataInput!
-  create: ProjectCreateWithoutFeaturesInput!
+input ProjectUpsertWithoutEpicsInput {
+  update: ProjectUpdateWithoutEpicsDataInput!
+  create: ProjectCreateWithoutEpicsInput!
 }
 
 input ProjectUpsertWithoutMilestonesInput {
@@ -7793,9 +6811,9 @@ input ProjectWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   lifecycle: LifecycleWhereInput
-  features_every: FeatureWhereInput
-  features_some: FeatureWhereInput
-  features_none: FeatureWhereInput
+  epics_every: EpicWhereInput
+  epics_some: EpicWhereInput
+  epics_none: EpicWhereInput
   milestones_every: MilestoneWhereInput
   milestones_some: MilestoneWhereInput
   milestones_none: MilestoneWhereInput
@@ -7820,7 +6838,6 @@ type Query {
   roleLevels(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleLevel]!
   milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone]!
   lifecycles(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Lifecycle]!
-  features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature]!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory]!
   user(where: UserWhereUniqueInput!): User
@@ -7834,7 +6851,6 @@ type Query {
   roleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
   milestone(where: MilestoneWhereUniqueInput!): Milestone
   lifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
-  feature(where: FeatureWhereUniqueInput!): Feature
   epic(where: EpicWhereUniqueInput!): Epic
   userStory(where: UserStoryWhereUniqueInput!): UserStory
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -7848,7 +6864,6 @@ type Query {
   roleLevelsConnection(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleLevelConnection!
   milestonesConnection(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MilestoneConnection!
   lifecyclesConnection(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LifecycleConnection!
-  featuresConnection(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeatureConnection!
   epicsConnection(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EpicConnection!
   userStoriesConnection(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserStoryConnection!
 
@@ -8836,7 +7851,6 @@ type Subscription {
   roleLevel(where: RoleLevelSubscriptionWhereInput): RoleLevelSubscriptionPayload
   milestone(where: MilestoneSubscriptionWhereInput): MilestoneSubscriptionPayload
   lifecycle(where: LifecycleSubscriptionWhereInput): LifecycleSubscriptionPayload
-  feature(where: FeatureSubscriptionWhereInput): FeatureSubscriptionPayload
   epic(where: EpicSubscriptionWhereInput): EpicSubscriptionPayload
   userStory(where: UserStorySubscriptionWhereInput): UserStorySubscriptionPayload
 }

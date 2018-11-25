@@ -42,7 +42,7 @@ class ProjectsCreate extends Component {
             status: values.status,
             startAt: values.startAt.format(),
             endAt: values.endAt.format(),
-            features: [],
+            epics: [],
             lifecycle: values.lifecycle,
             projectRoles: []
           }

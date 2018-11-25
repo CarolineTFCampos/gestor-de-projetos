@@ -92,9 +92,9 @@ class ModalEpic extends Component {
           variables: {
             data: {
               ...values,
-              feature: {
+              project: {
                 connect: {
-                  id: this.props.feature.id
+                  id: this.props.project.id
                 }
               }
             }

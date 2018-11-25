@@ -14,9 +14,6 @@ module.exports = {
   project: forwardTo('db'),
   projects: forwardTo('db'),
 
-  feature: forwardTo('db'),
-  features: forwardTo('db'),
-
   epic: forwardTo('db'),
   epics: forwardTo('db'),
 

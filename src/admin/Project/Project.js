@@ -112,7 +112,7 @@ const GET_PROJECT = gql`
           name
         }
       }
-      features {
+      epics {
         id
         name
         description
@@ -123,27 +123,15 @@ const GET_PROJECT = gql`
         estimateStart
         estimateEnd
         twTaskId
-        epics {
+        userStories {
           id
           name
           description
           priority
-          estimateSize
-          estimatePrice
           estimateEffort
           estimateStart
           estimateEnd
           twTaskId
-          userStories {
-            id
-            name
-            description
-            priority
-            estimateEffort
-            estimateStart
-            estimateEnd
-            twTaskId
-          }
         }
       }
     }

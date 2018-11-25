@@ -14,7 +14,6 @@ import message from 'antd/lib/message'
 import { formatMinutesToHour, formatMoney } from '../../utils'
 
 import ModalEpic from './ModalEpic'
-import ModalFeature from './ModalFeature'
 import ModalUserStory from './ModalUserStory'
 
 class ProjectScope extends Component {
@@ -23,18 +22,14 @@ class ProjectScope extends Component {
 
     this.state = {
       epic: null,
-      feature: null,
       userStory: null,
       modalEpicVisible: false,
-      modalFeatureVisible: false,
       modalUserStoryVisible: false
     }
 
     this.handleDelete = this.handleDelete.bind(this)
     this.handleOpenModalEpic = this.handleOpenModalEpic.bind(this)
     this.handleCloseModalEpic = this.handleCloseModalEpic.bind(this)
-    this.handleOpenModalFeature = this.handleOpenModalFeature.bind(this)
-    this.handleCloseModalFeature = this.handleCloseModalFeature.bind(this)
     this.handleOpenModalUserStory = this.handleOpenModalUserStory.bind(this)
     this.handleCloseModalUserStory = this.handleCloseModalUserStory.bind(this)
 
@@ -67,7 +62,7 @@ class ProjectScope extends Component {
         }
       },
       {
-        title: 'Esforço Hrs',
+        title: 'Esforço Estimado / Atual',
         dataIndex: 'estimateEffort',
         key: 'estimateEffort',
         align: 'center',
@@ -76,7 +71,7 @@ class ProjectScope extends Component {
         }
       },
       {
-        title: 'Custo R$',
+        title: 'Custo Estimado / Atual',
         dataIndex: 'estimatePrice',
         key: 'estimatePrice',
         align: 'center',
@@ -108,15 +103,11 @@ class ProjectScope extends Component {
           return (
             <span>
               <ButtonGroup>
-                {['Feature', 'Epic'].includes(record.__typename) && (
+                {record.__typename === 'Epic' && (
                   <Button
                     icon="plus"
                     onClick={function() {
-                      if (record.__typename === 'Feature') {
-                        self.handleOpenModalEpic(record)
-                      } else {
-                        self.handleOpenModalUserStory(record)
-                      }
+                      self.handleOpenModalUserStory(record)
                     }}
                   />
                 )}
@@ -124,9 +115,7 @@ class ProjectScope extends Component {
                 <Button
                   icon="edit"
                   onClick={function() {
-                    if (record.__typename === 'Feature') {
-                      self.handleOpenModalFeature(record, true)
-                    } else if (record.__typename === 'Epic') {
+                    if (record.__typename === 'Epic') {
                       self.handleOpenModalEpic(record, true)
                     } else {
                       self.handleOpenModalUserStory(record, true)
@@ -161,15 +150,6 @@ class ProjectScope extends Component {
       return
     }
 
-    if (item.__typename === 'Feature') {
-      this.props.deleteFeature({
-        variables: {
-          id: item.id
-        },
-        refetchQueries: ['GetProject']
-      })
-    }
-
     if (item.__typename === 'Epic') {
       this.props.deleteEpic({
         variables: {
@@ -192,7 +172,6 @@ class ProjectScope extends Component {
   handleOpenModalEpic(item, edit) {
     this.setState({
       epic: edit ? item : null,
-      feature: edit ? null : item,
       modalEpicVisible: true
     })
   }
@@ -200,22 +179,7 @@ class ProjectScope extends Component {
   handleCloseModalEpic() {
     this.setState({
       epic: null,
-      feature: null,
       modalEpicVisible: false
-    })
-  }
-
-  handleOpenModalFeature(item, edit) {
-    this.setState({
-      feature: edit ? item : null,
-      modalFeatureVisible: true
-    })
-  }
-
-  handleCloseModalFeature() {
-    this.setState({
-      feature: null,
-      modalFeatureVisible: false
     })
   }
 
@@ -241,24 +205,19 @@ class ProjectScope extends Component {
     return (
       <div>
         <div style={{ textAlign: 'right', marginBottom: '10px' }}>
-          <Button type="primary" onClick={() => self.handleOpenModalFeature()}>
+          <Button type="primary" onClick={() => self.handleOpenModalEpic()}>
             <Icon type="plus" theme="outlined" />
-            <span>Nova feature</span>
+            <span>Novo épico</span>
           </Button>
         </div>
 
         <Table
           defaultExpandAllRows={true}
           columns={self.columns}
-          dataSource={self.props.project.features.map(function(feature) {
+          dataSource={self.props.project.epics.map(function(epic) {
             return {
-              ...feature,
-              children: feature.epics.map(function(epic) {
-                return {
-                  ...epic,
-                  children: epic.userStories
-                }
-              })
+              ...epic,
+              children: epic.userStories
             }
           })}
           rowKey="id"
@@ -267,21 +226,10 @@ class ProjectScope extends Component {
         {self.state.modalEpicVisible && (
           <ModalEpic
             item={self.state.epic}
-            feature={self.state.feature}
+            project={self.props.project}
             visible={self.state.modalEpicVisible}
             onClose={function() {
               self.handleCloseModalEpic()
-            }}
-          />
-        )}
-
-        {self.state.modalFeatureVisible && (
-          <ModalFeature
-            item={self.state.feature}
-            project={self.props.project}
-            visible={self.state.modalFeatureVisible}
-            onClose={function() {
-              self.handleCloseModalFeature()
             }}
           />
         )}
@@ -301,14 +249,6 @@ class ProjectScope extends Component {
   }
 }
 
-const DELETE_FEATURE = gql`
-  mutation DeleteFeature($id: ID!) {
-    deleteFeature(where: { id: $id }) {
-      id
-    }
-  }
-`
-
 const DELETE_EPIC = gql`
   mutation DeleteEpic($id: ID!) {
     deleteEpic(where: { id: $id }) {
@@ -326,9 +266,6 @@ const DELETE_USER_STORY = gql`
 `
 
 const withGraphql = compose(
-  graphql(DELETE_FEATURE, {
-    name: 'deleteFeature'
-  }),
   graphql(DELETE_EPIC, {
     name: 'deleteEpic'
   }),

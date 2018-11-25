@@ -95,7 +95,7 @@ module.exports = {
   updateProject: forwardTo('db'),
   deleteProject: forwardTo('db'),
 
-  createFeature: async (root, args, ctx, info) => {
+  createEpic: async (root, args, ctx, info) => {
     const project = await ctx.db.query.project({
       where: {
         id: args.data.project.connect.id
@@ -103,65 +103,6 @@ module.exports = {
     })
 
     const tastId = await ctx.tw.createTaskListTask(project.twTaskListId, {
-      content: args.data.name,
-      description: args.data.description,
-      'start-date': args.data.estimateStart
-        .substr(0, 10)
-        .split('-')
-        .join(''),
-      'due-date': args.data.estimateEnd
-        .substr(0, 10)
-        .split('-')
-        .join(''),
-      'estimated-minutes': args.data.estimateEffort
-    })
-
-    return await ctx.db.mutation.createFeature({
-      data: {
-        ...args.data,
-        twTaskId: tastId
-      }
-    })
-  },
-  updateFeature: async (root, args, ctx, info) => {
-    const feature = await ctx.db.query.feature(args)
-
-    if (feature.twTaskId) {
-      await ctx.tw.updateSubTask(feature.twTaskId, {
-        content: args.data.name,
-        description: args.data.description,
-        'start-date': args.data.estimateStart
-          .substr(0, 10)
-          .split('-')
-          .join(''),
-        'due-date': args.data.estimateEnd
-          .substr(0, 10)
-          .split('-')
-          .join(''),
-        'estimated-minutes': args.data.estimateEffort
-      })
-    }
-
-    return await ctx.db.mutation.updateFeature(args)
-  },
-  deleteFeature: async (root, args, ctx, info) => {
-    const feature = await ctx.db.query.feature(args)
-
-    if (feature.twTaskId) {
-      await ctx.tw.deleteSubTask(feature.twTaskId)
-    }
-
-    return await ctx.db.mutation.deleteFeature(args)
-  },
-
-  createEpic: async (root, args, ctx, info) => {
-    const feature = await ctx.db.query.feature({
-      where: {
-        id: args.data.feature.connect.id
-      }
-    })
-
-    const tastId = await ctx.tw.createSubTask(feature.twTaskId, {
       content: args.data.name,
       description: args.data.description,
       'start-date': args.data.estimateStart

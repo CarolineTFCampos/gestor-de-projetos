@@ -42,7 +42,7 @@ class ProjectsEdit extends Component {
             status: values.status,
             startAt: values.startAt.format(),
             endAt: values.endAt.format(),
-            features: [],
+            epics: [],
             lifecycle: values.lifecycle,
             projectRoles: []
           }
@@ -76,17 +76,16 @@ class ProjectsEdit extends Component {
         </Title>
 
         {this.props.data && this.props.data.loading && <Loading />}
-        {this.props.data &&
-          this.props.data.project && (
-            <ProjectsForm
-              onSubmit={this.handleSubmit}
-              initialValues={{
-                ...this.props.data.project,
-                startAt: moment(this.props.data.project.startAt),
-                endAt: moment(this.props.data.project.endAt)
-              }}
-            />
-          )}
+        {this.props.data && this.props.data.project && (
+          <ProjectsForm
+            onSubmit={this.handleSubmit}
+            initialValues={{
+              ...this.props.data.project,
+              startAt: moment(this.props.data.project.startAt),
+              endAt: moment(this.props.data.project.endAt)
+            }}
+          />
+        )}
       </>
     )
   }
