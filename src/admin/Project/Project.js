@@ -128,10 +128,16 @@ const GET_PROJECT = gql`
           name
           description
           priority
+          effort
           estimateEffort
           estimateStart
           estimateEnd
           twTaskId
+          epic {
+            project {
+              twProjectId
+            }
+          }
         }
       }
     }

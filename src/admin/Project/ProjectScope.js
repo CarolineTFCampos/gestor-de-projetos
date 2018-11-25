@@ -66,12 +66,25 @@ class ProjectScope extends Component {
         dataIndex: 'estimateEffort',
         key: 'estimateEffort',
         align: 'center',
-        render: function(text) {
-          return formatMinutesToHour(text)
+        render: function(text, record) {
+          if (record.__typename === 'Epic') {
+            const effort = formatMinutesToHour(
+              record.userStories.reduce(function(prev, current) {
+                return prev + current.effort
+              }, 0)
+            )
+            const estimateEffort = formatMinutesToHour(text)
+
+            return `${estimateEffort} / ${effort}`
+          } else {
+            return `${formatMinutesToHour(text)} / ${formatMinutesToHour(
+              record.effort
+            )}`
+          }
         }
       },
       {
-        title: 'Custo Estimado / Atual',
+        title: 'Custo Estimado',
         dataIndex: 'estimatePrice',
         key: 'estimatePrice',
         align: 'center',
@@ -204,7 +217,37 @@ class ProjectScope extends Component {
 
     return (
       <div>
-        <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+        <div
+          style={{
+            marginBottom: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <div>
+            <div>
+              <strong>Esforço Estimado Total: </strong>
+              <span>
+                {formatMinutesToHour(
+                  self.props.project.epics.reduce(function(prev, current) {
+                    return prev + current.estimateEffort
+                  }, 0)
+                )}
+              </span>
+            </div>
+            <div>
+              <strong>Custo Estimado Total: </strong>
+              <span>
+                {formatMoney(
+                  self.props.project.epics.reduce(function(prev, current) {
+                    return prev + current.estimatePrice
+                  }, 0)
+                )}
+              </span>
+            </div>
+          </div>
+
           <Button type="primary" onClick={() => self.handleOpenModalEpic()}>
             <Icon type="plus" theme="outlined" />
             <span>Novo épico</span>

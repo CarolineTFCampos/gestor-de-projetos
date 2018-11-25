@@ -192,6 +192,7 @@ type UserStory {
   name: String!
   description: String
   priority: Int @default(value: 0)
+  effort: Int @default(value: 0)
   estimateEffort: Int @default(value: 0)
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -199,7 +200,6 @@ type UserStory {
   createdAt: DateTime!
   updatedAt: DateTime!
   epic: Epic! @relation(name: "EpicUserStories")
-  #Effort = Somatoria de Horas lançadas nas tasks TW
   #Estado
   #Sprint
   #Responsaveis (ANALISAR)

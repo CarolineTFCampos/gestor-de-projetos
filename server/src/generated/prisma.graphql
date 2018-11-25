@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Nov 25 2018 02:30:26 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 12:30:39 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -7918,6 +7918,7 @@ type UserStory implements Node {
   name: String!
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -7941,6 +7942,7 @@ input UserStoryCreateInput {
   name: String!
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -7957,6 +7959,7 @@ input UserStoryCreateWithoutEpicInput {
   name: String!
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -7981,6 +7984,8 @@ enum UserStoryOrderByInput {
   description_DESC
   priority_ASC
   priority_DESC
+  effort_ASC
+  effort_DESC
   estimateEffort_ASC
   estimateEffort_DESC
   estimateStart_ASC
@@ -8000,6 +8005,7 @@ type UserStoryPreviousValues {
   name: String!
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -8159,6 +8165,28 @@ input UserStoryScalarWhereInput {
 
   """All values greater than or equal the given value."""
   priority_gte: Int
+  effort: Int
+
+  """All values that are not equal to given value."""
+  effort_not: Int
+
+  """All values that are contained in given list."""
+  effort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  effort_not_in: [Int!]
+
+  """All values less than the given value."""
+  effort_lt: Int
+
+  """All values less than or equal the given value."""
+  effort_lte: Int
+
+  """All values greater than the given value."""
+  effort_gt: Int
+
+  """All values greater than or equal the given value."""
+  effort_gte: Int
   estimateEffort: Int
 
   """All values that are not equal to given value."""
@@ -8354,6 +8382,7 @@ input UserStoryUpdateInput {
   name: String
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -8365,6 +8394,7 @@ input UserStoryUpdateManyDataInput {
   name: String
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -8375,6 +8405,7 @@ input UserStoryUpdateManyMutationInput {
   name: String
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -8401,6 +8432,7 @@ input UserStoryUpdateWithoutEpicDataInput {
   name: String
   description: String
   priority: Int
+  effort: Int
   estimateEffort: Int
   estimateStart: DateTime
   estimateEnd: DateTime
@@ -8569,6 +8601,28 @@ input UserStoryWhereInput {
 
   """All values greater than or equal the given value."""
   priority_gte: Int
+  effort: Int
+
+  """All values that are not equal to given value."""
+  effort_not: Int
+
+  """All values that are contained in given list."""
+  effort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  effort_not_in: [Int!]
+
+  """All values less than the given value."""
+  effort_lt: Int
+
+  """All values less than or equal the given value."""
+  effort_lte: Int
+
+  """All values greater than the given value."""
+  effort_gt: Int
+
+  """All values greater than or equal the given value."""
+  effort_gte: Int
   estimateEffort: Int
 
   """All values that are not equal to given value."""

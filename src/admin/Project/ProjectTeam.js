@@ -68,7 +68,7 @@ class ProjectTeam extends Component {
       {
         key: 'total',
         dataIndex: 'total',
-        title: 'Custo Estimado / Autal',
+        title: 'Custo Estimado / Atual',
         render: function(text, record) {
           const price = formatMoney(
             record.contributors.reduce(function(prev, current) {
@@ -137,6 +137,7 @@ class ProjectTeam extends Component {
         key: 'roleLevel',
         dataIndex: 'roleLevel',
         title: 'Nível',
+        width: 150,
         render: function(text) {
           return roleLevelTypesTranslate[text]
         }
@@ -303,7 +304,90 @@ class ProjectTeam extends Component {
 
     return (
       <div>
-        <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+        <div
+          style={{
+            marginBottom: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <div style={{ display: 'flex' }}>
+            <div style={{ marginRight: '50px' }}>
+              <div>
+                <strong>Esforço Estimado Total: </strong>
+                <span>
+                  {formatMinutesToHour(
+                    self.props.project.projectRoles.reduce(function(
+                      prev,
+                      current
+                    ) {
+                      return prev + current.estimateEffort
+                    },
+                    0)
+                  )}
+                </span>
+              </div>
+              <div>
+                <strong>Esforço Total: </strong>
+                <span>
+                  {formatMinutesToHour(
+                    self.props.project.projectRoles.reduce(function(
+                      prev,
+                      current
+                    ) {
+                      return (
+                        prev +
+                        current.contributors.reduce(function(prev, crr) {
+                          return prev + crr.effort
+                        }, 0)
+                      )
+                    },
+                    0)
+                  )}
+                </span>
+              </div>
+            </div>
+            <div>
+              <div>
+                <div>
+                  <strong>Custo Estimado Total: </strong>
+                  <span>
+                    {formatMoney(
+                      self.props.project.projectRoles.reduce(function(
+                        prev,
+                        current
+                      ) {
+                        return (
+                          prev +
+                          (current.estimateEffort / 60) * current.estimatePrice
+                        )
+                      },
+                      0)
+                    )}
+                  </span>
+                </div>
+                <strong>Custo Total: </strong>
+                <span>
+                  {formatMoney(
+                    self.props.project.projectRoles.reduce(function(
+                      prev,
+                      current
+                    ) {
+                      return (
+                        prev +
+                        current.contributors.reduce(function(prev, crr) {
+                          return prev + (crr.effort / 60) * crr.price
+                        }, 0)
+                      )
+                    },
+                    0)
+                  )}
+                </span>
+              </div>
+            </div>
+          </div>
+
           <Button
             type="primary"
             onClick={() => self.handleOpenModalProjectRole()}
