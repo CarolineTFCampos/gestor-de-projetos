@@ -7,7 +7,7 @@ import ProjectsList from './ProjectsList'
 import ProjectsEdit from './ProjectsEdit'
 import ProjectsCreate from './ProjectsCreate'
 
-function Admin() {
+function Projects() {
   return (
     <Switch>
       <Route
@@ -22,4 +22,4 @@ function Admin() {
   )
 }
 
-export default Admin
+export default Projects
