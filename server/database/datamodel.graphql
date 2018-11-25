@@ -97,6 +97,7 @@ type ProjectRole {
 type ProjectRoleContributor {
   id: ID! @unique
   price: Float! @default(value: 0)
+  effort: Int @default(value: 0)
   estimateEffort: Int! @default(value: 0)
   startAt: DateTime!
   endAt: DateTime!

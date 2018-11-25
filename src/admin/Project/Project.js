@@ -26,7 +26,7 @@ function Project(props) {
 
       {props.data.project && (
         <Card>
-          <Tabs defaultActiveKey="gantt">
+          <Tabs defaultActiveKey="team">
             <TabPane tab="Sobre" key="plan">
               <h2>Sobre</h2>
             </TabPane>
@@ -84,6 +84,7 @@ const GET_PROJECT = gql`
         contributors {
           id
           price
+          effort
           estimateEffort
           startAt
           endAt
@@ -91,6 +92,12 @@ const GET_PROJECT = gql`
           contributor {
             id
             name
+            twPeopleId
+          }
+          projectRole {
+            project {
+              twProjectId
+            }
           }
         }
       }

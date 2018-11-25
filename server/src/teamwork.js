@@ -100,6 +100,12 @@ async function createPeople(data) {
     .then(getResponseData())
 }
 
+async function getTimeEntriesByProject(projectId) {
+  return await http
+    .get(`/projects/${projectId}/time_entries.json`)
+    .then(getResponseData('time-entries'))
+}
+
 module.exports = {
   project,
   projects,
@@ -112,5 +118,6 @@ module.exports = {
   deleteSubTask,
   peoples,
   peopleByEmail,
-  createPeople
+  createPeople,
+  getTimeEntriesByProject
 }

@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sat Nov 24 2018 11:00:41 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 01:11:18 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -5454,6 +5454,7 @@ type ProjectRoleConnection {
 type ProjectRoleContributor implements Node {
   id: ID!
   price: Float!
+  effort: Int
   estimateEffort: Int!
   startAt: DateTime!
   endAt: DateTime!
@@ -5476,6 +5477,7 @@ type ProjectRoleContributorConnection {
 
 input ProjectRoleContributorCreateInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime!
   endAt: DateTime!
@@ -5496,6 +5498,7 @@ input ProjectRoleContributorCreateManyWithoutProjectRoleInput {
 
 input ProjectRoleContributorCreateWithoutContributorInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime!
   endAt: DateTime!
@@ -5505,6 +5508,7 @@ input ProjectRoleContributorCreateWithoutContributorInput {
 
 input ProjectRoleContributorCreateWithoutProjectRoleInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime!
   endAt: DateTime!
@@ -5526,6 +5530,8 @@ enum ProjectRoleContributorOrderByInput {
   id_DESC
   price_ASC
   price_DESC
+  effort_ASC
+  effort_DESC
   estimateEffort_ASC
   estimateEffort_DESC
   startAt_ASC
@@ -5543,6 +5549,7 @@ enum ProjectRoleContributorOrderByInput {
 type ProjectRoleContributorPreviousValues {
   id: ID!
   price: Float!
+  effort: Int
   estimateEffort: Int!
   startAt: DateTime!
   endAt: DateTime!
@@ -5622,6 +5629,28 @@ input ProjectRoleContributorScalarWhereInput {
 
   """All values greater than or equal the given value."""
   price_gte: Float
+  effort: Int
+
+  """All values that are not equal to given value."""
+  effort_not: Int
+
+  """All values that are contained in given list."""
+  effort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  effort_not_in: [Int!]
+
+  """All values less than the given value."""
+  effort_lt: Int
+
+  """All values less than or equal the given value."""
+  effort_lte: Int
+
+  """All values greater than the given value."""
+  effort_gt: Int
+
+  """All values greater than or equal the given value."""
+  effort_gte: Int
   estimateEffort: Int
 
   """All values that are not equal to given value."""
@@ -5785,6 +5814,7 @@ input ProjectRoleContributorSubscriptionWhereInput {
 
 input ProjectRoleContributorUpdateInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime
   endAt: DateTime
@@ -5795,6 +5825,7 @@ input ProjectRoleContributorUpdateInput {
 
 input ProjectRoleContributorUpdateManyDataInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime
   endAt: DateTime
@@ -5803,6 +5834,7 @@ input ProjectRoleContributorUpdateManyDataInput {
 
 input ProjectRoleContributorUpdateManyMutationInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime
   endAt: DateTime
@@ -5838,6 +5870,7 @@ input ProjectRoleContributorUpdateManyWithWhereNestedInput {
 
 input ProjectRoleContributorUpdateWithoutContributorDataInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime
   endAt: DateTime
@@ -5847,6 +5880,7 @@ input ProjectRoleContributorUpdateWithoutContributorDataInput {
 
 input ProjectRoleContributorUpdateWithoutProjectRoleDataInput {
   price: Float
+  effort: Int
   estimateEffort: Int
   startAt: DateTime
   endAt: DateTime
@@ -5947,6 +5981,28 @@ input ProjectRoleContributorWhereInput {
 
   """All values greater than or equal the given value."""
   price_gte: Float
+  effort: Int
+
+  """All values that are not equal to given value."""
+  effort_not: Int
+
+  """All values that are contained in given list."""
+  effort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  effort_not_in: [Int!]
+
+  """All values less than the given value."""
+  effort_lt: Int
+
+  """All values less than or equal the given value."""
+  effort_lte: Int
+
+  """All values greater than the given value."""
+  effort_gt: Int
+
+  """All values greater than or equal the given value."""
+  effort_gte: Int
   estimateEffort: Int
 
   """All values that are not equal to given value."""
