@@ -21,5 +21,8 @@ module.exports = {
   userStories: forwardTo('db'),
 
   milestone: forwardTo('db'),
-  milestones: forwardTo('db')
+  milestones: forwardTo('db'),
+
+  release: forwardTo('db'),
+  releases: forwardTo('db')
 }

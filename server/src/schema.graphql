@@ -1,4 +1,4 @@
-# import Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
+# import Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -79,6 +79,17 @@ type Query {
     first: Int
     last: Int
   ): [Milestone]!
+
+  release(where: ReleaseWhereUniqueInput!): Release
+  releases(
+    where: ReleaseWhereInput
+    orderBy: ReleaseOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Release]!
 }
 
 type Mutation {
@@ -138,4 +149,11 @@ type Mutation {
     where: MilestoneWhereUniqueInput!
   ): Milestone
   deleteMilestone(where: MilestoneWhereUniqueInput!): Milestone
+
+  createRelease(data: ReleaseCreateInput!): Release!
+  updateRelease(
+    data: ReleaseUpdateInput!
+    where: ReleaseWhereUniqueInput!
+  ): Release
+  deleteRelease(where: ReleaseWhereUniqueInput!): Release
 }

@@ -12,7 +12,7 @@ import Loading from '../../components/Loading'
 import ProjectInfo from './ProjectInfo'
 import ProjectTeam from './ProjectTeam'
 import ProjectScope from './ProjectScope'
-import ProjectGantt from './ProjectGantt'
+import ProjectSchedule from './ProjectSchedule'
 import ProjectMilestone from './ProjectMilestone'
 
 const TabPane = Tabs.TabPane
@@ -26,7 +26,7 @@ function Project(props) {
 
       {props.data.project && (
         <Card>
-          <Tabs defaultActiveKey="team">
+          <Tabs defaultActiveKey="schedule">
             <TabPane tab="Sobre" key="plan">
               <h2>Sobre</h2>
             </TabPane>
@@ -42,8 +42,8 @@ function Project(props) {
             <TabPane tab="Marcos" key="milestones">
               <ProjectMilestone project={props.data.project} />
             </TabPane>
-            <TabPane tab="Cronograma" key="gantt">
-              <ProjectGantt project={props.data.project} />
+            <TabPane tab="Cronograma" key="schedule">
+              <ProjectSchedule project={props.data.project} />
             </TabPane>
             <TabPane tab="Recursos" key="resources">
               <h2>Recursos Fisico</h2>
@@ -112,6 +112,13 @@ const GET_PROJECT = gql`
           name
         }
       }
+      releases {
+        id
+        name
+        status
+        startAt
+        endAt
+      }
       epics {
         id
         name
@@ -124,6 +131,11 @@ const GET_PROJECT = gql`
         estimateStart
         estimateEnd
         twTaskId
+        release {
+          id
+          name
+          status
+        }
         userStories {
           id
           name

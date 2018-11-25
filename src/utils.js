@@ -19,6 +19,11 @@ export const epicStatusTranslate = {
   DONE: 'Concluído'
 }
 
+export const releaseStatusTranslate = {
+  OPEN: 'Aberta',
+  DONE: 'Concluída'
+}
+
 export const milestoneStatusTranslate = {
   OPEN: 'Aberto',
   DONE: 'Concluído',

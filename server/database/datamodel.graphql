@@ -78,6 +78,7 @@ type Project {
   updatedAt: DateTime!
   lifecycle: Lifecycle @relation(name: "LifecycleProjects")
   epics: [Epic!]! @relation(name: "ProjectEpics")
+  releases: [Release!]! @relation(name: "ProjectReleases")
   milestones: [Milestone!]! @relation(name: "ProjectMilestones")
   projectRoles: [ProjectRole!]! @relation(name: "ProjectProjectRoles")
 }
@@ -186,6 +187,7 @@ type Epic {
   createdAt: DateTime!
   updatedAt: DateTime!
   project: Project! @relation(name: "ProjectEpics")
+  release: Release @relation(name: "ReleaseEpics")
   userStories: [UserStory!]! @relation(name: "EpicUserStories")
   #Effort = Somatoria de Horas dos USs
   #Price = Somatoria de custos dos USs
@@ -210,4 +212,21 @@ type UserStory {
   epic: Epic! @relation(name: "EpicUserStories")
   #Sprint
   #Responsaveis (ANALISAR)
+}
+
+enum ReleaseStatus {
+  OPEN
+  DONE
+}
+
+type Release {
+  id: ID! @unique
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project! @relation(name: "ProjectReleases")
+  epics: [Epic!]! @relation(name: "ReleaseEpics")
 }

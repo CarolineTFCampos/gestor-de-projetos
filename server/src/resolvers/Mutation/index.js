@@ -9,6 +9,10 @@ module.exports = {
   updateRole: forwardTo('db'),
   deleteRole: forwardTo('db'),
 
+  createRelease: forwardTo('db'),
+  updateRelease: forwardTo('db'),
+  deleteRelease: forwardTo('db'),
+
   createContributor: async (root, args, ctx, info) => {
     let result = await ctx.tw.peopleByEmail(args.data.email)
     console.log(123, {

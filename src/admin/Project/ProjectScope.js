@@ -12,6 +12,7 @@ import ButtonGroup from 'antd/lib/button/button-group'
 import message from 'antd/lib/message'
 
 import {
+  releaseStatusTranslate,
   epicStatusTranslate,
   formatMinutesToHour,
   formatMoney
@@ -113,18 +114,18 @@ class ProjectScope extends Component {
           )
         }
       },
-      // {
-      //   title: 'Estado',
-      //   dataIndex: 'status',
-      //   key: 'status',
-      //   align: 'center'
-      // },
-      // {
-      //   title: 'Entrega',
-      //   dataIndex: 'release',
-      //   key: 'release',
-      //   align: 'center'
-      // },
+      {
+        key: 'releaseSprint',
+        dataIndex: 'releaseSprint',
+        title: 'Release | Sprint',
+        render: function(text, record) {
+          return record.release
+            ? `${record.release.name} (${
+                releaseStatusTranslate[record.release.status]
+              })`
+            : ''
+        }
+      },
       {
         key: 'action',
         title: 'Ações',

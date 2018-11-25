@@ -12,9 +12,14 @@ import Row from 'antd/lib/row'
 import Col from 'antd/lib/col'
 import Modal from 'antd/lib/modal'
 import Radio from 'antd/lib/radio'
+import Select from 'antd/lib/select'
 import message from 'antd/lib/message'
 
-import { formatFloatToMoney, parserMoneyToFloat } from '../../utils'
+import {
+  releaseStatusTranslate,
+  formatFloatToMoney,
+  parserMoneyToFloat
+} from '../../utils'
 
 import FormInput from '../../components/FormInput'
 
@@ -77,6 +82,18 @@ class ModalEpic extends Component {
               id: values.id
             },
             data: {
+              release:
+                values.release &&
+                !!values.release.id &&
+                values.release.id !== ''
+                  ? {
+                      connect: {
+                        id: values.release.id
+                      }
+                    }
+                  : {
+                      disconnect: true
+                    },
               name: values.name,
               description: values.description,
               priority: values.priority,
@@ -97,12 +114,30 @@ class ModalEpic extends Component {
         await this.props.createEpic({
           variables: {
             data: {
-              ...values,
               project: {
                 connect: {
                   id: this.props.project.id
                 }
-              }
+              },
+              release:
+                values.release &&
+                !!values.release.id &&
+                values.release.id !== ''
+                  ? {
+                      connect: {
+                        id: values.release.id
+                      }
+                    }
+                  : null,
+              name: values.name,
+              description: values.description,
+              priority: values.priority,
+              status: values.status,
+              estimateSize: values.estimateSize,
+              estimatePrice: values.estimatePrice,
+              estimateEffort: values.estimateEffort,
+              estimateStart: values.estimateStart,
+              estimateEnd: values.estimateEnd
             }
           },
           refetchQueries: ['GetProject']
@@ -128,9 +163,12 @@ class ModalEpic extends Component {
   render() {
     const { visible, onClose, item } = this.props
 
+    const self = this
+
     if (item) {
       item.estimateStart = moment(item.estimateStart)
       item.estimateEnd = moment(item.estimateEnd)
+      item.release = item.release || { id: '' }
     }
 
     if (!visible) {
@@ -141,7 +179,7 @@ class ModalEpic extends Component {
       <Form
         validate={validate}
         onSubmit={this.handleSubmit}
-        initialValues={item || {}}
+        initialValues={item || { release: { id: '' } }}
       >
         {function({ handleSubmit, submitting, invalid }) {
           return (
@@ -185,8 +223,8 @@ class ModalEpic extends Component {
                 </Col>
               </Row>
 
-              <Row type="flex">
-                <Col xs={24}>
+              <Row type="flex" justify="space-between">
+                <Col xs={24} sm={11}>
                   <Field
                     name="description"
                     type="textarea"
@@ -194,6 +232,32 @@ class ModalEpic extends Component {
                     placeholder="Descrição"
                     component={FormInput}
                   />
+                </Col>
+
+                <Col xs={24} sm={11}>
+                  <Field
+                    name="release.id"
+                    type="select"
+                    label="Release"
+                    placeholder="Release"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                    component={FormInput}
+                  >
+                    <Select.Option value="">Nenhuma</Select.Option>
+                    {self.props.project.releases.map(function(release) {
+                      return (
+                        <Select.Option key={release.id} value={release.id}>
+                          {release.name} (
+                          {releaseStatusTranslate[release.status]})
+                        </Select.Option>
+                      )
+                    })}
+                  </Field>
                 </Col>
               </Row>
 

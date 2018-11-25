@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Nov 25 2018 16:24:00 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 17:25:19 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -34,6 +34,10 @@ type AggregateProjectRole {
 }
 
 type AggregateProjectRoleContributor {
+  count: Int!
+}
+
+type AggregateRelease {
   count: Int!
 }
 
@@ -2255,6 +2259,7 @@ type Epic implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   project: Project!
+  release: Release
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory!]
 }
 
@@ -2280,11 +2285,17 @@ input EpicCreateInput {
   estimateEnd: DateTime
   twTaskId: String
   project: ProjectCreateOneWithoutEpicsInput!
+  release: ReleaseCreateOneWithoutEpicsInput
   userStories: UserStoryCreateManyWithoutEpicInput
 }
 
 input EpicCreateManyWithoutProjectInput {
   create: [EpicCreateWithoutProjectInput!]
+  connect: [EpicWhereUniqueInput!]
+}
+
+input EpicCreateManyWithoutReleaseInput {
+  create: [EpicCreateWithoutReleaseInput!]
   connect: [EpicWhereUniqueInput!]
 }
 
@@ -2304,6 +2315,22 @@ input EpicCreateWithoutProjectInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
+  release: ReleaseCreateOneWithoutEpicsInput
+  userStories: UserStoryCreateManyWithoutEpicInput
+}
+
+input EpicCreateWithoutReleaseInput {
+  name: String!
+  description: String
+  priority: Int
+  status: EpicStatus
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  project: ProjectCreateOneWithoutEpicsInput!
   userStories: UserStoryCreateManyWithoutEpicInput
 }
 
@@ -2319,6 +2346,7 @@ input EpicCreateWithoutUserStoriesInput {
   estimateEnd: DateTime
   twTaskId: String
   project: ProjectCreateOneWithoutEpicsInput!
+  release: ReleaseCreateOneWithoutEpicsInput
 }
 
 """An edge in a connection."""
@@ -2789,6 +2817,7 @@ input EpicUpdateInput {
   estimateEnd: DateTime
   twTaskId: String
   project: ProjectUpdateOneRequiredWithoutEpicsInput
+  release: ReleaseUpdateOneWithoutEpicsInput
   userStories: UserStoryUpdateManyWithoutEpicInput
 }
 
@@ -2829,6 +2858,17 @@ input EpicUpdateManyWithoutProjectInput {
   upsert: [EpicUpsertWithWhereUniqueWithoutProjectInput!]
 }
 
+input EpicUpdateManyWithoutReleaseInput {
+  create: [EpicCreateWithoutReleaseInput!]
+  connect: [EpicWhereUniqueInput!]
+  disconnect: [EpicWhereUniqueInput!]
+  delete: [EpicWhereUniqueInput!]
+  update: [EpicUpdateWithWhereUniqueWithoutReleaseInput!]
+  updateMany: [EpicUpdateManyWithWhereNestedInput!]
+  deleteMany: [EpicScalarWhereInput!]
+  upsert: [EpicUpsertWithWhereUniqueWithoutReleaseInput!]
+}
+
 input EpicUpdateManyWithWhereNestedInput {
   where: EpicScalarWhereInput!
   data: EpicUpdateManyDataInput!
@@ -2852,6 +2892,22 @@ input EpicUpdateWithoutProjectDataInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
+  release: ReleaseUpdateOneWithoutEpicsInput
+  userStories: UserStoryUpdateManyWithoutEpicInput
+}
+
+input EpicUpdateWithoutReleaseDataInput {
+  name: String
+  description: String
+  priority: Int
+  status: EpicStatus
+  estimateSize: Int
+  estimatePrice: Float
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  project: ProjectUpdateOneRequiredWithoutEpicsInput
   userStories: UserStoryUpdateManyWithoutEpicInput
 }
 
@@ -2867,11 +2923,17 @@ input EpicUpdateWithoutUserStoriesDataInput {
   estimateEnd: DateTime
   twTaskId: String
   project: ProjectUpdateOneRequiredWithoutEpicsInput
+  release: ReleaseUpdateOneWithoutEpicsInput
 }
 
 input EpicUpdateWithWhereUniqueWithoutProjectInput {
   where: EpicWhereUniqueInput!
   data: EpicUpdateWithoutProjectDataInput!
+}
+
+input EpicUpdateWithWhereUniqueWithoutReleaseInput {
+  where: EpicWhereUniqueInput!
+  data: EpicUpdateWithoutReleaseDataInput!
 }
 
 input EpicUpsertWithoutUserStoriesInput {
@@ -2883,6 +2945,12 @@ input EpicUpsertWithWhereUniqueWithoutProjectInput {
   where: EpicWhereUniqueInput!
   update: EpicUpdateWithoutProjectDataInput!
   create: EpicCreateWithoutProjectInput!
+}
+
+input EpicUpsertWithWhereUniqueWithoutReleaseInput {
+  where: EpicWhereUniqueInput!
+  update: EpicUpdateWithoutReleaseDataInput!
+  create: EpicCreateWithoutReleaseInput!
 }
 
 input EpicWhereInput {
@@ -3241,6 +3309,7 @@ input EpicWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   project: ProjectWhereInput
+  release: ReleaseWhereInput
   userStories_every: UserStoryWhereInput
   userStories_some: UserStoryWhereInput
   userStories_none: UserStoryWhereInput
@@ -4198,6 +4267,7 @@ type Mutation {
   createLifecycle(data: LifecycleCreateInput!): Lifecycle!
   createEpic(data: EpicCreateInput!): Epic!
   createUserStory(data: UserStoryCreateInput!): UserStory!
+  createRelease(data: ReleaseCreateInput!): Release!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateContributor(data: ContributorUpdateInput!, where: ContributorWhereUniqueInput!): Contributor
   updateContributorExperience(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -4211,6 +4281,7 @@ type Mutation {
   updateLifecycle(data: LifecycleUpdateInput!, where: LifecycleWhereUniqueInput!): Lifecycle
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
   updateUserStory(data: UserStoryUpdateInput!, where: UserStoryWhereUniqueInput!): UserStory
+  updateRelease(data: ReleaseUpdateInput!, where: ReleaseWhereUniqueInput!): Release
   deleteUser(where: UserWhereUniqueInput!): User
   deleteContributor(where: ContributorWhereUniqueInput!): Contributor
   deleteContributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -4224,6 +4295,7 @@ type Mutation {
   deleteLifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   deleteEpic(where: EpicWhereUniqueInput!): Epic
   deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
+  deleteRelease(where: ReleaseWhereUniqueInput!): Release
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertContributor(where: ContributorWhereUniqueInput!, create: ContributorCreateInput!, update: ContributorUpdateInput!): Contributor!
   upsertContributorExperience(where: ContributorExperienceWhereUniqueInput!, create: ContributorExperienceCreateInput!, update: ContributorExperienceUpdateInput!): ContributorExperience!
@@ -4237,6 +4309,7 @@ type Mutation {
   upsertLifecycle(where: LifecycleWhereUniqueInput!, create: LifecycleCreateInput!, update: LifecycleUpdateInput!): Lifecycle!
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
   upsertUserStory(where: UserStoryWhereUniqueInput!, create: UserStoryCreateInput!, update: UserStoryUpdateInput!): UserStory!
+  upsertRelease(where: ReleaseWhereUniqueInput!, create: ReleaseCreateInput!, update: ReleaseUpdateInput!): Release!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyContributors(data: ContributorUpdateManyMutationInput!, where: ContributorWhereInput): BatchPayload!
   updateManyContributorExperiences(data: ContributorExperienceUpdateManyMutationInput!, where: ContributorExperienceWhereInput): BatchPayload!
@@ -4250,6 +4323,7 @@ type Mutation {
   updateManyLifecycles(data: LifecycleUpdateManyMutationInput!, where: LifecycleWhereInput): BatchPayload!
   updateManyEpics(data: EpicUpdateManyMutationInput!, where: EpicWhereInput): BatchPayload!
   updateManyUserStories(data: UserStoryUpdateManyMutationInput!, where: UserStoryWhereInput): BatchPayload!
+  updateManyReleases(data: ReleaseUpdateManyMutationInput!, where: ReleaseWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyContributors(where: ContributorWhereInput): BatchPayload!
   deleteManyContributorExperiences(where: ContributorExperienceWhereInput): BatchPayload!
@@ -4263,6 +4337,7 @@ type Mutation {
   deleteManyLifecycles(where: LifecycleWhereInput): BatchPayload!
   deleteManyEpics(where: EpicWhereInput): BatchPayload!
   deleteManyUserStories(where: UserStoryWhereInput): BatchPayload!
+  deleteManyReleases(where: ReleaseWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -4309,6 +4384,7 @@ type Project implements Node {
   updatedAt: DateTime!
   lifecycle: Lifecycle
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
+  releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release!]
   milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone!]
   projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole!]
 }
@@ -4337,6 +4413,7 @@ input ProjectCreateInput {
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -4361,6 +4438,11 @@ input ProjectCreateOneWithoutProjectRolesInput {
   connect: ProjectWhereUniqueInput
 }
 
+input ProjectCreateOneWithoutReleasesInput {
+  create: ProjectCreateWithoutReleasesInput
+  connect: ProjectWhereUniqueInput
+}
+
 input ProjectCreateWithoutEpicsInput {
   name: String!
   sponsor: String!
@@ -4374,6 +4456,7 @@ input ProjectCreateWithoutEpicsInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  releases: ReleaseCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -4391,6 +4474,7 @@ input ProjectCreateWithoutLifecycleInput {
   twProjectId: String
   twTaskListId: String
   epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -4409,6 +4493,7 @@ input ProjectCreateWithoutMilestonesInput {
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
@@ -4426,7 +4511,26 @@ input ProjectCreateWithoutProjectRolesInput {
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutReleasesInput {
+  name: String!
+  sponsor: String!
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
+  epics: EpicCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
 """An edge in a connection."""
@@ -6218,6 +6322,7 @@ input ProjectUpdateInput {
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6287,6 +6392,13 @@ input ProjectUpdateOneRequiredWithoutProjectRolesInput {
   upsert: ProjectUpsertWithoutProjectRolesInput
 }
 
+input ProjectUpdateOneRequiredWithoutReleasesInput {
+  create: ProjectCreateWithoutReleasesInput
+  connect: ProjectWhereUniqueInput
+  update: ProjectUpdateWithoutReleasesDataInput
+  upsert: ProjectUpsertWithoutReleasesInput
+}
+
 input ProjectUpdateWithoutEpicsDataInput {
   name: String
   sponsor: String
@@ -6300,6 +6412,7 @@ input ProjectUpdateWithoutEpicsDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6317,6 +6430,7 @@ input ProjectUpdateWithoutLifecycleDataInput {
   twProjectId: String
   twTaskListId: String
   epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6335,6 +6449,7 @@ input ProjectUpdateWithoutMilestonesDataInput {
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
@@ -6352,7 +6467,26 @@ input ProjectUpdateWithoutProjectRolesDataInput {
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutReleasesDataInput {
+  name: String
+  sponsor: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  epics: EpicUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
@@ -6373,6 +6507,11 @@ input ProjectUpsertWithoutMilestonesInput {
 input ProjectUpsertWithoutProjectRolesInput {
   update: ProjectUpdateWithoutProjectRolesDataInput!
   create: ProjectCreateWithoutProjectRolesInput!
+}
+
+input ProjectUpsertWithoutReleasesInput {
+  update: ProjectUpdateWithoutReleasesDataInput!
+  create: ProjectCreateWithoutReleasesInput!
 }
 
 input ProjectUpsertWithWhereUniqueWithoutLifecycleInput {
@@ -6852,6 +6991,9 @@ input ProjectWhereInput {
   epics_every: EpicWhereInput
   epics_some: EpicWhereInput
   epics_none: EpicWhereInput
+  releases_every: ReleaseWhereInput
+  releases_some: ReleaseWhereInput
+  releases_none: ReleaseWhereInput
   milestones_every: MilestoneWhereInput
   milestones_some: MilestoneWhereInput
   milestones_none: MilestoneWhereInput
@@ -6878,6 +7020,7 @@ type Query {
   lifecycles(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Lifecycle]!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory]!
+  releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release]!
   user(where: UserWhereUniqueInput!): User
   contributor(where: ContributorWhereUniqueInput!): Contributor
   contributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -6891,6 +7034,7 @@ type Query {
   lifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   epic(where: EpicWhereUniqueInput!): Epic
   userStory(where: UserStoryWhereUniqueInput!): UserStory
+  release(where: ReleaseWhereUniqueInput!): Release
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   contributorsConnection(where: ContributorWhereInput, orderBy: ContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorConnection!
   contributorExperiencesConnection(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorExperienceConnection!
@@ -6904,12 +7048,616 @@ type Query {
   lifecyclesConnection(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LifecycleConnection!
   epicsConnection(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EpicConnection!
   userStoriesConnection(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserStoryConnection!
+  releasesConnection(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReleaseConnection!
 
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
     id: ID!
   ): Node
+}
+
+type Release implements Node {
+  id: ID!
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project!
+  epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
+}
+
+"""A connection to a list of items."""
+type ReleaseConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ReleaseEdge]!
+  aggregate: AggregateRelease!
+}
+
+input ReleaseCreateInput {
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  project: ProjectCreateOneWithoutReleasesInput!
+  epics: EpicCreateManyWithoutReleaseInput
+}
+
+input ReleaseCreateManyWithoutProjectInput {
+  create: [ReleaseCreateWithoutProjectInput!]
+  connect: [ReleaseWhereUniqueInput!]
+}
+
+input ReleaseCreateOneWithoutEpicsInput {
+  create: ReleaseCreateWithoutEpicsInput
+  connect: ReleaseWhereUniqueInput
+}
+
+input ReleaseCreateWithoutEpicsInput {
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  project: ProjectCreateOneWithoutReleasesInput!
+}
+
+input ReleaseCreateWithoutProjectInput {
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  epics: EpicCreateManyWithoutReleaseInput
+}
+
+"""An edge in a connection."""
+type ReleaseEdge {
+  """The item at the end of the edge."""
+  node: Release!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ReleaseOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  status_ASC
+  status_DESC
+  startAt_ASC
+  startAt_DESC
+  endAt_ASC
+  endAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ReleasePreviousValues {
+  id: ID!
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input ReleaseScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ReleaseScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ReleaseScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ReleaseScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  status: ReleaseStatus
+
+  """All values that are not equal to given value."""
+  status_not: ReleaseStatus
+
+  """All values that are contained in given list."""
+  status_in: [ReleaseStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [ReleaseStatus!]
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+enum ReleaseStatus {
+  OPEN
+  DONE
+}
+
+type ReleaseSubscriptionPayload {
+  mutation: MutationType!
+  node: Release
+  updatedFields: [String!]
+  previousValues: ReleasePreviousValues
+}
+
+input ReleaseSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ReleaseSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ReleaseSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ReleaseSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ReleaseWhereInput
+}
+
+input ReleaseUpdateInput {
+  name: String
+  status: ReleaseStatus
+  startAt: DateTime
+  endAt: DateTime
+  project: ProjectUpdateOneRequiredWithoutReleasesInput
+  epics: EpicUpdateManyWithoutReleaseInput
+}
+
+input ReleaseUpdateManyDataInput {
+  name: String
+  status: ReleaseStatus
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input ReleaseUpdateManyMutationInput {
+  name: String
+  status: ReleaseStatus
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input ReleaseUpdateManyWithoutProjectInput {
+  create: [ReleaseCreateWithoutProjectInput!]
+  connect: [ReleaseWhereUniqueInput!]
+  disconnect: [ReleaseWhereUniqueInput!]
+  delete: [ReleaseWhereUniqueInput!]
+  update: [ReleaseUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [ReleaseUpdateManyWithWhereNestedInput!]
+  deleteMany: [ReleaseScalarWhereInput!]
+  upsert: [ReleaseUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input ReleaseUpdateManyWithWhereNestedInput {
+  where: ReleaseScalarWhereInput!
+  data: ReleaseUpdateManyDataInput!
+}
+
+input ReleaseUpdateOneWithoutEpicsInput {
+  create: ReleaseCreateWithoutEpicsInput
+  connect: ReleaseWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ReleaseUpdateWithoutEpicsDataInput
+  upsert: ReleaseUpsertWithoutEpicsInput
+}
+
+input ReleaseUpdateWithoutEpicsDataInput {
+  name: String
+  status: ReleaseStatus
+  startAt: DateTime
+  endAt: DateTime
+  project: ProjectUpdateOneRequiredWithoutReleasesInput
+}
+
+input ReleaseUpdateWithoutProjectDataInput {
+  name: String
+  status: ReleaseStatus
+  startAt: DateTime
+  endAt: DateTime
+  epics: EpicUpdateManyWithoutReleaseInput
+}
+
+input ReleaseUpdateWithWhereUniqueWithoutProjectInput {
+  where: ReleaseWhereUniqueInput!
+  data: ReleaseUpdateWithoutProjectDataInput!
+}
+
+input ReleaseUpsertWithoutEpicsInput {
+  update: ReleaseUpdateWithoutEpicsDataInput!
+  create: ReleaseCreateWithoutEpicsInput!
+}
+
+input ReleaseUpsertWithWhereUniqueWithoutProjectInput {
+  where: ReleaseWhereUniqueInput!
+  update: ReleaseUpdateWithoutProjectDataInput!
+  create: ReleaseCreateWithoutProjectInput!
+}
+
+input ReleaseWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ReleaseWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ReleaseWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ReleaseWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  status: ReleaseStatus
+
+  """All values that are not equal to given value."""
+  status_not: ReleaseStatus
+
+  """All values that are contained in given list."""
+  status_in: [ReleaseStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [ReleaseStatus!]
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  project: ProjectWhereInput
+  epics_every: EpicWhereInput
+  epics_some: EpicWhereInput
+  epics_none: EpicWhereInput
+}
+
+input ReleaseWhereUniqueInput {
+  id: ID
 }
 
 type Role implements Node {
@@ -7891,6 +8639,7 @@ type Subscription {
   lifecycle(where: LifecycleSubscriptionWhereInput): LifecycleSubscriptionPayload
   epic(where: EpicSubscriptionWhereInput): EpicSubscriptionPayload
   userStory(where: UserStorySubscriptionWhereInput): UserStorySubscriptionPayload
+  release(where: ReleaseSubscriptionWhereInput): ReleaseSubscriptionPayload
 }
 
 type User implements Node {
