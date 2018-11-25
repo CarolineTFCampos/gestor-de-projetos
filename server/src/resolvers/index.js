@@ -33,6 +33,11 @@ module.exports = {
     }
   },
   UserStory: {
+    status: async function(root, args, ctx, info) {
+      const result = await ctx.tw.task(root.twTaskId)
+
+      return result && result.boardColumn ? result.boardColumn.name : 'Aberta'
+    },
     effort: async function(root, args, ctx, info) {
       const result = await ctx.tw.getTimeEntriesByProject(
         root.epic.project.twProjectId

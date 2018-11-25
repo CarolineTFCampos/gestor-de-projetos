@@ -192,6 +192,7 @@ type UserStory {
   name: String!
   description: String
   priority: Int @default(value: 0)
+  status: String
   effort: Int @default(value: 0)
   estimateEffort: Int @default(value: 0)
   estimateStart: DateTime
@@ -200,7 +201,6 @@ type UserStory {
   createdAt: DateTime!
   updatedAt: DateTime!
   epic: Epic! @relation(name: "EpicUserStories")
-  #Estado
   #Sprint
   #Responsaveis (ANALISAR)
 }

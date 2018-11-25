@@ -106,6 +106,12 @@ async function getTimeEntriesByProject(projectId) {
     .then(getResponseData('time-entries'))
 }
 
+async function task(taskId) {
+  return await http
+    .get(`/tasks/${taskId}.json`)
+    .then(getResponseData('todo-item'))
+}
+
 module.exports = {
   project,
   projects,
@@ -119,5 +125,6 @@ module.exports = {
   peoples,
   peopleByEmail,
   createPeople,
-  getTimeEntriesByProject
+  getTimeEntriesByProject,
+  task
 }

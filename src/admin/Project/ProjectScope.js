@@ -96,6 +96,15 @@ class ProjectScope extends Component {
           return ''
         }
       },
+      {
+        key: 'status',
+        dataIndex: 'status',
+        title: 'Estado',
+        align: 'center',
+        render: function(text) {
+          return text ? <Tag color="blue">{text}</Tag> : ''
+        }
+      },
       // {
       //   title: 'Estado',
       //   dataIndex: 'status',
