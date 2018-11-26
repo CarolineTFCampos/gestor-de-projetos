@@ -14,6 +14,7 @@ import message from 'antd/lib/message'
 import {
   releaseStatusTranslate,
   epicStatusTranslate,
+  iterationStatusTranslate,
   formatMinutesToHour,
   formatMoney
 } from '../../utils'
@@ -122,6 +123,10 @@ class ProjectScope extends Component {
           return record.release
             ? `${record.release.name} (${
                 releaseStatusTranslate[record.release.status]
+              })`
+            : record.iteration
+            ? `${record.iteration.name} (${
+                iterationStatusTranslate[record.iteration.status]
               })`
             : ''
         }
@@ -299,6 +304,7 @@ class ProjectScope extends Component {
           <ModalUserStory
             epic={self.state.epic}
             item={self.state.userStory}
+            project={self.props.project}
             visible={self.state.modalUserStoryVisible}
             onClose={function() {
               self.handleCloseModalUserStory()

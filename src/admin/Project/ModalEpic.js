@@ -128,7 +128,9 @@ class ModalEpic extends Component {
                         id: values.release.id
                       }
                     }
-                  : null,
+                  : {
+                      disconnect: true
+                    },
               name: values.name,
               description: values.description,
               priority: values.priority,

@@ -11,23 +11,23 @@ import ButtonGroup from 'antd/lib/button/button-group'
 import message from 'antd/lib/message'
 
 import {
-  epicStatusTranslate,
   releaseStatusTranslate,
+  iterationStatusTranslate,
   formatDate,
   formatMinutesToHour
 } from '../../utils'
 
-import ModalRelease from './ModalRelease'
-import ModalReleaseAddEpic from './ModalReleaseAddEpic'
+import ModalIteration from './ModalIteration'
+import ModalIterationAddUserStory from './ModalIterationAddUserStory'
 
-class ProjectRelease extends Component {
+class ProjectIteration extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      release: null,
-      modalReleaseVisible: false,
-      modalReleaseAddEpicVisible: false
+      iteration: null,
+      modalIterationVisible: false,
+      modalIterationAddUserStoryVisible: false
     }
 
     const self = this
@@ -59,7 +59,7 @@ class ProjectRelease extends Component {
         dataIndex: 'status',
         title: 'Estado',
         render: function(text) {
-          return releaseStatusTranslate[text] || epicStatusTranslate[text]
+          return iterationStatusTranslate[text] || text
         }
       },
       {
@@ -67,7 +67,7 @@ class ProjectRelease extends Component {
         dataIndex: 'estimateEffort',
         title: 'Esforço estimado',
         render: function(text, record) {
-          if (record.__typename === 'Epic') {
+          if (record.__typename === 'UserStory') {
             return formatMinutesToHour(text)
           }
 
@@ -86,18 +86,18 @@ class ProjectRelease extends Component {
           return (
             <span>
               <ButtonGroup>
-                {record.__typename === 'Release' && (
+                {record.__typename === 'Iteration' && (
                   <>
                     <Button
                       icon="plus"
                       onClick={function() {
-                        self.handleOpenModalAddEpic(record)
+                        self.handleOpenModalAddUserStory(record)
                       }}
                     />
                     <Button
                       icon="edit"
                       onClick={function() {
-                        self.handleOpenModalRelease(record)
+                        self.handleOpenModalIteration(record)
                       }}
                     />
                   </>
@@ -109,10 +109,10 @@ class ProjectRelease extends Component {
                   okText="Sim"
                   cancelText="Não"
                   onConfirm={function() {
-                    if (record.__typename === 'Release') {
-                      self.handleDeleteRelease(record)
+                    if (record.__typename === 'Iteration') {
+                      self.handleDeleteIteration(record)
                     } else {
-                      self.handleDeleteEpic(record)
+                      self.handleDeleteUserStory(record)
                     }
                   }}
                 >
@@ -125,23 +125,27 @@ class ProjectRelease extends Component {
       }
     ]
 
-    this.handleDeleteEpic = this.handleDeleteEpic.bind(this)
-    this.handleDeleteRelease = this.handleDeleteRelease.bind(this)
-    this.handleOpenModalRelease = this.handleOpenModalRelease.bind(this)
-    this.handleCloseModalRelease = this.handleCloseModalRelease.bind(this)
-    this.handleOpenModalAddEpic = this.handleOpenModalAddEpic.bind(this)
-    this.handleCloseModalAddEpic = this.handleCloseModalAddEpic.bind(this)
+    this.handleDeleteUserStory = this.handleDeleteUserStory.bind(this)
+    this.handleDeleteIteration = this.handleDeleteIteration.bind(this)
+    this.handleOpenModalIteration = this.handleOpenModalIteration.bind(this)
+    this.handleCloseModalIteration = this.handleCloseModalIteration.bind(this)
+    this.handleOpenModalAddUserStory = this.handleOpenModalAddUserStory.bind(
+      this
+    )
+    this.handleCloseModalAddUserStory = this.handleCloseModalAddUserStory.bind(
+      this
+    )
   }
 
-  async handleDeleteEpic(item) {
+  async handleDeleteUserStory(item) {
     try {
-      await this.props.updateRelease({
+      await this.props.updateIteration({
         variables: {
           where: {
-            id: item.release.id
+            id: item.iteration.id
           },
           data: {
-            epics: {
+            userStories: {
               disconnect: {
                 id: item.id
               }
@@ -152,7 +156,7 @@ class ProjectRelease extends Component {
       })
 
       // Exibe mensagem de sucesso
-      message.success(`Epic removida com sucesso`)
+      message.success(`História de Usuario removida com sucesso`)
     } catch (err) {
       // Mensagem de erro do graphql
       const error = err.graphQLErrors[0].message
@@ -164,9 +168,9 @@ class ProjectRelease extends Component {
     return true
   }
 
-  async handleDeleteRelease(item) {
+  async handleDeleteIteration(item) {
     try {
-      await this.props.deleteRelease({
+      await this.props.deleteIteration({
         variables: {
           id: item.id
         },
@@ -174,7 +178,7 @@ class ProjectRelease extends Component {
       })
 
       // Exibe mensagem de sucesso
-      message.success(`Release removida com sucesso`)
+      message.success(`Iteração removida com sucesso`)
     } catch (err) {
       // Mensagem de erro do graphql
       const error = err.graphQLErrors[0].message
@@ -186,31 +190,31 @@ class ProjectRelease extends Component {
     return true
   }
 
-  handleOpenModalRelease(item) {
+  handleOpenModalIteration(item) {
     this.setState({
-      release: item,
-      modalReleaseVisible: true
+      iteration: item,
+      modalIterationVisible: true
     })
   }
 
-  handleCloseModalRelease() {
+  handleCloseModalIteration() {
     this.setState({
-      release: null,
-      modalReleaseVisible: false
+      iteration: null,
+      modalIterationVisible: false
     })
   }
 
-  handleOpenModalAddEpic(item) {
+  handleOpenModalAddUserStory(item) {
     this.setState({
-      release: item,
-      modalReleaseAddEpicVisible: true
+      iteration: item,
+      modalIterationAddUserStoryVisible: true
     })
   }
 
-  handleCloseModalAddEpic() {
+  handleCloseModalAddUserStory() {
     this.setState({
-      release: null,
-      modalReleaseAddEpicVisible: false
+      iteration: null,
+      modalIterationAddUserStoryVisible: false
     })
   }
 
@@ -220,43 +224,53 @@ class ProjectRelease extends Component {
     return (
       <div>
         <div style={{ textAlign: 'right', marginBottom: '10px' }}>
-          <Button type="primary" onClick={() => self.handleOpenModalRelease()}>
+          <Button
+            type="primary"
+            onClick={() => self.handleOpenModalIteration()}
+          >
             <Icon type="plus" theme="outlined" />
-            <span>Nova release</span>
+            <span>Nova Iteração</span>
           </Button>
         </div>
 
         <Table
           rowKey="id"
           columns={self.columns}
-          dataSource={self.props.project.releases.map(function(release) {
+          dataSource={self.props.project.iterations.map(function(iteration) {
             return {
-              ...release,
-              children: self.props.project.epics.filter(function(epic) {
-                return epic.release && epic.release.id === release.id
-              })
+              ...iteration,
+              children: self.props.project.epics
+                .map(function(epic) {
+                  return epic.userStories.filter(function(userStory) {
+                    return (
+                      userStory.iteration &&
+                      userStory.iteration.id === iteration.id
+                    )
+                  })
+                })
+                .flat()
             }
           })}
         />
 
-        {self.state.modalReleaseVisible && (
-          <ModalRelease
-            item={self.state.release}
+        {self.state.modalIterationVisible && (
+          <ModalIteration
+            item={self.state.iteration}
             project={self.props.project}
-            visible={self.state.modalReleaseVisible}
+            visible={self.state.modalIterationVisible}
             onClose={function() {
-              self.handleCloseModalRelease()
+              self.handleCloseModalIteration()
             }}
           />
         )}
 
-        {self.state.modalReleaseAddEpicVisible && (
-          <ModalReleaseAddEpic
-            release={self.state.release}
+        {self.state.modalIterationAddUserStoryVisible && (
+          <ModalIterationAddUserStory
+            iteration={self.state.iteration}
             project={self.props.project}
-            visible={self.state.modalReleaseAddEpicVisible}
+            visible={self.state.modalIterationAddUserStoryVisible}
             onClose={function() {
-              self.handleCloseModalAddEpic()
+              self.handleCloseModalAddUserStory()
             }}
           />
         )}
@@ -265,33 +279,33 @@ class ProjectRelease extends Component {
   }
 }
 
-const UPDATE_RELEASE = gql`
-  mutation UpdateRelease(
-    $where: ReleaseWhereUniqueInput!
-    $data: ReleaseUpdateInput!
+const UPDATE_ITERATION = gql`
+  mutation UpdateIteration(
+    $where: IterationWhereUniqueInput!
+    $data: IterationUpdateInput!
   ) {
-    updateRelease(where: $where, data: $data) {
+    updateIteration(where: $where, data: $data) {
       id
       name
     }
   }
 `
 
-const DELETE_RELEASE = gql`
-  mutation DeleteRelease($id: ID!) {
-    deleteRelease(where: { id: $id }) {
+const DELETE_ITERATION = gql`
+  mutation DeleteIteration($id: ID!) {
+    deleteIteration(where: { id: $id }) {
       id
     }
   }
 `
 
 const withGraphql = compose(
-  graphql(UPDATE_RELEASE, {
-    name: 'updateRelease'
+  graphql(UPDATE_ITERATION, {
+    name: 'updateIteration'
   }),
-  graphql(DELETE_RELEASE, {
-    name: 'deleteRelease'
+  graphql(DELETE_ITERATION, {
+    name: 'deleteIteration'
   })
 )
 
-export default withGraphql(ProjectRelease)
+export default withGraphql(ProjectIteration)

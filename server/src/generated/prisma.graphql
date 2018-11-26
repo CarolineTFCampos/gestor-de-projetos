@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Nov 25 2018 17:25:19 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 20:00:51 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -14,6 +14,10 @@ type AggregateContributorFormation {
 }
 
 type AggregateEpic {
+  count: Int!
+}
+
+type AggregateIteration {
   count: Int!
 }
 
@@ -2258,8 +2262,8 @@ type Epic implements Node {
   twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  project: Project!
   release: Release
+  project: Project!
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory!]
 }
 
@@ -2284,8 +2288,8 @@ input EpicCreateInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  project: ProjectCreateOneWithoutEpicsInput!
   release: ReleaseCreateOneWithoutEpicsInput
+  project: ProjectCreateOneWithoutEpicsInput!
   userStories: UserStoryCreateManyWithoutEpicInput
 }
 
@@ -2345,8 +2349,8 @@ input EpicCreateWithoutUserStoriesInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  project: ProjectCreateOneWithoutEpicsInput!
   release: ReleaseCreateOneWithoutEpicsInput
+  project: ProjectCreateOneWithoutEpicsInput!
 }
 
 """An edge in a connection."""
@@ -2816,8 +2820,8 @@ input EpicUpdateInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  project: ProjectUpdateOneRequiredWithoutEpicsInput
   release: ReleaseUpdateOneWithoutEpicsInput
+  project: ProjectUpdateOneRequiredWithoutEpicsInput
   userStories: UserStoryUpdateManyWithoutEpicInput
 }
 
@@ -2922,8 +2926,8 @@ input EpicUpdateWithoutUserStoriesDataInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
-  project: ProjectUpdateOneRequiredWithoutEpicsInput
   release: ReleaseUpdateOneWithoutEpicsInput
+  project: ProjectUpdateOneRequiredWithoutEpicsInput
 }
 
 input EpicUpdateWithWhereUniqueWithoutProjectInput {
@@ -3308,14 +3312,670 @@ input EpicWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  project: ProjectWhereInput
   release: ReleaseWhereInput
+  project: ProjectWhereInput
   userStories_every: UserStoryWhereInput
   userStories_some: UserStoryWhereInput
   userStories_none: UserStoryWhereInput
 }
 
 input EpicWhereUniqueInput {
+  id: ID
+}
+
+type Iteration implements Node {
+  id: ID!
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  release: Release!
+  project: Project!
+  userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory!]
+}
+
+"""A connection to a list of items."""
+type IterationConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [IterationEdge]!
+  aggregate: AggregateIteration!
+}
+
+input IterationCreateInput {
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  release: ReleaseCreateOneWithoutIterationsInput!
+  project: ProjectCreateOneWithoutIterationsInput!
+  userStories: UserStoryCreateManyWithoutIterationInput
+}
+
+input IterationCreateManyWithoutProjectInput {
+  create: [IterationCreateWithoutProjectInput!]
+  connect: [IterationWhereUniqueInput!]
+}
+
+input IterationCreateManyWithoutReleaseInput {
+  create: [IterationCreateWithoutReleaseInput!]
+  connect: [IterationWhereUniqueInput!]
+}
+
+input IterationCreateOneWithoutUserStoriesInput {
+  create: IterationCreateWithoutUserStoriesInput
+  connect: IterationWhereUniqueInput
+}
+
+input IterationCreateWithoutProjectInput {
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  release: ReleaseCreateOneWithoutIterationsInput!
+  userStories: UserStoryCreateManyWithoutIterationInput
+}
+
+input IterationCreateWithoutReleaseInput {
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  project: ProjectCreateOneWithoutIterationsInput!
+  userStories: UserStoryCreateManyWithoutIterationInput
+}
+
+input IterationCreateWithoutUserStoriesInput {
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  release: ReleaseCreateOneWithoutIterationsInput!
+  project: ProjectCreateOneWithoutIterationsInput!
+}
+
+"""An edge in a connection."""
+type IterationEdge {
+  """The item at the end of the edge."""
+  node: Iteration!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum IterationOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  status_ASC
+  status_DESC
+  startAt_ASC
+  startAt_DESC
+  endAt_ASC
+  endAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type IterationPreviousValues {
+  id: ID!
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input IterationScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [IterationScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [IterationScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [IterationScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  status: IterationStatus
+
+  """All values that are not equal to given value."""
+  status_not: IterationStatus
+
+  """All values that are contained in given list."""
+  status_in: [IterationStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [IterationStatus!]
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+enum IterationStatus {
+  OPEN
+  DONE
+}
+
+type IterationSubscriptionPayload {
+  mutation: MutationType!
+  node: Iteration
+  updatedFields: [String!]
+  previousValues: IterationPreviousValues
+}
+
+input IterationSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [IterationSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [IterationSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [IterationSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: IterationWhereInput
+}
+
+input IterationUpdateInput {
+  name: String
+  status: IterationStatus
+  startAt: DateTime
+  endAt: DateTime
+  release: ReleaseUpdateOneRequiredWithoutIterationsInput
+  project: ProjectUpdateOneRequiredWithoutIterationsInput
+  userStories: UserStoryUpdateManyWithoutIterationInput
+}
+
+input IterationUpdateManyDataInput {
+  name: String
+  status: IterationStatus
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input IterationUpdateManyMutationInput {
+  name: String
+  status: IterationStatus
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input IterationUpdateManyWithoutProjectInput {
+  create: [IterationCreateWithoutProjectInput!]
+  connect: [IterationWhereUniqueInput!]
+  disconnect: [IterationWhereUniqueInput!]
+  delete: [IterationWhereUniqueInput!]
+  update: [IterationUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [IterationUpdateManyWithWhereNestedInput!]
+  deleteMany: [IterationScalarWhereInput!]
+  upsert: [IterationUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input IterationUpdateManyWithoutReleaseInput {
+  create: [IterationCreateWithoutReleaseInput!]
+  connect: [IterationWhereUniqueInput!]
+  disconnect: [IterationWhereUniqueInput!]
+  delete: [IterationWhereUniqueInput!]
+  update: [IterationUpdateWithWhereUniqueWithoutReleaseInput!]
+  updateMany: [IterationUpdateManyWithWhereNestedInput!]
+  deleteMany: [IterationScalarWhereInput!]
+  upsert: [IterationUpsertWithWhereUniqueWithoutReleaseInput!]
+}
+
+input IterationUpdateManyWithWhereNestedInput {
+  where: IterationScalarWhereInput!
+  data: IterationUpdateManyDataInput!
+}
+
+input IterationUpdateOneWithoutUserStoriesInput {
+  create: IterationCreateWithoutUserStoriesInput
+  connect: IterationWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: IterationUpdateWithoutUserStoriesDataInput
+  upsert: IterationUpsertWithoutUserStoriesInput
+}
+
+input IterationUpdateWithoutProjectDataInput {
+  name: String
+  status: IterationStatus
+  startAt: DateTime
+  endAt: DateTime
+  release: ReleaseUpdateOneRequiredWithoutIterationsInput
+  userStories: UserStoryUpdateManyWithoutIterationInput
+}
+
+input IterationUpdateWithoutReleaseDataInput {
+  name: String
+  status: IterationStatus
+  startAt: DateTime
+  endAt: DateTime
+  project: ProjectUpdateOneRequiredWithoutIterationsInput
+  userStories: UserStoryUpdateManyWithoutIterationInput
+}
+
+input IterationUpdateWithoutUserStoriesDataInput {
+  name: String
+  status: IterationStatus
+  startAt: DateTime
+  endAt: DateTime
+  release: ReleaseUpdateOneRequiredWithoutIterationsInput
+  project: ProjectUpdateOneRequiredWithoutIterationsInput
+}
+
+input IterationUpdateWithWhereUniqueWithoutProjectInput {
+  where: IterationWhereUniqueInput!
+  data: IterationUpdateWithoutProjectDataInput!
+}
+
+input IterationUpdateWithWhereUniqueWithoutReleaseInput {
+  where: IterationWhereUniqueInput!
+  data: IterationUpdateWithoutReleaseDataInput!
+}
+
+input IterationUpsertWithoutUserStoriesInput {
+  update: IterationUpdateWithoutUserStoriesDataInput!
+  create: IterationCreateWithoutUserStoriesInput!
+}
+
+input IterationUpsertWithWhereUniqueWithoutProjectInput {
+  where: IterationWhereUniqueInput!
+  update: IterationUpdateWithoutProjectDataInput!
+  create: IterationCreateWithoutProjectInput!
+}
+
+input IterationUpsertWithWhereUniqueWithoutReleaseInput {
+  where: IterationWhereUniqueInput!
+  update: IterationUpdateWithoutReleaseDataInput!
+  create: IterationCreateWithoutReleaseInput!
+}
+
+input IterationWhereInput {
+  """Logical AND on all given filters."""
+  AND: [IterationWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [IterationWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [IterationWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  status: IterationStatus
+
+  """All values that are not equal to given value."""
+  status_not: IterationStatus
+
+  """All values that are contained in given list."""
+  status_in: [IterationStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [IterationStatus!]
+  startAt: DateTime
+
+  """All values that are not equal to given value."""
+  startAt_not: DateTime
+
+  """All values that are contained in given list."""
+  startAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startAt_lte: DateTime
+
+  """All values greater than the given value."""
+  startAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startAt_gte: DateTime
+  endAt: DateTime
+
+  """All values that are not equal to given value."""
+  endAt_not: DateTime
+
+  """All values that are contained in given list."""
+  endAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endAt_lte: DateTime
+
+  """All values greater than the given value."""
+  endAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endAt_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  release: ReleaseWhereInput
+  project: ProjectWhereInput
+  userStories_every: UserStoryWhereInput
+  userStories_some: UserStoryWhereInput
+  userStories_none: UserStoryWhereInput
+}
+
+input IterationWhereUniqueInput {
   id: ID
 }
 
@@ -4268,6 +4928,7 @@ type Mutation {
   createEpic(data: EpicCreateInput!): Epic!
   createUserStory(data: UserStoryCreateInput!): UserStory!
   createRelease(data: ReleaseCreateInput!): Release!
+  createIteration(data: IterationCreateInput!): Iteration!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateContributor(data: ContributorUpdateInput!, where: ContributorWhereUniqueInput!): Contributor
   updateContributorExperience(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -4282,6 +4943,7 @@ type Mutation {
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
   updateUserStory(data: UserStoryUpdateInput!, where: UserStoryWhereUniqueInput!): UserStory
   updateRelease(data: ReleaseUpdateInput!, where: ReleaseWhereUniqueInput!): Release
+  updateIteration(data: IterationUpdateInput!, where: IterationWhereUniqueInput!): Iteration
   deleteUser(where: UserWhereUniqueInput!): User
   deleteContributor(where: ContributorWhereUniqueInput!): Contributor
   deleteContributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -4296,6 +4958,7 @@ type Mutation {
   deleteEpic(where: EpicWhereUniqueInput!): Epic
   deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
   deleteRelease(where: ReleaseWhereUniqueInput!): Release
+  deleteIteration(where: IterationWhereUniqueInput!): Iteration
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertContributor(where: ContributorWhereUniqueInput!, create: ContributorCreateInput!, update: ContributorUpdateInput!): Contributor!
   upsertContributorExperience(where: ContributorExperienceWhereUniqueInput!, create: ContributorExperienceCreateInput!, update: ContributorExperienceUpdateInput!): ContributorExperience!
@@ -4310,6 +4973,7 @@ type Mutation {
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
   upsertUserStory(where: UserStoryWhereUniqueInput!, create: UserStoryCreateInput!, update: UserStoryUpdateInput!): UserStory!
   upsertRelease(where: ReleaseWhereUniqueInput!, create: ReleaseCreateInput!, update: ReleaseUpdateInput!): Release!
+  upsertIteration(where: IterationWhereUniqueInput!, create: IterationCreateInput!, update: IterationUpdateInput!): Iteration!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyContributors(data: ContributorUpdateManyMutationInput!, where: ContributorWhereInput): BatchPayload!
   updateManyContributorExperiences(data: ContributorExperienceUpdateManyMutationInput!, where: ContributorExperienceWhereInput): BatchPayload!
@@ -4324,6 +4988,7 @@ type Mutation {
   updateManyEpics(data: EpicUpdateManyMutationInput!, where: EpicWhereInput): BatchPayload!
   updateManyUserStories(data: UserStoryUpdateManyMutationInput!, where: UserStoryWhereInput): BatchPayload!
   updateManyReleases(data: ReleaseUpdateManyMutationInput!, where: ReleaseWhereInput): BatchPayload!
+  updateManyIterations(data: IterationUpdateManyMutationInput!, where: IterationWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyContributors(where: ContributorWhereInput): BatchPayload!
   deleteManyContributorExperiences(where: ContributorExperienceWhereInput): BatchPayload!
@@ -4338,6 +5003,7 @@ type Mutation {
   deleteManyEpics(where: EpicWhereInput): BatchPayload!
   deleteManyUserStories(where: UserStoryWhereInput): BatchPayload!
   deleteManyReleases(where: ReleaseWhereInput): BatchPayload!
+  deleteManyIterations(where: IterationWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -4385,6 +5051,7 @@ type Project implements Node {
   lifecycle: Lifecycle
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
   releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release!]
+  iterations(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Iteration!]
   milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone!]
   projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole!]
 }
@@ -4414,6 +5081,7 @@ input ProjectCreateInput {
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -4425,6 +5093,11 @@ input ProjectCreateManyWithoutLifecycleInput {
 
 input ProjectCreateOneWithoutEpicsInput {
   create: ProjectCreateWithoutEpicsInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutIterationsInput {
+  create: ProjectCreateWithoutIterationsInput
   connect: ProjectWhereUniqueInput
 }
 
@@ -4457,6 +5130,26 @@ input ProjectCreateWithoutEpicsInput {
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   releases: ReleaseCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutIterationsInput {
+  name: String!
+  sponsor: String!
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
+  epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -4475,6 +5168,7 @@ input ProjectCreateWithoutLifecycleInput {
   twTaskListId: String
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -4494,6 +5188,7 @@ input ProjectCreateWithoutMilestonesInput {
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
 
@@ -4512,6 +5207,7 @@ input ProjectCreateWithoutProjectRolesInput {
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
 }
 
@@ -4529,6 +5225,7 @@ input ProjectCreateWithoutReleasesInput {
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -6323,6 +7020,7 @@ input ProjectUpdateInput {
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6378,6 +7076,13 @@ input ProjectUpdateOneRequiredWithoutEpicsInput {
   upsert: ProjectUpsertWithoutEpicsInput
 }
 
+input ProjectUpdateOneRequiredWithoutIterationsInput {
+  create: ProjectCreateWithoutIterationsInput
+  connect: ProjectWhereUniqueInput
+  update: ProjectUpdateWithoutIterationsDataInput
+  upsert: ProjectUpsertWithoutIterationsInput
+}
+
 input ProjectUpdateOneRequiredWithoutMilestonesInput {
   create: ProjectCreateWithoutMilestonesInput
   connect: ProjectWhereUniqueInput
@@ -6413,6 +7118,26 @@ input ProjectUpdateWithoutEpicsDataInput {
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutIterationsDataInput {
+  name: String
+  sponsor: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6431,6 +7156,7 @@ input ProjectUpdateWithoutLifecycleDataInput {
   twTaskListId: String
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6450,6 +7176,7 @@ input ProjectUpdateWithoutMilestonesDataInput {
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
@@ -6468,6 +7195,7 @@ input ProjectUpdateWithoutProjectRolesDataInput {
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
 }
 
@@ -6485,6 +7213,7 @@ input ProjectUpdateWithoutReleasesDataInput {
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -6497,6 +7226,11 @@ input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
 input ProjectUpsertWithoutEpicsInput {
   update: ProjectUpdateWithoutEpicsDataInput!
   create: ProjectCreateWithoutEpicsInput!
+}
+
+input ProjectUpsertWithoutIterationsInput {
+  update: ProjectUpdateWithoutIterationsDataInput!
+  create: ProjectCreateWithoutIterationsInput!
 }
 
 input ProjectUpsertWithoutMilestonesInput {
@@ -6994,6 +7728,9 @@ input ProjectWhereInput {
   releases_every: ReleaseWhereInput
   releases_some: ReleaseWhereInput
   releases_none: ReleaseWhereInput
+  iterations_every: IterationWhereInput
+  iterations_some: IterationWhereInput
+  iterations_none: IterationWhereInput
   milestones_every: MilestoneWhereInput
   milestones_some: MilestoneWhereInput
   milestones_none: MilestoneWhereInput
@@ -7021,6 +7758,7 @@ type Query {
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory]!
   releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release]!
+  iterations(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Iteration]!
   user(where: UserWhereUniqueInput!): User
   contributor(where: ContributorWhereUniqueInput!): Contributor
   contributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -7035,6 +7773,7 @@ type Query {
   epic(where: EpicWhereUniqueInput!): Epic
   userStory(where: UserStoryWhereUniqueInput!): UserStory
   release(where: ReleaseWhereUniqueInput!): Release
+  iteration(where: IterationWhereUniqueInput!): Iteration
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   contributorsConnection(where: ContributorWhereInput, orderBy: ContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorConnection!
   contributorExperiencesConnection(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorExperienceConnection!
@@ -7049,6 +7788,7 @@ type Query {
   epicsConnection(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EpicConnection!
   userStoriesConnection(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserStoryConnection!
   releasesConnection(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReleaseConnection!
+  iterationsConnection(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IterationConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -7067,6 +7807,7 @@ type Release implements Node {
   updatedAt: DateTime!
   project: Project!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
+  iterations(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Iteration!]
 }
 
 """A connection to a list of items."""
@@ -7086,6 +7827,7 @@ input ReleaseCreateInput {
   endAt: DateTime!
   project: ProjectCreateOneWithoutReleasesInput!
   epics: EpicCreateManyWithoutReleaseInput
+  iterations: IterationCreateManyWithoutReleaseInput
 }
 
 input ReleaseCreateManyWithoutProjectInput {
@@ -7098,12 +7840,27 @@ input ReleaseCreateOneWithoutEpicsInput {
   connect: ReleaseWhereUniqueInput
 }
 
+input ReleaseCreateOneWithoutIterationsInput {
+  create: ReleaseCreateWithoutIterationsInput
+  connect: ReleaseWhereUniqueInput
+}
+
 input ReleaseCreateWithoutEpicsInput {
   name: String!
   status: ReleaseStatus!
   startAt: DateTime!
   endAt: DateTime!
   project: ProjectCreateOneWithoutReleasesInput!
+  iterations: IterationCreateManyWithoutReleaseInput
+}
+
+input ReleaseCreateWithoutIterationsInput {
+  name: String!
+  status: ReleaseStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  project: ProjectCreateOneWithoutReleasesInput!
+  epics: EpicCreateManyWithoutReleaseInput
 }
 
 input ReleaseCreateWithoutProjectInput {
@@ -7112,6 +7869,7 @@ input ReleaseCreateWithoutProjectInput {
   startAt: DateTime!
   endAt: DateTime!
   epics: EpicCreateManyWithoutReleaseInput
+  iterations: IterationCreateManyWithoutReleaseInput
 }
 
 """An edge in a connection."""
@@ -7390,6 +8148,7 @@ input ReleaseUpdateInput {
   endAt: DateTime
   project: ProjectUpdateOneRequiredWithoutReleasesInput
   epics: EpicUpdateManyWithoutReleaseInput
+  iterations: IterationUpdateManyWithoutReleaseInput
 }
 
 input ReleaseUpdateManyDataInput {
@@ -7422,6 +8181,13 @@ input ReleaseUpdateManyWithWhereNestedInput {
   data: ReleaseUpdateManyDataInput!
 }
 
+input ReleaseUpdateOneRequiredWithoutIterationsInput {
+  create: ReleaseCreateWithoutIterationsInput
+  connect: ReleaseWhereUniqueInput
+  update: ReleaseUpdateWithoutIterationsDataInput
+  upsert: ReleaseUpsertWithoutIterationsInput
+}
+
 input ReleaseUpdateOneWithoutEpicsInput {
   create: ReleaseCreateWithoutEpicsInput
   connect: ReleaseWhereUniqueInput
@@ -7437,6 +8203,16 @@ input ReleaseUpdateWithoutEpicsDataInput {
   startAt: DateTime
   endAt: DateTime
   project: ProjectUpdateOneRequiredWithoutReleasesInput
+  iterations: IterationUpdateManyWithoutReleaseInput
+}
+
+input ReleaseUpdateWithoutIterationsDataInput {
+  name: String
+  status: ReleaseStatus
+  startAt: DateTime
+  endAt: DateTime
+  project: ProjectUpdateOneRequiredWithoutReleasesInput
+  epics: EpicUpdateManyWithoutReleaseInput
 }
 
 input ReleaseUpdateWithoutProjectDataInput {
@@ -7445,6 +8221,7 @@ input ReleaseUpdateWithoutProjectDataInput {
   startAt: DateTime
   endAt: DateTime
   epics: EpicUpdateManyWithoutReleaseInput
+  iterations: IterationUpdateManyWithoutReleaseInput
 }
 
 input ReleaseUpdateWithWhereUniqueWithoutProjectInput {
@@ -7455,6 +8232,11 @@ input ReleaseUpdateWithWhereUniqueWithoutProjectInput {
 input ReleaseUpsertWithoutEpicsInput {
   update: ReleaseUpdateWithoutEpicsDataInput!
   create: ReleaseCreateWithoutEpicsInput!
+}
+
+input ReleaseUpsertWithoutIterationsInput {
+  update: ReleaseUpdateWithoutIterationsDataInput!
+  create: ReleaseCreateWithoutIterationsInput!
 }
 
 input ReleaseUpsertWithWhereUniqueWithoutProjectInput {
@@ -7654,6 +8436,9 @@ input ReleaseWhereInput {
   epics_every: EpicWhereInput
   epics_some: EpicWhereInput
   epics_none: EpicWhereInput
+  iterations_every: IterationWhereInput
+  iterations_some: IterationWhereInput
+  iterations_none: IterationWhereInput
 }
 
 input ReleaseWhereUniqueInput {
@@ -8640,6 +9425,7 @@ type Subscription {
   epic(where: EpicSubscriptionWhereInput): EpicSubscriptionPayload
   userStory(where: UserStorySubscriptionWhereInput): UserStorySubscriptionPayload
   release(where: ReleaseSubscriptionWhereInput): ReleaseSubscriptionPayload
+  iteration(where: IterationSubscriptionWhereInput): IterationSubscriptionPayload
 }
 
 type User implements Node {
@@ -8714,6 +9500,7 @@ type UserStory implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   epic: Epic!
+  iteration: Iteration
 }
 
 """A connection to a list of items."""
@@ -8737,10 +9524,16 @@ input UserStoryCreateInput {
   estimateEnd: DateTime
   twTaskId: String
   epic: EpicCreateOneWithoutUserStoriesInput!
+  iteration: IterationCreateOneWithoutUserStoriesInput
 }
 
 input UserStoryCreateManyWithoutEpicInput {
   create: [UserStoryCreateWithoutEpicInput!]
+  connect: [UserStoryWhereUniqueInput!]
+}
+
+input UserStoryCreateManyWithoutIterationInput {
+  create: [UserStoryCreateWithoutIterationInput!]
   connect: [UserStoryWhereUniqueInput!]
 }
 
@@ -8754,6 +9547,20 @@ input UserStoryCreateWithoutEpicInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
+  iteration: IterationCreateOneWithoutUserStoriesInput
+}
+
+input UserStoryCreateWithoutIterationInput {
+  name: String!
+  description: String
+  priority: Int
+  status: String
+  effort: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  epic: EpicCreateOneWithoutUserStoriesInput!
 }
 
 """An edge in a connection."""
@@ -9222,6 +10029,7 @@ input UserStoryUpdateInput {
   estimateEnd: DateTime
   twTaskId: String
   epic: EpicUpdateOneRequiredWithoutUserStoriesInput
+  iteration: IterationUpdateOneWithoutUserStoriesInput
 }
 
 input UserStoryUpdateManyDataInput {
@@ -9259,6 +10067,17 @@ input UserStoryUpdateManyWithoutEpicInput {
   upsert: [UserStoryUpsertWithWhereUniqueWithoutEpicInput!]
 }
 
+input UserStoryUpdateManyWithoutIterationInput {
+  create: [UserStoryCreateWithoutIterationInput!]
+  connect: [UserStoryWhereUniqueInput!]
+  disconnect: [UserStoryWhereUniqueInput!]
+  delete: [UserStoryWhereUniqueInput!]
+  update: [UserStoryUpdateWithWhereUniqueWithoutIterationInput!]
+  updateMany: [UserStoryUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserStoryScalarWhereInput!]
+  upsert: [UserStoryUpsertWithWhereUniqueWithoutIterationInput!]
+}
+
 input UserStoryUpdateManyWithWhereNestedInput {
   where: UserStoryScalarWhereInput!
   data: UserStoryUpdateManyDataInput!
@@ -9274,6 +10093,20 @@ input UserStoryUpdateWithoutEpicDataInput {
   estimateStart: DateTime
   estimateEnd: DateTime
   twTaskId: String
+  iteration: IterationUpdateOneWithoutUserStoriesInput
+}
+
+input UserStoryUpdateWithoutIterationDataInput {
+  name: String
+  description: String
+  priority: Int
+  status: String
+  effort: Int
+  estimateEffort: Int
+  estimateStart: DateTime
+  estimateEnd: DateTime
+  twTaskId: String
+  epic: EpicUpdateOneRequiredWithoutUserStoriesInput
 }
 
 input UserStoryUpdateWithWhereUniqueWithoutEpicInput {
@@ -9281,10 +10114,21 @@ input UserStoryUpdateWithWhereUniqueWithoutEpicInput {
   data: UserStoryUpdateWithoutEpicDataInput!
 }
 
+input UserStoryUpdateWithWhereUniqueWithoutIterationInput {
+  where: UserStoryWhereUniqueInput!
+  data: UserStoryUpdateWithoutIterationDataInput!
+}
+
 input UserStoryUpsertWithWhereUniqueWithoutEpicInput {
   where: UserStoryWhereUniqueInput!
   update: UserStoryUpdateWithoutEpicDataInput!
   create: UserStoryCreateWithoutEpicInput!
+}
+
+input UserStoryUpsertWithWhereUniqueWithoutIterationInput {
+  where: UserStoryWhereUniqueInput!
+  update: UserStoryUpdateWithoutIterationDataInput!
+  create: UserStoryCreateWithoutIterationInput!
 }
 
 input UserStoryWhereInput {
@@ -9651,6 +10495,7 @@ input UserStoryWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   epic: EpicWhereInput
+  iteration: IterationWhereInput
 }
 
 input UserStoryWhereUniqueInput {

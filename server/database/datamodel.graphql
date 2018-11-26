@@ -79,6 +79,7 @@ type Project {
   lifecycle: Lifecycle @relation(name: "LifecycleProjects")
   epics: [Epic!]! @relation(name: "ProjectEpics")
   releases: [Release!]! @relation(name: "ProjectReleases")
+  iterations: [Iteration!]! @relation(name: "ProjectIterations")
   milestones: [Milestone!]! @relation(name: "ProjectMilestones")
   projectRoles: [ProjectRole!]! @relation(name: "ProjectProjectRoles")
 }
@@ -186,8 +187,8 @@ type Epic {
   twTaskId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  project: Project! @relation(name: "ProjectEpics")
   release: Release @relation(name: "ReleaseEpics")
+  project: Project! @relation(name: "ProjectEpics")
   userStories: [UserStory!]! @relation(name: "EpicUserStories")
   #Effort = Somatoria de Horas dos USs
   #Price = Somatoria de custos dos USs
@@ -210,6 +211,7 @@ type UserStory {
   createdAt: DateTime!
   updatedAt: DateTime!
   epic: Epic! @relation(name: "EpicUserStories")
+  iteration: Iteration @relation(name: "IterationUserStories")
   #Sprint
   #Responsaveis (ANALISAR)
 }
@@ -229,4 +231,23 @@ type Release {
   updatedAt: DateTime!
   project: Project! @relation(name: "ProjectReleases")
   epics: [Epic!]! @relation(name: "ReleaseEpics")
+  iterations: [Iteration!]! @relation(name: "ReleaseIterations")
+}
+
+enum IterationStatus {
+  OPEN
+  DONE
+}
+
+type Iteration {
+  id: ID! @unique
+  name: String!
+  status: IterationStatus!
+  startAt: DateTime!
+  endAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  release: Release! @relation(name: "ReleaseIterations")
+  project: Project! @relation(name: "ProjectIterations")
+  userStories: [UserStory!]! @relation(name: "IterationUserStories")
 }

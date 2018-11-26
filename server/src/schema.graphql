@@ -1,4 +1,4 @@
-# import Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
+# import Iteration, IterationWhereUniqueInput, IterationWhereInput, IterationOrderByInput, IterationCreateInput, IterationUpdateInput, Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -90,6 +90,17 @@ type Query {
     first: Int
     last: Int
   ): [Release]!
+
+  iteration(where: IterationWhereUniqueInput!): Iteration
+  iterations(
+    where: IterationWhereInput
+    orderBy: IterationOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Iteration]!
 }
 
 type Mutation {
@@ -156,4 +167,11 @@ type Mutation {
     where: ReleaseWhereUniqueInput!
   ): Release
   deleteRelease(where: ReleaseWhereUniqueInput!): Release
+
+  createIteration(data: IterationCreateInput!): Iteration!
+  updateIteration(
+    data: IterationUpdateInput!
+    where: IterationWhereUniqueInput!
+  ): Iteration
+  deleteIteration(where: IterationWhereUniqueInput!): Iteration
 }

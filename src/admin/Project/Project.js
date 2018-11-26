@@ -26,8 +26,8 @@ function Project(props) {
 
       {props.data.project && (
         <Card>
-          <Tabs defaultActiveKey="schedule">
-            <TabPane tab="Sobre" key="plan">
+          <Tabs defaultActiveKey="scope">
+            <TabPane tab="Sobre" key="about">
               <h2>Sobre</h2>
             </TabPane>
             <TabPane tab="Escopo" key="scope">
@@ -119,6 +119,18 @@ const GET_PROJECT = gql`
         startAt
         endAt
       }
+      iterations {
+        id
+        name
+        status
+        startAt
+        endAt
+        release {
+          id
+          name
+          status
+        }
+      }
       epics {
         id
         name
@@ -151,6 +163,11 @@ const GET_PROJECT = gql`
             project {
               twProjectId
             }
+          }
+          iteration {
+            id
+            name
+            status
           }
         }
       }

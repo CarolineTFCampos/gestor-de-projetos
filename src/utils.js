@@ -24,6 +24,11 @@ export const releaseStatusTranslate = {
   DONE: 'Concluída'
 }
 
+export const iterationStatusTranslate = {
+  OPEN: 'Aberta',
+  DONE: 'Concluída'
+}
+
 export const milestoneStatusTranslate = {
   OPEN: 'Aberto',
   DONE: 'Concluído',

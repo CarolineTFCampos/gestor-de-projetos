@@ -24,5 +24,8 @@ module.exports = {
   milestones: forwardTo('db'),
 
   release: forwardTo('db'),
-  releases: forwardTo('db')
+  releases: forwardTo('db'),
+
+  iteration: forwardTo('db'),
+  iterations: forwardTo('db')
 }

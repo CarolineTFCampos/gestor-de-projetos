@@ -11,7 +11,10 @@ import Tag from 'antd/lib/tag'
 import Row from 'antd/lib/row'
 import Col from 'antd/lib/col'
 import Modal from 'antd/lib/modal'
+import Select from 'antd/lib/select'
 import message from 'antd/lib/message'
+
+import { iterationStatusTranslate } from '../../utils'
 
 import FormInput from '../../components/FormInput'
 
@@ -62,6 +65,18 @@ class ModalUserStory extends Component {
               id: values.id
             },
             data: {
+              iteration:
+                values.iteration &&
+                !!values.iteration.id &&
+                values.iteration.id !== ''
+                  ? {
+                      connect: {
+                        id: values.iteration.id
+                      }
+                    }
+                  : {
+                      disconnect: true
+                    },
               name: values.name,
               description: values.description,
               priority: values.priority,
@@ -81,12 +96,29 @@ class ModalUserStory extends Component {
         await this.props.createUserStory({
           variables: {
             data: {
-              ...values,
               epic: {
                 connect: {
                   id: this.props.epic.id
                 }
-              }
+              },
+              iteration:
+                values.iteration &&
+                !!values.iteration.id &&
+                values.iteration.id !== ''
+                  ? {
+                      connect: {
+                        id: values.iteration.id
+                      }
+                    }
+                  : {
+                      disconnect: true
+                    },
+              name: values.name,
+              description: values.description,
+              priority: values.priority,
+              estimateEffort: values.estimateEffort,
+              estimateStart: values.estimateStart,
+              estimateEnd: values.estimateEnd
             }
           },
           refetchQueries: ['GetProject']
@@ -114,9 +146,12 @@ class ModalUserStory extends Component {
   render() {
     const { visible, onClose, item } = this.props
 
+    const self = this
+
     if (item) {
       item.estimateStart = moment(item.estimateStart)
       item.estimateEnd = moment(item.estimateEnd)
+      item.iteration = item.iteration || { id: '' }
     }
 
     if (!visible) {
@@ -146,8 +181,8 @@ class ModalUserStory extends Component {
               confirmLoading={submitting}
               width="80%"
             >
-              <Row type="flex">
-                <Col xs={24}>
+              <Row type="flex" justify="space-between">
+                <Col xs={24} sm={11}>
                   <Field
                     name="name"
                     type="text"
@@ -155,6 +190,32 @@ class ModalUserStory extends Component {
                     placeholder="Nome"
                     component={FormInput}
                   />
+                </Col>
+
+                <Col xs={24} sm={11}>
+                  <Field
+                    name="iteration.id"
+                    type="select"
+                    label="Iteração"
+                    placeholder="Iteração"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                    component={FormInput}
+                  >
+                    <Select.Option value="">Nenhuma</Select.Option>
+                    {self.props.project.iterations.map(function(iteration) {
+                      return (
+                        <Select.Option key={iteration.id} value={iteration.id}>
+                          {iteration.name} (
+                          {iterationStatusTranslate[iteration.status]})
+                        </Select.Option>
+                      )
+                    })}
+                  </Field>
                 </Col>
               </Row>
 

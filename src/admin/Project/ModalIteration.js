@@ -11,7 +11,10 @@ import Row from 'antd/lib/row'
 import Col from 'antd/lib/col'
 import Modal from 'antd/lib/modal'
 import Radio from 'antd/lib/radio'
+import Select from 'antd/lib/select'
 import message from 'antd/lib/message'
+
+import { releaseStatusTranslate } from '../../utils'
 
 import FormInput from '../../components/FormInput'
 
@@ -20,6 +23,12 @@ function validate(values) {
 
   if (!values.name || values.name.trim() === '') {
     errors.name = 'Nome é obrigatório!'
+  }
+
+  if (!values.release || values.release.id.trim() === '') {
+    errors.release = {
+      id: 'Release é obrigatória!'
+    }
   }
 
   if (!values.status) {
@@ -42,7 +51,7 @@ function validate(values) {
   return errors
 }
 
-class ModalRelease extends Component {
+class ModalIteration extends Component {
   constructor(props) {
     super(props)
 
@@ -52,30 +61,15 @@ class ModalRelease extends Component {
   async handleSubmit(values) {
     try {
       if (values.id) {
-        await this.props.updateRelease({
+        await this.props.updateIteration({
           variables: {
             where: {
               id: values.id
             },
             data: {
-              name: values.name,
-              startAt: values.startAt,
-              endAt: values.endAt,
-              status: values.status
-            }
-          },
-          refetchQueries: ['GetProject']
-        })
-
-        // Exibe mensagem de sucesso
-        message.success(`Release (${values.name}) atualizada com sucesso`)
-      } else {
-        await this.props.createRelease({
-          variables: {
-            data: {
-              project: {
+              release: {
                 connect: {
-                  id: this.props.project.id
+                  id: values.release.id
                 }
               },
               name: values.name,
@@ -88,7 +82,32 @@ class ModalRelease extends Component {
         })
 
         // Exibe mensagem de sucesso
-        message.success(`Release (${values.name}) criada com sucesso`)
+        message.success(`Iteração (${values.name}) atualizada com sucesso`)
+      } else {
+        await this.props.createIteration({
+          variables: {
+            data: {
+              project: {
+                connect: {
+                  id: this.props.project.id
+                }
+              },
+              release: {
+                connect: {
+                  id: values.release.id
+                }
+              },
+              name: values.name,
+              startAt: values.startAt,
+              endAt: values.endAt,
+              status: values.status
+            }
+          },
+          refetchQueries: ['GetProject']
+        })
+
+        // Exibe mensagem de sucesso
+        message.success(`Iteração (${values.name}) criada com sucesso`)
       }
 
       // Fecha modal
@@ -106,6 +125,8 @@ class ModalRelease extends Component {
 
   render() {
     const { visible, onClose, item } = this.props
+
+    const self = this
 
     if (item) {
       item.startAt = moment(item.startAt)
@@ -125,7 +146,7 @@ class ModalRelease extends Component {
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title="Nova Release"
+              title="Nova Iteração"
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"
@@ -154,6 +175,34 @@ class ModalRelease extends Component {
                   >
                     <Radio.Button value="OPEN">Aberta</Radio.Button>
                     <Radio.Button value="DONE">Concluída</Radio.Button>
+                  </Field>
+                </Col>
+              </Row>
+
+              <Row type="flex">
+                <Col xs={24} sm={11}>
+                  <Field
+                    name="release.id"
+                    type="select"
+                    label="Release"
+                    placeholder="Release"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                    component={FormInput}
+                  >
+                    <Select.Option value="">Nenhuma</Select.Option>
+                    {self.props.project.releases.map(function(release) {
+                      return (
+                        <Select.Option key={release.id} value={release.id}>
+                          {release.name} (
+                          {releaseStatusTranslate[release.status]})
+                        </Select.Option>
+                      )
+                    })}
                   </Field>
                 </Col>
               </Row>
@@ -187,21 +236,21 @@ class ModalRelease extends Component {
   }
 }
 
-const CREATE_RELEASE = gql`
-  mutation CreateRelease($data: ReleaseCreateInput!) {
-    createRelease(data: $data) {
+const CREATE_ITERATION = gql`
+  mutation CreateIteration($data: IterationCreateInput!) {
+    createIteration(data: $data) {
       id
       name
     }
   }
 `
 
-const UPDATE_RELEASE = gql`
-  mutation UpdateRelease(
-    $where: ReleaseWhereUniqueInput!
-    $data: ReleaseUpdateInput!
+const UPDATE_ITERATION = gql`
+  mutation UpdateIteration(
+    $where: IterationWhereUniqueInput!
+    $data: IterationUpdateInput!
   ) {
-    updateRelease(where: $where, data: $data) {
+    updateIteration(where: $where, data: $data) {
       id
       name
     }
@@ -209,12 +258,12 @@ const UPDATE_RELEASE = gql`
 `
 
 const withGraphql = compose(
-  graphql(CREATE_RELEASE, {
-    name: 'createRelease'
+  graphql(CREATE_ITERATION, {
+    name: 'createIteration'
   }),
-  graphql(UPDATE_RELEASE, {
-    name: 'updateRelease'
+  graphql(UPDATE_ITERATION, {
+    name: 'updateIteration'
   })
 )
 
-export default withGraphql(ModalRelease)
+export default withGraphql(ModalIteration)

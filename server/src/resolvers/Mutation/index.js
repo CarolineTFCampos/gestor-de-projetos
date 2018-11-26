@@ -13,6 +13,22 @@ module.exports = {
   updateRelease: forwardTo('db'),
   deleteRelease: forwardTo('db'),
 
+  createIteration: forwardTo('db'),
+  updateIteration: forwardTo('db'),
+  deleteIteration: forwardTo('db'),
+
+  createMilestone: forwardTo('db'),
+  updateMilestone: forwardTo('db'),
+  deleteMilestone: forwardTo('db'),
+
+  createProjectRole: forwardTo('db'),
+  updateProjectRole: forwardTo('db'),
+  deleteProjectRole: forwardTo('db'),
+
+  createProjectRoleContributor: forwardTo('db'),
+  updateProjectRoleContributor: forwardTo('db'),
+  deleteProjectRoleContributor: forwardTo('db'),
+
   createContributor: async (root, args, ctx, info) => {
     let result = await ctx.tw.peopleByEmail(args.data.email)
     console.log(123, {
@@ -55,21 +71,8 @@ module.exports = {
       }
     })
   },
-
   updateContributor: forwardTo('db'),
   deleteContributor: forwardTo('db'),
-
-  createMilestone: forwardTo('db'),
-  updateMilestone: forwardTo('db'),
-  deleteMilestone: forwardTo('db'),
-
-  createProjectRole: forwardTo('db'),
-  updateProjectRole: forwardTo('db'),
-  deleteProjectRole: forwardTo('db'),
-
-  createProjectRoleContributor: forwardTo('db'),
-  updateProjectRoleContributor: forwardTo('db'),
-  deleteProjectRoleContributor: forwardTo('db'),
 
   createProject: async (root, args, ctx, info) => {
     const result = await ctx.tw.createProject({

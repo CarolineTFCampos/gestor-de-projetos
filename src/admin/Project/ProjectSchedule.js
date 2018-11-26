@@ -3,6 +3,7 @@ import React from 'react'
 import Tabs from 'antd/lib/tabs'
 
 import ProjectRelease from './ProjectRelease'
+import ProjectIteration from './ProjectIteration'
 
 const TabPane = Tabs.TabPane
 
@@ -12,8 +13,8 @@ function ProjectSchedulea(props) {
       <TabPane tab="Releases" key="releases">
         <ProjectRelease project={props.project} />
       </TabPane>
-      <TabPane tab="Sprints" key="sprints">
-        <h2>SPRINTS</h2>
+      <TabPane tab="Iterações" key="iterations">
+        <ProjectIteration project={props.project} />
       </TabPane>
       <TabPane tab="Gantt" key="gantt">
         <h2>GANTT</h2>
