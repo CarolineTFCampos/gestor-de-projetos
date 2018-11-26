@@ -1,4 +1,4 @@
-# import Iteration, IterationWhereUniqueInput, IterationWhereInput, IterationOrderByInput, IterationCreateInput, IterationUpdateInput, Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
+# import Risk, RiskWhereUniqueInput, RiskWhereInput, RiskOrderByInput, RiskCreateInput, RiskUpdateInput, Iteration, IterationWhereUniqueInput, IterationWhereInput, IterationOrderByInput, IterationCreateInput, IterationUpdateInput, Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -101,6 +101,17 @@ type Query {
     first: Int
     last: Int
   ): [Iteration]!
+
+  risk(where: RiskWhereUniqueInput!): Risk
+  risks(
+    where: RiskWhereInput
+    orderBy: RiskOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Risk]!
 }
 
 type Mutation {
@@ -174,4 +185,8 @@ type Mutation {
     where: IterationWhereUniqueInput!
   ): Iteration
   deleteIteration(where: IterationWhereUniqueInput!): Iteration
+
+  createRisk(data: RiskCreateInput!): Risk!
+  updateRisk(data: RiskUpdateInput!, where: RiskWhereUniqueInput!): Risk
+  deleteRisk(where: RiskWhereUniqueInput!): Risk
 }

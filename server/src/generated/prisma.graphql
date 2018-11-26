@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Sun Nov 25 2018 20:00:51 GMT-0200 (-02)
+# timestamp: Mon Nov 26 2018 01:03:53 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -42,6 +42,10 @@ type AggregateProjectRoleContributor {
 }
 
 type AggregateRelease {
+  count: Int!
+}
+
+type AggregateRisk {
   count: Int!
 }
 
@@ -4929,6 +4933,7 @@ type Mutation {
   createUserStory(data: UserStoryCreateInput!): UserStory!
   createRelease(data: ReleaseCreateInput!): Release!
   createIteration(data: IterationCreateInput!): Iteration!
+  createRisk(data: RiskCreateInput!): Risk!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateContributor(data: ContributorUpdateInput!, where: ContributorWhereUniqueInput!): Contributor
   updateContributorExperience(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -4944,6 +4949,7 @@ type Mutation {
   updateUserStory(data: UserStoryUpdateInput!, where: UserStoryWhereUniqueInput!): UserStory
   updateRelease(data: ReleaseUpdateInput!, where: ReleaseWhereUniqueInput!): Release
   updateIteration(data: IterationUpdateInput!, where: IterationWhereUniqueInput!): Iteration
+  updateRisk(data: RiskUpdateInput!, where: RiskWhereUniqueInput!): Risk
   deleteUser(where: UserWhereUniqueInput!): User
   deleteContributor(where: ContributorWhereUniqueInput!): Contributor
   deleteContributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -4959,6 +4965,7 @@ type Mutation {
   deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
   deleteRelease(where: ReleaseWhereUniqueInput!): Release
   deleteIteration(where: IterationWhereUniqueInput!): Iteration
+  deleteRisk(where: RiskWhereUniqueInput!): Risk
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertContributor(where: ContributorWhereUniqueInput!, create: ContributorCreateInput!, update: ContributorUpdateInput!): Contributor!
   upsertContributorExperience(where: ContributorExperienceWhereUniqueInput!, create: ContributorExperienceCreateInput!, update: ContributorExperienceUpdateInput!): ContributorExperience!
@@ -4974,6 +4981,7 @@ type Mutation {
   upsertUserStory(where: UserStoryWhereUniqueInput!, create: UserStoryCreateInput!, update: UserStoryUpdateInput!): UserStory!
   upsertRelease(where: ReleaseWhereUniqueInput!, create: ReleaseCreateInput!, update: ReleaseUpdateInput!): Release!
   upsertIteration(where: IterationWhereUniqueInput!, create: IterationCreateInput!, update: IterationUpdateInput!): Iteration!
+  upsertRisk(where: RiskWhereUniqueInput!, create: RiskCreateInput!, update: RiskUpdateInput!): Risk!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyContributors(data: ContributorUpdateManyMutationInput!, where: ContributorWhereInput): BatchPayload!
   updateManyContributorExperiences(data: ContributorExperienceUpdateManyMutationInput!, where: ContributorExperienceWhereInput): BatchPayload!
@@ -4989,6 +4997,7 @@ type Mutation {
   updateManyUserStories(data: UserStoryUpdateManyMutationInput!, where: UserStoryWhereInput): BatchPayload!
   updateManyReleases(data: ReleaseUpdateManyMutationInput!, where: ReleaseWhereInput): BatchPayload!
   updateManyIterations(data: IterationUpdateManyMutationInput!, where: IterationWhereInput): BatchPayload!
+  updateManyRisks(data: RiskUpdateManyMutationInput!, where: RiskWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyContributors(where: ContributorWhereInput): BatchPayload!
   deleteManyContributorExperiences(where: ContributorExperienceWhereInput): BatchPayload!
@@ -5004,6 +5013,7 @@ type Mutation {
   deleteManyUserStories(where: UserStoryWhereInput): BatchPayload!
   deleteManyReleases(where: ReleaseWhereInput): BatchPayload!
   deleteManyIterations(where: IterationWhereInput): BatchPayload!
+  deleteManyRisks(where: RiskWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -5049,6 +5059,7 @@ type Project implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   lifecycle: Lifecycle
+  risks(where: RiskWhereInput, orderBy: RiskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Risk!]
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
   releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release!]
   iterations(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Iteration!]
@@ -5079,6 +5090,7 @@ input ProjectCreateInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
@@ -5116,6 +5128,11 @@ input ProjectCreateOneWithoutReleasesInput {
   connect: ProjectWhereUniqueInput
 }
 
+input ProjectCreateOneWithoutRisksInput {
+  create: ProjectCreateWithoutRisksInput
+  connect: ProjectWhereUniqueInput
+}
+
 input ProjectCreateWithoutEpicsInput {
   name: String!
   sponsor: String!
@@ -5129,6 +5146,7 @@ input ProjectCreateWithoutEpicsInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  risks: RiskCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
@@ -5148,6 +5166,7 @@ input ProjectCreateWithoutIterationsInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
@@ -5166,6 +5185,7 @@ input ProjectCreateWithoutLifecycleInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
+  risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
@@ -5186,6 +5206,7 @@ input ProjectCreateWithoutMilestonesInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
@@ -5205,6 +5226,7 @@ input ProjectCreateWithoutProjectRolesInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
@@ -5224,7 +5246,28 @@ input ProjectCreateWithoutReleasesInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleCreateOneWithoutProjectsInput
+  risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutRisksInput {
+  name: String!
+  sponsor: String!
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleCreateOneWithoutProjectsInput
+  epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
@@ -7018,6 +7061,7 @@ input ProjectUpdateInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
@@ -7104,6 +7148,13 @@ input ProjectUpdateOneRequiredWithoutReleasesInput {
   upsert: ProjectUpsertWithoutReleasesInput
 }
 
+input ProjectUpdateOneRequiredWithoutRisksInput {
+  create: ProjectCreateWithoutRisksInput
+  connect: ProjectWhereUniqueInput
+  update: ProjectUpdateWithoutRisksDataInput
+  upsert: ProjectUpsertWithoutRisksInput
+}
+
 input ProjectUpdateWithoutEpicsDataInput {
   name: String
   sponsor: String
@@ -7117,6 +7168,7 @@ input ProjectUpdateWithoutEpicsDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  risks: RiskUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
@@ -7136,6 +7188,7 @@ input ProjectUpdateWithoutIterationsDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
@@ -7154,6 +7207,7 @@ input ProjectUpdateWithoutLifecycleDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
+  risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
@@ -7174,6 +7228,7 @@ input ProjectUpdateWithoutMilestonesDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
@@ -7193,6 +7248,7 @@ input ProjectUpdateWithoutProjectRolesDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
@@ -7212,7 +7268,28 @@ input ProjectUpdateWithoutReleasesDataInput {
   twProjectId: String
   twTaskListId: String
   lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutRisksDataInput {
+  name: String
+  sponsor: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  lifecycle: LifecycleUpdateOneWithoutProjectsInput
+  epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
@@ -7246,6 +7323,11 @@ input ProjectUpsertWithoutProjectRolesInput {
 input ProjectUpsertWithoutReleasesInput {
   update: ProjectUpdateWithoutReleasesDataInput!
   create: ProjectCreateWithoutReleasesInput!
+}
+
+input ProjectUpsertWithoutRisksInput {
+  update: ProjectUpdateWithoutRisksDataInput!
+  create: ProjectCreateWithoutRisksInput!
 }
 
 input ProjectUpsertWithWhereUniqueWithoutLifecycleInput {
@@ -7722,6 +7804,9 @@ input ProjectWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   lifecycle: LifecycleWhereInput
+  risks_every: RiskWhereInput
+  risks_some: RiskWhereInput
+  risks_none: RiskWhereInput
   epics_every: EpicWhereInput
   epics_some: EpicWhereInput
   epics_none: EpicWhereInput
@@ -7759,6 +7844,7 @@ type Query {
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory]!
   releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release]!
   iterations(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Iteration]!
+  risks(where: RiskWhereInput, orderBy: RiskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Risk]!
   user(where: UserWhereUniqueInput!): User
   contributor(where: ContributorWhereUniqueInput!): Contributor
   contributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
@@ -7774,6 +7860,7 @@ type Query {
   userStory(where: UserStoryWhereUniqueInput!): UserStory
   release(where: ReleaseWhereUniqueInput!): Release
   iteration(where: IterationWhereUniqueInput!): Iteration
+  risk(where: RiskWhereUniqueInput!): Risk
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   contributorsConnection(where: ContributorWhereInput, orderBy: ContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorConnection!
   contributorExperiencesConnection(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorExperienceConnection!
@@ -7789,6 +7876,7 @@ type Query {
   userStoriesConnection(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserStoryConnection!
   releasesConnection(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReleaseConnection!
   iterationsConnection(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IterationConnection!
+  risksConnection(where: RiskWhereInput, orderBy: RiskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RiskConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -8442,6 +8530,657 @@ input ReleaseWhereInput {
 }
 
 input ReleaseWhereUniqueInput {
+  id: ID
+}
+
+type Risk implements Node {
+  id: ID!
+  name: String!
+  plan: String!
+  impact: Int
+  probability: Int
+  status: RiskStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project!
+}
+
+"""A connection to a list of items."""
+type RiskConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RiskEdge]!
+  aggregate: AggregateRisk!
+}
+
+input RiskCreateInput {
+  name: String!
+  plan: String!
+  impact: Int
+  probability: Int
+  status: RiskStatus!
+  project: ProjectCreateOneWithoutRisksInput!
+}
+
+input RiskCreateManyWithoutProjectInput {
+  create: [RiskCreateWithoutProjectInput!]
+  connect: [RiskWhereUniqueInput!]
+}
+
+input RiskCreateWithoutProjectInput {
+  name: String!
+  plan: String!
+  impact: Int
+  probability: Int
+  status: RiskStatus!
+}
+
+"""An edge in a connection."""
+type RiskEdge {
+  """The item at the end of the edge."""
+  node: Risk!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RiskOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  plan_ASC
+  plan_DESC
+  impact_ASC
+  impact_DESC
+  probability_ASC
+  probability_DESC
+  status_ASC
+  status_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type RiskPreviousValues {
+  id: ID!
+  name: String!
+  plan: String!
+  impact: Int
+  probability: Int
+  status: RiskStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input RiskScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RiskScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RiskScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RiskScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  plan: String
+
+  """All values that are not equal to given value."""
+  plan_not: String
+
+  """All values that are contained in given list."""
+  plan_in: [String!]
+
+  """All values that are not contained in given list."""
+  plan_not_in: [String!]
+
+  """All values less than the given value."""
+  plan_lt: String
+
+  """All values less than or equal the given value."""
+  plan_lte: String
+
+  """All values greater than the given value."""
+  plan_gt: String
+
+  """All values greater than or equal the given value."""
+  plan_gte: String
+
+  """All values containing the given string."""
+  plan_contains: String
+
+  """All values not containing the given string."""
+  plan_not_contains: String
+
+  """All values starting with the given string."""
+  plan_starts_with: String
+
+  """All values not starting with the given string."""
+  plan_not_starts_with: String
+
+  """All values ending with the given string."""
+  plan_ends_with: String
+
+  """All values not ending with the given string."""
+  plan_not_ends_with: String
+  impact: Int
+
+  """All values that are not equal to given value."""
+  impact_not: Int
+
+  """All values that are contained in given list."""
+  impact_in: [Int!]
+
+  """All values that are not contained in given list."""
+  impact_not_in: [Int!]
+
+  """All values less than the given value."""
+  impact_lt: Int
+
+  """All values less than or equal the given value."""
+  impact_lte: Int
+
+  """All values greater than the given value."""
+  impact_gt: Int
+
+  """All values greater than or equal the given value."""
+  impact_gte: Int
+  probability: Int
+
+  """All values that are not equal to given value."""
+  probability_not: Int
+
+  """All values that are contained in given list."""
+  probability_in: [Int!]
+
+  """All values that are not contained in given list."""
+  probability_not_in: [Int!]
+
+  """All values less than the given value."""
+  probability_lt: Int
+
+  """All values less than or equal the given value."""
+  probability_lte: Int
+
+  """All values greater than the given value."""
+  probability_gt: Int
+
+  """All values greater than or equal the given value."""
+  probability_gte: Int
+  status: RiskStatus
+
+  """All values that are not equal to given value."""
+  status_not: RiskStatus
+
+  """All values that are contained in given list."""
+  status_in: [RiskStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [RiskStatus!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+enum RiskStatus {
+  OPEN
+  PENDING
+  DONE
+}
+
+type RiskSubscriptionPayload {
+  mutation: MutationType!
+  node: Risk
+  updatedFields: [String!]
+  previousValues: RiskPreviousValues
+}
+
+input RiskSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RiskSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RiskSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RiskSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RiskWhereInput
+}
+
+input RiskUpdateInput {
+  name: String
+  plan: String
+  impact: Int
+  probability: Int
+  status: RiskStatus
+  project: ProjectUpdateOneRequiredWithoutRisksInput
+}
+
+input RiskUpdateManyDataInput {
+  name: String
+  plan: String
+  impact: Int
+  probability: Int
+  status: RiskStatus
+}
+
+input RiskUpdateManyMutationInput {
+  name: String
+  plan: String
+  impact: Int
+  probability: Int
+  status: RiskStatus
+}
+
+input RiskUpdateManyWithoutProjectInput {
+  create: [RiskCreateWithoutProjectInput!]
+  connect: [RiskWhereUniqueInput!]
+  disconnect: [RiskWhereUniqueInput!]
+  delete: [RiskWhereUniqueInput!]
+  update: [RiskUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [RiskUpdateManyWithWhereNestedInput!]
+  deleteMany: [RiskScalarWhereInput!]
+  upsert: [RiskUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input RiskUpdateManyWithWhereNestedInput {
+  where: RiskScalarWhereInput!
+  data: RiskUpdateManyDataInput!
+}
+
+input RiskUpdateWithoutProjectDataInput {
+  name: String
+  plan: String
+  impact: Int
+  probability: Int
+  status: RiskStatus
+}
+
+input RiskUpdateWithWhereUniqueWithoutProjectInput {
+  where: RiskWhereUniqueInput!
+  data: RiskUpdateWithoutProjectDataInput!
+}
+
+input RiskUpsertWithWhereUniqueWithoutProjectInput {
+  where: RiskWhereUniqueInput!
+  update: RiskUpdateWithoutProjectDataInput!
+  create: RiskCreateWithoutProjectInput!
+}
+
+input RiskWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RiskWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RiskWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RiskWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  plan: String
+
+  """All values that are not equal to given value."""
+  plan_not: String
+
+  """All values that are contained in given list."""
+  plan_in: [String!]
+
+  """All values that are not contained in given list."""
+  plan_not_in: [String!]
+
+  """All values less than the given value."""
+  plan_lt: String
+
+  """All values less than or equal the given value."""
+  plan_lte: String
+
+  """All values greater than the given value."""
+  plan_gt: String
+
+  """All values greater than or equal the given value."""
+  plan_gte: String
+
+  """All values containing the given string."""
+  plan_contains: String
+
+  """All values not containing the given string."""
+  plan_not_contains: String
+
+  """All values starting with the given string."""
+  plan_starts_with: String
+
+  """All values not starting with the given string."""
+  plan_not_starts_with: String
+
+  """All values ending with the given string."""
+  plan_ends_with: String
+
+  """All values not ending with the given string."""
+  plan_not_ends_with: String
+  impact: Int
+
+  """All values that are not equal to given value."""
+  impact_not: Int
+
+  """All values that are contained in given list."""
+  impact_in: [Int!]
+
+  """All values that are not contained in given list."""
+  impact_not_in: [Int!]
+
+  """All values less than the given value."""
+  impact_lt: Int
+
+  """All values less than or equal the given value."""
+  impact_lte: Int
+
+  """All values greater than the given value."""
+  impact_gt: Int
+
+  """All values greater than or equal the given value."""
+  impact_gte: Int
+  probability: Int
+
+  """All values that are not equal to given value."""
+  probability_not: Int
+
+  """All values that are contained in given list."""
+  probability_in: [Int!]
+
+  """All values that are not contained in given list."""
+  probability_not_in: [Int!]
+
+  """All values less than the given value."""
+  probability_lt: Int
+
+  """All values less than or equal the given value."""
+  probability_lte: Int
+
+  """All values greater than the given value."""
+  probability_gt: Int
+
+  """All values greater than or equal the given value."""
+  probability_gte: Int
+  status: RiskStatus
+
+  """All values that are not equal to given value."""
+  status_not: RiskStatus
+
+  """All values that are contained in given list."""
+  status_in: [RiskStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [RiskStatus!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  project: ProjectWhereInput
+}
+
+input RiskWhereUniqueInput {
   id: ID
 }
 
@@ -9426,6 +10165,7 @@ type Subscription {
   userStory(where: UserStorySubscriptionWhereInput): UserStorySubscriptionPayload
   release(where: ReleaseSubscriptionWhereInput): ReleaseSubscriptionPayload
   iteration(where: IterationSubscriptionWhereInput): IterationSubscriptionPayload
+  risk(where: RiskSubscriptionWhereInput): RiskSubscriptionPayload
 }
 
 type User implements Node {

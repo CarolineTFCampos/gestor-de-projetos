@@ -77,6 +77,7 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   lifecycle: Lifecycle @relation(name: "LifecycleProjects")
+  risks: [Risk!]! @relation(name: "ProjectRisks")
   epics: [Epic!]! @relation(name: "ProjectEpics")
   releases: [Release!]! @relation(name: "ProjectReleases")
   iterations: [Iteration!]! @relation(name: "ProjectIterations")
@@ -250,4 +251,22 @@ type Iteration {
   release: Release! @relation(name: "ReleaseIterations")
   project: Project! @relation(name: "ProjectIterations")
   userStories: [UserStory!]! @relation(name: "IterationUserStories")
+}
+
+enum RiskStatus {
+  OPEN
+  PENDING
+  DONE
+}
+
+type Risk {
+  id: ID! @unique
+  name: String!
+  plan: String!
+  impact: Int @default(value: 1)
+  probability: Int @default(value: 1)
+  status: RiskStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project! @relation(name: "ProjectRisks")
 }

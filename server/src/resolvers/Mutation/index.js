@@ -5,6 +5,10 @@ const { auth } = require('./auth')
 module.exports = {
   ...auth,
 
+  createRisk: forwardTo('db'),
+  updateRisk: forwardTo('db'),
+  deleteRisk: forwardTo('db'),
+
   createRole: forwardTo('db'),
   updateRole: forwardTo('db'),
   deleteRole: forwardTo('db'),

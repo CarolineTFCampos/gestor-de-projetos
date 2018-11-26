@@ -11,7 +11,6 @@ import ButtonGroup from 'antd/lib/button/button-group'
 import message from 'antd/lib/message'
 
 import {
-  releaseStatusTranslate,
   iterationStatusTranslate,
   formatDate,
   formatMinutesToHour

@@ -24,6 +24,12 @@ export const releaseStatusTranslate = {
   DONE: 'Concluída'
 }
 
+export const riskStatusTranslate = {
+  OPEN: 'Aberto',
+  PENDING: 'Pendente',
+  DONE: 'Fechado'
+}
+
 export const iterationStatusTranslate = {
   OPEN: 'Aberta',
   DONE: 'Concluída'

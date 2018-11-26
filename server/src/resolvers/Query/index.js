@@ -27,5 +27,8 @@ module.exports = {
   releases: forwardTo('db'),
 
   iteration: forwardTo('db'),
-  iterations: forwardTo('db')
+  iterations: forwardTo('db'),
+
+  risk: forwardTo('db'),
+  risks: forwardTo('db')
 }

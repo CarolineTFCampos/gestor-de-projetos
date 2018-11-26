@@ -11,6 +11,7 @@ import Loading from '../../components/Loading'
 
 import ProjectInfo from './ProjectInfo'
 import ProjectTeam from './ProjectTeam'
+import ProjectRisk from './ProjectRisk'
 import ProjectScope from './ProjectScope'
 import ProjectSchedule from './ProjectSchedule'
 import ProjectMilestone from './ProjectMilestone'
@@ -26,7 +27,7 @@ function Project(props) {
 
       {props.data.project && (
         <Card>
-          <Tabs defaultActiveKey="scope">
+          <Tabs defaultActiveKey="risk">
             <TabPane tab="Sobre" key="about">
               <h2>Sobre</h2>
             </TabPane>
@@ -37,7 +38,7 @@ function Project(props) {
               <ProjectTeam project={props.data.project} />
             </TabPane>
             <TabPane tab="Riscos" key="risk">
-              <h2>Riscos</h2>
+              <ProjectRisk project={props.data.project} />
             </TabPane>
             <TabPane tab="Marcos" key="milestones">
               <ProjectMilestone project={props.data.project} />
@@ -73,6 +74,16 @@ const GET_PROJECT = gql`
       restrictions
       createdAt
       updatedAt
+      risks {
+        id
+        name
+        plan
+        probability
+        impact
+        status
+        createdAt
+        updatedAt
+      }
       projectRoles {
         id
         estimatePrice
