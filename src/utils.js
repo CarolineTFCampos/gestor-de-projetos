@@ -13,6 +13,15 @@ export const roleLevelTypesTranslate = {
   EXPERT: 'Especialista'
 }
 
+export const resourceTypeTranslate = {
+  EQUIPAMENT: 'Equipamento',
+  TOOL: 'Ferramenta',
+  SERVICE: 'Serviço',
+  COMPONENT: 'Componente',
+  TRAVEL: 'Viagem',
+  OTHER: 'Outro'
+}
+
 export const epicStatusTranslate = {
   TODO: 'A fazer',
   INPROGRESS: 'Em progresso',
