@@ -1,4 +1,4 @@
-# import Risk, RiskWhereUniqueInput, RiskWhereInput, RiskOrderByInput, RiskCreateInput, RiskUpdateInput, Iteration, IterationWhereUniqueInput, IterationWhereInput, IterationOrderByInput, IterationCreateInput, IterationUpdateInput, Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
+# import Resource, ResourceWhereUniqueInput, ResourceWhereInput, ResourceOrderByInput, ResourceCreateInput, ResourceUpdateInput, Risk, RiskWhereUniqueInput, RiskWhereInput, RiskOrderByInput, RiskCreateInput, RiskUpdateInput, Iteration, IterationWhereUniqueInput, IterationWhereInput, IterationOrderByInput, IterationCreateInput, IterationUpdateInput, Release, ReleaseWhereUniqueInput, ReleaseWhereInput, ReleaseOrderByInput, ReleaseCreateInput, ReleaseUpdateInput, Milestone, MilestoneWhereUniqueInput, MilestoneWhereInput, MilestoneOrderByInput, MilestoneCreateInput, MilestoneUpdateInput, ProjectRoleContributor, ProjectRoleContributorCreateInput, ProjectRoleContributorUpdateInput, ProjectRoleContributorWhereUniqueInput, ProjectRole, ProjectRoleCreateInput, ProjectRoleUpdateInput, ProjectRoleWhereUniqueInput, UserStory, UserStoryWhereInput, UserStoryOrderByInput, UserStoryWhereUniqueInput, UserStoryCreateInput, UserStoryUpdateInput, Epic, EpicWhereInput, EpicOrderByInput, EpicWhereUniqueInput, EpicCreateInput, EpicUpdateInput, Project, ProjectWhereInput, ProjectOrderByInput, ProjectWhereUniqueInput, ProjectCreateInput, ProjectUpdateInput, Contributor, ContributorWhereInput, ContributorOrderByInput, ContributorWhereUniqueInput, ContributorCreateInput, ContributorUpdateInput from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -80,6 +80,17 @@ type Query {
     last: Int
   ): [Milestone]!
 
+  resource(where: ResourceWhereUniqueInput!): Resource
+  resources(
+    where: ResourceWhereInput
+    orderBy: ResourceOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Resource]!
+
   release(where: ReleaseWhereUniqueInput!): Release
   releases(
     where: ReleaseWhereInput
@@ -116,7 +127,7 @@ type Query {
 
 type Mutation {
   signin(email: String!, password: String!): AuthPayload!
-  signup(email: String!, password: String!, name: String!): AuthPayload!
+  # signup(email: String!, password: String!, name: String!): AuthPayload!
 
   createRole(data: RoleCreateInput!): Role!
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
@@ -171,6 +182,13 @@ type Mutation {
     where: MilestoneWhereUniqueInput!
   ): Milestone
   deleteMilestone(where: MilestoneWhereUniqueInput!): Milestone
+
+  createResource(data: ResourceCreateInput!): Resource!
+  updateResource(
+    data: ResourceUpdateInput!
+    where: ResourceWhereUniqueInput!
+  ): Resource
+  deleteResource(where: ResourceWhereUniqueInput!): Resource
 
   createRelease(data: ReleaseCreateInput!): Release!
   updateRelease(

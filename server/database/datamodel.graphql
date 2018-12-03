@@ -65,6 +65,7 @@ type Project {
   id: ID! @unique
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -76,13 +77,33 @@ type Project {
   twTaskListId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  lifecycle: Lifecycle @relation(name: "LifecycleProjects")
   risks: [Risk!]! @relation(name: "ProjectRisks")
   epics: [Epic!]! @relation(name: "ProjectEpics")
   releases: [Release!]! @relation(name: "ProjectReleases")
+  resources: [Resource!]! @relation(name: "ProjectResources")
   iterations: [Iteration!]! @relation(name: "ProjectIterations")
   milestones: [Milestone!]! @relation(name: "ProjectMilestones")
   projectRoles: [ProjectRole!]! @relation(name: "ProjectProjectRoles")
+}
+
+type Resource {
+  id: ID! @unique
+  name: String!
+  description: String
+  type: ResourceType!
+  price: Float @default(value: 0)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project! @relation(name: "ProjectResources")
+}
+
+enum ResourceType {
+  EQUIPAMENT
+  TOOL
+  SERVICE
+  COMPONENT
+  TRAVEL
+  OTHER
 }
 
 type ProjectRole {
@@ -157,15 +178,6 @@ type Milestone {
   updatedAt: DateTime!
   project: Project! @relation(name: "ProjectMilestones")
   contributor: Contributor! @relation(name: "ContributorMilestones")
-}
-
-type Lifecycle {
-  id: ID! @unique
-  name: String!
-  phase: [String!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  projects: [Project!]! @relation(name: "LifecycleProjects")
 }
 
 enum EpicStatus {
@@ -264,6 +276,7 @@ type Risk {
   name: String!
   plan: String!
   impact: Int @default(value: 1)
+  priority: Int @default(value: 1)
   probability: Int @default(value: 1)
   status: RiskStatus!
   createdAt: DateTime!

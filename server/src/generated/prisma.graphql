@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/carolineedecampos-881f88/gestor-de-projetos/dev
-# timestamp: Mon Nov 26 2018 01:03:53 GMT-0200 (-02)
+# timestamp: Mon Dec 03 2018 03:22:07 GMT-0200 (-02)
 
 type AggregateContributor {
   count: Int!
@@ -21,10 +21,6 @@ type AggregateIteration {
   count: Int!
 }
 
-type AggregateLifecycle {
-  count: Int!
-}
-
 type AggregateMilestone {
   count: Int!
 }
@@ -42,6 +38,10 @@ type AggregateProjectRoleContributor {
 }
 
 type AggregateRelease {
+  count: Int!
+}
+
+type AggregateResource {
   count: Int!
 }
 
@@ -3983,288 +3983,6 @@ input IterationWhereUniqueInput {
   id: ID
 }
 
-type Lifecycle implements Node {
-  id: ID!
-  name: String!
-  phase: [String!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
-}
-
-"""A connection to a list of items."""
-type LifecycleConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [LifecycleEdge]!
-  aggregate: AggregateLifecycle!
-}
-
-input LifecycleCreateInput {
-  name: String!
-  phase: LifecycleCreatephaseInput
-  projects: ProjectCreateManyWithoutLifecycleInput
-}
-
-input LifecycleCreateOneWithoutProjectsInput {
-  create: LifecycleCreateWithoutProjectsInput
-  connect: LifecycleWhereUniqueInput
-}
-
-input LifecycleCreatephaseInput {
-  set: [String!]
-}
-
-input LifecycleCreateWithoutProjectsInput {
-  name: String!
-  phase: LifecycleCreatephaseInput
-}
-
-"""An edge in a connection."""
-type LifecycleEdge {
-  """The item at the end of the edge."""
-  node: Lifecycle!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum LifecycleOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type LifecyclePreviousValues {
-  id: ID!
-  name: String!
-  phase: [String!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type LifecycleSubscriptionPayload {
-  mutation: MutationType!
-  node: Lifecycle
-  updatedFields: [String!]
-  previousValues: LifecyclePreviousValues
-}
-
-input LifecycleSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [LifecycleSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [LifecycleSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [LifecycleSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: LifecycleWhereInput
-}
-
-input LifecycleUpdateInput {
-  name: String
-  phase: LifecycleUpdatephaseInput
-  projects: ProjectUpdateManyWithoutLifecycleInput
-}
-
-input LifecycleUpdateManyMutationInput {
-  name: String
-  phase: LifecycleUpdatephaseInput
-}
-
-input LifecycleUpdateOneWithoutProjectsInput {
-  create: LifecycleCreateWithoutProjectsInput
-  connect: LifecycleWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: LifecycleUpdateWithoutProjectsDataInput
-  upsert: LifecycleUpsertWithoutProjectsInput
-}
-
-input LifecycleUpdatephaseInput {
-  set: [String!]
-}
-
-input LifecycleUpdateWithoutProjectsDataInput {
-  name: String
-  phase: LifecycleUpdatephaseInput
-}
-
-input LifecycleUpsertWithoutProjectsInput {
-  update: LifecycleUpdateWithoutProjectsDataInput!
-  create: LifecycleCreateWithoutProjectsInput!
-}
-
-input LifecycleWhereInput {
-  """Logical AND on all given filters."""
-  AND: [LifecycleWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [LifecycleWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [LifecycleWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-  projects_every: ProjectWhereInput
-  projects_some: ProjectWhereInput
-  projects_none: ProjectWhereInput
-}
-
-input LifecycleWhereUniqueInput {
-  id: ID
-}
-
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -4923,12 +4641,12 @@ type Mutation {
   createContributorExperience(data: ContributorExperienceCreateInput!): ContributorExperience!
   createContributorFormation(data: ContributorFormationCreateInput!): ContributorFormation!
   createProject(data: ProjectCreateInput!): Project!
+  createResource(data: ResourceCreateInput!): Resource!
   createProjectRole(data: ProjectRoleCreateInput!): ProjectRole!
   createProjectRoleContributor(data: ProjectRoleContributorCreateInput!): ProjectRoleContributor!
   createRole(data: RoleCreateInput!): Role!
   createRoleLevel(data: RoleLevelCreateInput!): RoleLevel!
   createMilestone(data: MilestoneCreateInput!): Milestone!
-  createLifecycle(data: LifecycleCreateInput!): Lifecycle!
   createEpic(data: EpicCreateInput!): Epic!
   createUserStory(data: UserStoryCreateInput!): UserStory!
   createRelease(data: ReleaseCreateInput!): Release!
@@ -4939,12 +4657,12 @@ type Mutation {
   updateContributorExperience(data: ContributorExperienceUpdateInput!, where: ContributorExperienceWhereUniqueInput!): ContributorExperience
   updateContributorFormation(data: ContributorFormationUpdateInput!, where: ContributorFormationWhereUniqueInput!): ContributorFormation
   updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
+  updateResource(data: ResourceUpdateInput!, where: ResourceWhereUniqueInput!): Resource
   updateProjectRole(data: ProjectRoleUpdateInput!, where: ProjectRoleWhereUniqueInput!): ProjectRole
   updateProjectRoleContributor(data: ProjectRoleContributorUpdateInput!, where: ProjectRoleContributorWhereUniqueInput!): ProjectRoleContributor
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateRoleLevel(data: RoleLevelUpdateInput!, where: RoleLevelWhereUniqueInput!): RoleLevel
   updateMilestone(data: MilestoneUpdateInput!, where: MilestoneWhereUniqueInput!): Milestone
-  updateLifecycle(data: LifecycleUpdateInput!, where: LifecycleWhereUniqueInput!): Lifecycle
   updateEpic(data: EpicUpdateInput!, where: EpicWhereUniqueInput!): Epic
   updateUserStory(data: UserStoryUpdateInput!, where: UserStoryWhereUniqueInput!): UserStory
   updateRelease(data: ReleaseUpdateInput!, where: ReleaseWhereUniqueInput!): Release
@@ -4955,12 +4673,12 @@ type Mutation {
   deleteContributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
   deleteContributorFormation(where: ContributorFormationWhereUniqueInput!): ContributorFormation
   deleteProject(where: ProjectWhereUniqueInput!): Project
+  deleteResource(where: ResourceWhereUniqueInput!): Resource
   deleteProjectRole(where: ProjectRoleWhereUniqueInput!): ProjectRole
   deleteProjectRoleContributor(where: ProjectRoleContributorWhereUniqueInput!): ProjectRoleContributor
   deleteRole(where: RoleWhereUniqueInput!): Role
   deleteRoleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
   deleteMilestone(where: MilestoneWhereUniqueInput!): Milestone
-  deleteLifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   deleteEpic(where: EpicWhereUniqueInput!): Epic
   deleteUserStory(where: UserStoryWhereUniqueInput!): UserStory
   deleteRelease(where: ReleaseWhereUniqueInput!): Release
@@ -4971,12 +4689,12 @@ type Mutation {
   upsertContributorExperience(where: ContributorExperienceWhereUniqueInput!, create: ContributorExperienceCreateInput!, update: ContributorExperienceUpdateInput!): ContributorExperience!
   upsertContributorFormation(where: ContributorFormationWhereUniqueInput!, create: ContributorFormationCreateInput!, update: ContributorFormationUpdateInput!): ContributorFormation!
   upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
+  upsertResource(where: ResourceWhereUniqueInput!, create: ResourceCreateInput!, update: ResourceUpdateInput!): Resource!
   upsertProjectRole(where: ProjectRoleWhereUniqueInput!, create: ProjectRoleCreateInput!, update: ProjectRoleUpdateInput!): ProjectRole!
   upsertProjectRoleContributor(where: ProjectRoleContributorWhereUniqueInput!, create: ProjectRoleContributorCreateInput!, update: ProjectRoleContributorUpdateInput!): ProjectRoleContributor!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   upsertRoleLevel(where: RoleLevelWhereUniqueInput!, create: RoleLevelCreateInput!, update: RoleLevelUpdateInput!): RoleLevel!
   upsertMilestone(where: MilestoneWhereUniqueInput!, create: MilestoneCreateInput!, update: MilestoneUpdateInput!): Milestone!
-  upsertLifecycle(where: LifecycleWhereUniqueInput!, create: LifecycleCreateInput!, update: LifecycleUpdateInput!): Lifecycle!
   upsertEpic(where: EpicWhereUniqueInput!, create: EpicCreateInput!, update: EpicUpdateInput!): Epic!
   upsertUserStory(where: UserStoryWhereUniqueInput!, create: UserStoryCreateInput!, update: UserStoryUpdateInput!): UserStory!
   upsertRelease(where: ReleaseWhereUniqueInput!, create: ReleaseCreateInput!, update: ReleaseUpdateInput!): Release!
@@ -4987,12 +4705,12 @@ type Mutation {
   updateManyContributorExperiences(data: ContributorExperienceUpdateManyMutationInput!, where: ContributorExperienceWhereInput): BatchPayload!
   updateManyContributorFormations(data: ContributorFormationUpdateManyMutationInput!, where: ContributorFormationWhereInput): BatchPayload!
   updateManyProjects(data: ProjectUpdateManyMutationInput!, where: ProjectWhereInput): BatchPayload!
+  updateManyResources(data: ResourceUpdateManyMutationInput!, where: ResourceWhereInput): BatchPayload!
   updateManyProjectRoles(data: ProjectRoleUpdateManyMutationInput!, where: ProjectRoleWhereInput): BatchPayload!
   updateManyProjectRoleContributors(data: ProjectRoleContributorUpdateManyMutationInput!, where: ProjectRoleContributorWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   updateManyRoleLevels(data: RoleLevelUpdateManyMutationInput!, where: RoleLevelWhereInput): BatchPayload!
   updateManyMilestones(data: MilestoneUpdateManyMutationInput!, where: MilestoneWhereInput): BatchPayload!
-  updateManyLifecycles(data: LifecycleUpdateManyMutationInput!, where: LifecycleWhereInput): BatchPayload!
   updateManyEpics(data: EpicUpdateManyMutationInput!, where: EpicWhereInput): BatchPayload!
   updateManyUserStories(data: UserStoryUpdateManyMutationInput!, where: UserStoryWhereInput): BatchPayload!
   updateManyReleases(data: ReleaseUpdateManyMutationInput!, where: ReleaseWhereInput): BatchPayload!
@@ -5003,12 +4721,12 @@ type Mutation {
   deleteManyContributorExperiences(where: ContributorExperienceWhereInput): BatchPayload!
   deleteManyContributorFormations(where: ContributorFormationWhereInput): BatchPayload!
   deleteManyProjects(where: ProjectWhereInput): BatchPayload!
+  deleteManyResources(where: ResourceWhereInput): BatchPayload!
   deleteManyProjectRoles(where: ProjectRoleWhereInput): BatchPayload!
   deleteManyProjectRoleContributors(where: ProjectRoleContributorWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
   deleteManyRoleLevels(where: RoleLevelWhereInput): BatchPayload!
   deleteManyMilestones(where: MilestoneWhereInput): BatchPayload!
-  deleteManyLifecycles(where: LifecycleWhereInput): BatchPayload!
   deleteManyEpics(where: EpicWhereInput): BatchPayload!
   deleteManyUserStories(where: UserStoryWhereInput): BatchPayload!
   deleteManyReleases(where: ReleaseWhereInput): BatchPayload!
@@ -5047,6 +4765,7 @@ type Project implements Node {
   id: ID!
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5058,10 +4777,10 @@ type Project implements Node {
   twTaskListId: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  lifecycle: Lifecycle
   risks(where: RiskWhereInput, orderBy: RiskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Risk!]
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic!]
   releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release!]
+  resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
   iterations(where: IterationWhereInput, orderBy: IterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Iteration!]
   milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone!]
   projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole!]
@@ -5080,6 +4799,7 @@ type ProjectConnection {
 input ProjectCreateInput {
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5089,18 +4809,13 @@ input ProjectCreateInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
   risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
-}
-
-input ProjectCreateManyWithoutLifecycleInput {
-  create: [ProjectCreateWithoutLifecycleInput!]
-  connect: [ProjectWhereUniqueInput!]
 }
 
 input ProjectCreateOneWithoutEpicsInput {
@@ -5128,6 +4843,11 @@ input ProjectCreateOneWithoutReleasesInput {
   connect: ProjectWhereUniqueInput
 }
 
+input ProjectCreateOneWithoutResourcesInput {
+  create: ProjectCreateWithoutResourcesInput
+  connect: ProjectWhereUniqueInput
+}
+
 input ProjectCreateOneWithoutRisksInput {
   create: ProjectCreateWithoutRisksInput
   connect: ProjectWhereUniqueInput
@@ -5136,6 +4856,7 @@ input ProjectCreateOneWithoutRisksInput {
 input ProjectCreateWithoutEpicsInput {
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5145,9 +4866,9 @@ input ProjectCreateWithoutEpicsInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
   risks: RiskCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
@@ -5156,26 +4877,7 @@ input ProjectCreateWithoutEpicsInput {
 input ProjectCreateWithoutIterationsInput {
   name: String!
   sponsor: String!
-  objectives: String
-  motivations: String
-  limitations: String
-  restrictions: String
-  status: ProjectStatus
-  startAt: DateTime
-  endAt: DateTime
-  twProjectId: String
-  twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
-  risks: RiskCreateManyWithoutProjectInput
-  epics: EpicCreateManyWithoutProjectInput
-  releases: ReleaseCreateManyWithoutProjectInput
-  milestones: MilestoneCreateManyWithoutProjectInput
-  projectRoles: ProjectRoleCreateManyWithoutProjectInput
-}
-
-input ProjectCreateWithoutLifecycleInput {
-  name: String!
-  sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5188,7 +4890,7 @@ input ProjectCreateWithoutLifecycleInput {
   risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
-  iterations: IterationCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -5196,6 +4898,7 @@ input ProjectCreateWithoutLifecycleInput {
 input ProjectCreateWithoutMilestonesInput {
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5205,10 +4908,10 @@ input ProjectCreateWithoutMilestonesInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
   risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
 }
@@ -5216,6 +4919,7 @@ input ProjectCreateWithoutMilestonesInput {
 input ProjectCreateWithoutProjectRolesInput {
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5225,10 +4929,10 @@ input ProjectCreateWithoutProjectRolesInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
   risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
 }
@@ -5236,6 +4940,7 @@ input ProjectCreateWithoutProjectRolesInput {
 input ProjectCreateWithoutReleasesInput {
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5245,9 +4950,30 @@ input ProjectCreateWithoutReleasesInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
   risks: RiskCreateManyWithoutProjectInput
   epics: EpicCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
+  iterations: IterationCreateManyWithoutProjectInput
+  milestones: MilestoneCreateManyWithoutProjectInput
+  projectRoles: ProjectRoleCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutResourcesInput {
+  name: String!
+  sponsor: String!
+  plan: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  risks: RiskCreateManyWithoutProjectInput
+  epics: EpicCreateManyWithoutProjectInput
+  releases: ReleaseCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
@@ -5256,6 +4982,7 @@ input ProjectCreateWithoutReleasesInput {
 input ProjectCreateWithoutRisksInput {
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -5265,9 +4992,9 @@ input ProjectCreateWithoutRisksInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleCreateOneWithoutProjectsInput
   epics: EpicCreateManyWithoutProjectInput
   releases: ReleaseCreateManyWithoutProjectInput
+  resources: ResourceCreateManyWithoutProjectInput
   iterations: IterationCreateManyWithoutProjectInput
   milestones: MilestoneCreateManyWithoutProjectInput
   projectRoles: ProjectRoleCreateManyWithoutProjectInput
@@ -5289,6 +5016,8 @@ enum ProjectOrderByInput {
   name_DESC
   sponsor_ASC
   sponsor_DESC
+  plan_ASC
+  plan_DESC
   objectives_ASC
   objectives_DESC
   motivations_ASC
@@ -5317,6 +5046,7 @@ type ProjectPreviousValues {
   id: ID!
   name: String!
   sponsor: String!
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -6531,475 +6261,6 @@ input ProjectRoleWhereUniqueInput {
   id: ID
 }
 
-input ProjectScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ProjectScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ProjectScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProjectScalarWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
-  sponsor: String
-
-  """All values that are not equal to given value."""
-  sponsor_not: String
-
-  """All values that are contained in given list."""
-  sponsor_in: [String!]
-
-  """All values that are not contained in given list."""
-  sponsor_not_in: [String!]
-
-  """All values less than the given value."""
-  sponsor_lt: String
-
-  """All values less than or equal the given value."""
-  sponsor_lte: String
-
-  """All values greater than the given value."""
-  sponsor_gt: String
-
-  """All values greater than or equal the given value."""
-  sponsor_gte: String
-
-  """All values containing the given string."""
-  sponsor_contains: String
-
-  """All values not containing the given string."""
-  sponsor_not_contains: String
-
-  """All values starting with the given string."""
-  sponsor_starts_with: String
-
-  """All values not starting with the given string."""
-  sponsor_not_starts_with: String
-
-  """All values ending with the given string."""
-  sponsor_ends_with: String
-
-  """All values not ending with the given string."""
-  sponsor_not_ends_with: String
-  objectives: String
-
-  """All values that are not equal to given value."""
-  objectives_not: String
-
-  """All values that are contained in given list."""
-  objectives_in: [String!]
-
-  """All values that are not contained in given list."""
-  objectives_not_in: [String!]
-
-  """All values less than the given value."""
-  objectives_lt: String
-
-  """All values less than or equal the given value."""
-  objectives_lte: String
-
-  """All values greater than the given value."""
-  objectives_gt: String
-
-  """All values greater than or equal the given value."""
-  objectives_gte: String
-
-  """All values containing the given string."""
-  objectives_contains: String
-
-  """All values not containing the given string."""
-  objectives_not_contains: String
-
-  """All values starting with the given string."""
-  objectives_starts_with: String
-
-  """All values not starting with the given string."""
-  objectives_not_starts_with: String
-
-  """All values ending with the given string."""
-  objectives_ends_with: String
-
-  """All values not ending with the given string."""
-  objectives_not_ends_with: String
-  motivations: String
-
-  """All values that are not equal to given value."""
-  motivations_not: String
-
-  """All values that are contained in given list."""
-  motivations_in: [String!]
-
-  """All values that are not contained in given list."""
-  motivations_not_in: [String!]
-
-  """All values less than the given value."""
-  motivations_lt: String
-
-  """All values less than or equal the given value."""
-  motivations_lte: String
-
-  """All values greater than the given value."""
-  motivations_gt: String
-
-  """All values greater than or equal the given value."""
-  motivations_gte: String
-
-  """All values containing the given string."""
-  motivations_contains: String
-
-  """All values not containing the given string."""
-  motivations_not_contains: String
-
-  """All values starting with the given string."""
-  motivations_starts_with: String
-
-  """All values not starting with the given string."""
-  motivations_not_starts_with: String
-
-  """All values ending with the given string."""
-  motivations_ends_with: String
-
-  """All values not ending with the given string."""
-  motivations_not_ends_with: String
-  limitations: String
-
-  """All values that are not equal to given value."""
-  limitations_not: String
-
-  """All values that are contained in given list."""
-  limitations_in: [String!]
-
-  """All values that are not contained in given list."""
-  limitations_not_in: [String!]
-
-  """All values less than the given value."""
-  limitations_lt: String
-
-  """All values less than or equal the given value."""
-  limitations_lte: String
-
-  """All values greater than the given value."""
-  limitations_gt: String
-
-  """All values greater than or equal the given value."""
-  limitations_gte: String
-
-  """All values containing the given string."""
-  limitations_contains: String
-
-  """All values not containing the given string."""
-  limitations_not_contains: String
-
-  """All values starting with the given string."""
-  limitations_starts_with: String
-
-  """All values not starting with the given string."""
-  limitations_not_starts_with: String
-
-  """All values ending with the given string."""
-  limitations_ends_with: String
-
-  """All values not ending with the given string."""
-  limitations_not_ends_with: String
-  restrictions: String
-
-  """All values that are not equal to given value."""
-  restrictions_not: String
-
-  """All values that are contained in given list."""
-  restrictions_in: [String!]
-
-  """All values that are not contained in given list."""
-  restrictions_not_in: [String!]
-
-  """All values less than the given value."""
-  restrictions_lt: String
-
-  """All values less than or equal the given value."""
-  restrictions_lte: String
-
-  """All values greater than the given value."""
-  restrictions_gt: String
-
-  """All values greater than or equal the given value."""
-  restrictions_gte: String
-
-  """All values containing the given string."""
-  restrictions_contains: String
-
-  """All values not containing the given string."""
-  restrictions_not_contains: String
-
-  """All values starting with the given string."""
-  restrictions_starts_with: String
-
-  """All values not starting with the given string."""
-  restrictions_not_starts_with: String
-
-  """All values ending with the given string."""
-  restrictions_ends_with: String
-
-  """All values not ending with the given string."""
-  restrictions_not_ends_with: String
-  status: ProjectStatus
-
-  """All values that are not equal to given value."""
-  status_not: ProjectStatus
-
-  """All values that are contained in given list."""
-  status_in: [ProjectStatus!]
-
-  """All values that are not contained in given list."""
-  status_not_in: [ProjectStatus!]
-  startAt: DateTime
-
-  """All values that are not equal to given value."""
-  startAt_not: DateTime
-
-  """All values that are contained in given list."""
-  startAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  startAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  startAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  startAt_lte: DateTime
-
-  """All values greater than the given value."""
-  startAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  startAt_gte: DateTime
-  endAt: DateTime
-
-  """All values that are not equal to given value."""
-  endAt_not: DateTime
-
-  """All values that are contained in given list."""
-  endAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  endAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  endAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  endAt_lte: DateTime
-
-  """All values greater than the given value."""
-  endAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  endAt_gte: DateTime
-  twProjectId: String
-
-  """All values that are not equal to given value."""
-  twProjectId_not: String
-
-  """All values that are contained in given list."""
-  twProjectId_in: [String!]
-
-  """All values that are not contained in given list."""
-  twProjectId_not_in: [String!]
-
-  """All values less than the given value."""
-  twProjectId_lt: String
-
-  """All values less than or equal the given value."""
-  twProjectId_lte: String
-
-  """All values greater than the given value."""
-  twProjectId_gt: String
-
-  """All values greater than or equal the given value."""
-  twProjectId_gte: String
-
-  """All values containing the given string."""
-  twProjectId_contains: String
-
-  """All values not containing the given string."""
-  twProjectId_not_contains: String
-
-  """All values starting with the given string."""
-  twProjectId_starts_with: String
-
-  """All values not starting with the given string."""
-  twProjectId_not_starts_with: String
-
-  """All values ending with the given string."""
-  twProjectId_ends_with: String
-
-  """All values not ending with the given string."""
-  twProjectId_not_ends_with: String
-  twTaskListId: String
-
-  """All values that are not equal to given value."""
-  twTaskListId_not: String
-
-  """All values that are contained in given list."""
-  twTaskListId_in: [String!]
-
-  """All values that are not contained in given list."""
-  twTaskListId_not_in: [String!]
-
-  """All values less than the given value."""
-  twTaskListId_lt: String
-
-  """All values less than or equal the given value."""
-  twTaskListId_lte: String
-
-  """All values greater than the given value."""
-  twTaskListId_gt: String
-
-  """All values greater than or equal the given value."""
-  twTaskListId_gte: String
-
-  """All values containing the given string."""
-  twTaskListId_contains: String
-
-  """All values not containing the given string."""
-  twTaskListId_not_contains: String
-
-  """All values starting with the given string."""
-  twTaskListId_starts_with: String
-
-  """All values not starting with the given string."""
-  twTaskListId_not_starts_with: String
-
-  """All values ending with the given string."""
-  twTaskListId_ends_with: String
-
-  """All values not ending with the given string."""
-  twTaskListId_not_ends_with: String
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-}
-
 enum ProjectStatus {
   OPEN
   TODO
@@ -7051,6 +6312,7 @@ input ProjectSubscriptionWhereInput {
 input ProjectUpdateInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7060,32 +6322,19 @@ input ProjectUpdateInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
 
-input ProjectUpdateManyDataInput {
-  name: String
-  sponsor: String
-  objectives: String
-  motivations: String
-  limitations: String
-  restrictions: String
-  status: ProjectStatus
-  startAt: DateTime
-  endAt: DateTime
-  twProjectId: String
-  twTaskListId: String
-}
-
 input ProjectUpdateManyMutationInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7095,22 +6344,6 @@ input ProjectUpdateManyMutationInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-}
-
-input ProjectUpdateManyWithoutLifecycleInput {
-  create: [ProjectCreateWithoutLifecycleInput!]
-  connect: [ProjectWhereUniqueInput!]
-  disconnect: [ProjectWhereUniqueInput!]
-  delete: [ProjectWhereUniqueInput!]
-  update: [ProjectUpdateWithWhereUniqueWithoutLifecycleInput!]
-  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
-  deleteMany: [ProjectScalarWhereInput!]
-  upsert: [ProjectUpsertWithWhereUniqueWithoutLifecycleInput!]
-}
-
-input ProjectUpdateManyWithWhereNestedInput {
-  where: ProjectScalarWhereInput!
-  data: ProjectUpdateManyDataInput!
 }
 
 input ProjectUpdateOneRequiredWithoutEpicsInput {
@@ -7148,6 +6381,13 @@ input ProjectUpdateOneRequiredWithoutReleasesInput {
   upsert: ProjectUpsertWithoutReleasesInput
 }
 
+input ProjectUpdateOneRequiredWithoutResourcesInput {
+  create: ProjectCreateWithoutResourcesInput
+  connect: ProjectWhereUniqueInput
+  update: ProjectUpdateWithoutResourcesDataInput
+  upsert: ProjectUpsertWithoutResourcesInput
+}
+
 input ProjectUpdateOneRequiredWithoutRisksInput {
   create: ProjectCreateWithoutRisksInput
   connect: ProjectWhereUniqueInput
@@ -7158,6 +6398,7 @@ input ProjectUpdateOneRequiredWithoutRisksInput {
 input ProjectUpdateWithoutEpicsDataInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7167,9 +6408,9 @@ input ProjectUpdateWithoutEpicsDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   risks: RiskUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
@@ -7178,26 +6419,7 @@ input ProjectUpdateWithoutEpicsDataInput {
 input ProjectUpdateWithoutIterationsDataInput {
   name: String
   sponsor: String
-  objectives: String
-  motivations: String
-  limitations: String
-  restrictions: String
-  status: ProjectStatus
-  startAt: DateTime
-  endAt: DateTime
-  twProjectId: String
-  twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
-  risks: RiskUpdateManyWithoutProjectInput
-  epics: EpicUpdateManyWithoutProjectInput
-  releases: ReleaseUpdateManyWithoutProjectInput
-  milestones: MilestoneUpdateManyWithoutProjectInput
-  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
-}
-
-input ProjectUpdateWithoutLifecycleDataInput {
-  name: String
-  sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7210,7 +6432,7 @@ input ProjectUpdateWithoutLifecycleDataInput {
   risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
-  iterations: IterationUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -7218,6 +6440,7 @@ input ProjectUpdateWithoutLifecycleDataInput {
 input ProjectUpdateWithoutMilestonesDataInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7227,10 +6450,10 @@ input ProjectUpdateWithoutMilestonesDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
 }
@@ -7238,6 +6461,7 @@ input ProjectUpdateWithoutMilestonesDataInput {
 input ProjectUpdateWithoutProjectRolesDataInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7247,10 +6471,10 @@ input ProjectUpdateWithoutProjectRolesDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
 }
@@ -7258,6 +6482,7 @@ input ProjectUpdateWithoutProjectRolesDataInput {
 input ProjectUpdateWithoutReleasesDataInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7267,9 +6492,30 @@ input ProjectUpdateWithoutReleasesDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   risks: RiskUpdateManyWithoutProjectInput
   epics: EpicUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
+  iterations: IterationUpdateManyWithoutProjectInput
+  milestones: MilestoneUpdateManyWithoutProjectInput
+  projectRoles: ProjectRoleUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutResourcesDataInput {
+  name: String
+  sponsor: String
+  plan: String
+  objectives: String
+  motivations: String
+  limitations: String
+  restrictions: String
+  status: ProjectStatus
+  startAt: DateTime
+  endAt: DateTime
+  twProjectId: String
+  twTaskListId: String
+  risks: RiskUpdateManyWithoutProjectInput
+  epics: EpicUpdateManyWithoutProjectInput
+  releases: ReleaseUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
@@ -7278,6 +6524,7 @@ input ProjectUpdateWithoutReleasesDataInput {
 input ProjectUpdateWithoutRisksDataInput {
   name: String
   sponsor: String
+  plan: String
   objectives: String
   motivations: String
   limitations: String
@@ -7287,17 +6534,12 @@ input ProjectUpdateWithoutRisksDataInput {
   endAt: DateTime
   twProjectId: String
   twTaskListId: String
-  lifecycle: LifecycleUpdateOneWithoutProjectsInput
   epics: EpicUpdateManyWithoutProjectInput
   releases: ReleaseUpdateManyWithoutProjectInput
+  resources: ResourceUpdateManyWithoutProjectInput
   iterations: IterationUpdateManyWithoutProjectInput
   milestones: MilestoneUpdateManyWithoutProjectInput
   projectRoles: ProjectRoleUpdateManyWithoutProjectInput
-}
-
-input ProjectUpdateWithWhereUniqueWithoutLifecycleInput {
-  where: ProjectWhereUniqueInput!
-  data: ProjectUpdateWithoutLifecycleDataInput!
 }
 
 input ProjectUpsertWithoutEpicsInput {
@@ -7325,15 +6567,14 @@ input ProjectUpsertWithoutReleasesInput {
   create: ProjectCreateWithoutReleasesInput!
 }
 
+input ProjectUpsertWithoutResourcesInput {
+  update: ProjectUpdateWithoutResourcesDataInput!
+  create: ProjectCreateWithoutResourcesInput!
+}
+
 input ProjectUpsertWithoutRisksInput {
   update: ProjectUpdateWithoutRisksDataInput!
   create: ProjectCreateWithoutRisksInput!
-}
-
-input ProjectUpsertWithWhereUniqueWithoutLifecycleInput {
-  where: ProjectWhereUniqueInput!
-  update: ProjectUpdateWithoutLifecycleDataInput!
-  create: ProjectCreateWithoutLifecycleInput!
 }
 
 input ProjectWhereInput {
@@ -7465,6 +6706,46 @@ input ProjectWhereInput {
 
   """All values not ending with the given string."""
   sponsor_not_ends_with: String
+  plan: String
+
+  """All values that are not equal to given value."""
+  plan_not: String
+
+  """All values that are contained in given list."""
+  plan_in: [String!]
+
+  """All values that are not contained in given list."""
+  plan_not_in: [String!]
+
+  """All values less than the given value."""
+  plan_lt: String
+
+  """All values less than or equal the given value."""
+  plan_lte: String
+
+  """All values greater than the given value."""
+  plan_gt: String
+
+  """All values greater than or equal the given value."""
+  plan_gte: String
+
+  """All values containing the given string."""
+  plan_contains: String
+
+  """All values not containing the given string."""
+  plan_not_contains: String
+
+  """All values starting with the given string."""
+  plan_starts_with: String
+
+  """All values not starting with the given string."""
+  plan_not_starts_with: String
+
+  """All values ending with the given string."""
+  plan_ends_with: String
+
+  """All values not ending with the given string."""
+  plan_not_ends_with: String
   objectives: String
 
   """All values that are not equal to given value."""
@@ -7803,7 +7084,6 @@ input ProjectWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  lifecycle: LifecycleWhereInput
   risks_every: RiskWhereInput
   risks_some: RiskWhereInput
   risks_none: RiskWhereInput
@@ -7813,6 +7093,9 @@ input ProjectWhereInput {
   releases_every: ReleaseWhereInput
   releases_some: ReleaseWhereInput
   releases_none: ReleaseWhereInput
+  resources_every: ResourceWhereInput
+  resources_some: ResourceWhereInput
+  resources_none: ResourceWhereInput
   iterations_every: IterationWhereInput
   iterations_some: IterationWhereInput
   iterations_none: IterationWhereInput
@@ -7834,12 +7117,12 @@ type Query {
   contributorExperiences(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorExperience]!
   contributorFormations(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContributorFormation]!
   projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
+  resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource]!
   projectRoles(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRole]!
   projectRoleContributors(where: ProjectRoleContributorWhereInput, orderBy: ProjectRoleContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectRoleContributor]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   roleLevels(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleLevel]!
   milestones(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Milestone]!
-  lifecycles(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Lifecycle]!
   epics(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Epic]!
   userStories(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserStory]!
   releases(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Release]!
@@ -7850,12 +7133,12 @@ type Query {
   contributorExperience(where: ContributorExperienceWhereUniqueInput!): ContributorExperience
   contributorFormation(where: ContributorFormationWhereUniqueInput!): ContributorFormation
   project(where: ProjectWhereUniqueInput!): Project
+  resource(where: ResourceWhereUniqueInput!): Resource
   projectRole(where: ProjectRoleWhereUniqueInput!): ProjectRole
   projectRoleContributor(where: ProjectRoleContributorWhereUniqueInput!): ProjectRoleContributor
   role(where: RoleWhereUniqueInput!): Role
   roleLevel(where: RoleLevelWhereUniqueInput!): RoleLevel
   milestone(where: MilestoneWhereUniqueInput!): Milestone
-  lifecycle(where: LifecycleWhereUniqueInput!): Lifecycle
   epic(where: EpicWhereUniqueInput!): Epic
   userStory(where: UserStoryWhereUniqueInput!): UserStory
   release(where: ReleaseWhereUniqueInput!): Release
@@ -7866,12 +7149,12 @@ type Query {
   contributorExperiencesConnection(where: ContributorExperienceWhereInput, orderBy: ContributorExperienceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorExperienceConnection!
   contributorFormationsConnection(where: ContributorFormationWhereInput, orderBy: ContributorFormationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContributorFormationConnection!
   projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
+  resourcesConnection(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResourceConnection!
   projectRolesConnection(where: ProjectRoleWhereInput, orderBy: ProjectRoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRoleConnection!
   projectRoleContributorsConnection(where: ProjectRoleContributorWhereInput, orderBy: ProjectRoleContributorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectRoleContributorConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   roleLevelsConnection(where: RoleLevelWhereInput, orderBy: RoleLevelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleLevelConnection!
   milestonesConnection(where: MilestoneWhereInput, orderBy: MilestoneOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MilestoneConnection!
-  lifecyclesConnection(where: LifecycleWhereInput, orderBy: LifecycleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LifecycleConnection!
   epicsConnection(where: EpicWhereInput, orderBy: EpicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EpicConnection!
   userStoriesConnection(where: UserStoryWhereInput, orderBy: UserStoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserStoryConnection!
   releasesConnection(where: ReleaseWhereInput, orderBy: ReleaseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReleaseConnection!
@@ -8533,11 +7816,612 @@ input ReleaseWhereUniqueInput {
   id: ID
 }
 
+type Resource implements Node {
+  id: ID!
+  name: String!
+  description: String
+  type: ResourceType!
+  price: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project!
+}
+
+"""A connection to a list of items."""
+type ResourceConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ResourceEdge]!
+  aggregate: AggregateResource!
+}
+
+input ResourceCreateInput {
+  name: String!
+  description: String
+  type: ResourceType!
+  price: Float
+  project: ProjectCreateOneWithoutResourcesInput!
+}
+
+input ResourceCreateManyWithoutProjectInput {
+  create: [ResourceCreateWithoutProjectInput!]
+  connect: [ResourceWhereUniqueInput!]
+}
+
+input ResourceCreateWithoutProjectInput {
+  name: String!
+  description: String
+  type: ResourceType!
+  price: Float
+}
+
+"""An edge in a connection."""
+type ResourceEdge {
+  """The item at the end of the edge."""
+  node: Resource!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ResourceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  type_ASC
+  type_DESC
+  price_ASC
+  price_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ResourcePreviousValues {
+  id: ID!
+  name: String!
+  description: String
+  type: ResourceType!
+  price: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input ResourceScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResourceScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResourceScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResourceScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  type: ResourceType
+
+  """All values that are not equal to given value."""
+  type_not: ResourceType
+
+  """All values that are contained in given list."""
+  type_in: [ResourceType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [ResourceType!]
+  price: Float
+
+  """All values that are not equal to given value."""
+  price_not: Float
+
+  """All values that are contained in given list."""
+  price_in: [Float!]
+
+  """All values that are not contained in given list."""
+  price_not_in: [Float!]
+
+  """All values less than the given value."""
+  price_lt: Float
+
+  """All values less than or equal the given value."""
+  price_lte: Float
+
+  """All values greater than the given value."""
+  price_gt: Float
+
+  """All values greater than or equal the given value."""
+  price_gte: Float
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type ResourceSubscriptionPayload {
+  mutation: MutationType!
+  node: Resource
+  updatedFields: [String!]
+  previousValues: ResourcePreviousValues
+}
+
+input ResourceSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResourceSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResourceSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResourceSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ResourceWhereInput
+}
+
+enum ResourceType {
+  EQUIPAMENT
+  TOOL
+  SERVICE
+  COMPONENT
+  TRAVEL
+  OTHER
+}
+
+input ResourceUpdateInput {
+  name: String
+  description: String
+  type: ResourceType
+  price: Float
+  project: ProjectUpdateOneRequiredWithoutResourcesInput
+}
+
+input ResourceUpdateManyDataInput {
+  name: String
+  description: String
+  type: ResourceType
+  price: Float
+}
+
+input ResourceUpdateManyMutationInput {
+  name: String
+  description: String
+  type: ResourceType
+  price: Float
+}
+
+input ResourceUpdateManyWithoutProjectInput {
+  create: [ResourceCreateWithoutProjectInput!]
+  connect: [ResourceWhereUniqueInput!]
+  disconnect: [ResourceWhereUniqueInput!]
+  delete: [ResourceWhereUniqueInput!]
+  update: [ResourceUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [ResourceUpdateManyWithWhereNestedInput!]
+  deleteMany: [ResourceScalarWhereInput!]
+  upsert: [ResourceUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input ResourceUpdateManyWithWhereNestedInput {
+  where: ResourceScalarWhereInput!
+  data: ResourceUpdateManyDataInput!
+}
+
+input ResourceUpdateWithoutProjectDataInput {
+  name: String
+  description: String
+  type: ResourceType
+  price: Float
+}
+
+input ResourceUpdateWithWhereUniqueWithoutProjectInput {
+  where: ResourceWhereUniqueInput!
+  data: ResourceUpdateWithoutProjectDataInput!
+}
+
+input ResourceUpsertWithWhereUniqueWithoutProjectInput {
+  where: ResourceWhereUniqueInput!
+  update: ResourceUpdateWithoutProjectDataInput!
+  create: ResourceCreateWithoutProjectInput!
+}
+
+input ResourceWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResourceWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResourceWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResourceWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  type: ResourceType
+
+  """All values that are not equal to given value."""
+  type_not: ResourceType
+
+  """All values that are contained in given list."""
+  type_in: [ResourceType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [ResourceType!]
+  price: Float
+
+  """All values that are not equal to given value."""
+  price_not: Float
+
+  """All values that are contained in given list."""
+  price_in: [Float!]
+
+  """All values that are not contained in given list."""
+  price_not_in: [Float!]
+
+  """All values less than the given value."""
+  price_lt: Float
+
+  """All values less than or equal the given value."""
+  price_lte: Float
+
+  """All values greater than the given value."""
+  price_gt: Float
+
+  """All values greater than or equal the given value."""
+  price_gte: Float
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  project: ProjectWhereInput
+}
+
+input ResourceWhereUniqueInput {
+  id: ID
+}
+
 type Risk implements Node {
   id: ID!
   name: String!
   plan: String!
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus!
   createdAt: DateTime!
@@ -8559,6 +8443,7 @@ input RiskCreateInput {
   name: String!
   plan: String!
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus!
   project: ProjectCreateOneWithoutRisksInput!
@@ -8573,6 +8458,7 @@ input RiskCreateWithoutProjectInput {
   name: String!
   plan: String!
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus!
 }
@@ -8595,6 +8481,8 @@ enum RiskOrderByInput {
   plan_DESC
   impact_ASC
   impact_DESC
+  priority_ASC
+  priority_DESC
   probability_ASC
   probability_DESC
   status_ASC
@@ -8610,6 +8498,7 @@ type RiskPreviousValues {
   name: String!
   plan: String!
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus!
   createdAt: DateTime!
@@ -8767,6 +8656,28 @@ input RiskScalarWhereInput {
 
   """All values greater than or equal the given value."""
   impact_gte: Int
+  priority: Int
+
+  """All values that are not equal to given value."""
+  priority_not: Int
+
+  """All values that are contained in given list."""
+  priority_in: [Int!]
+
+  """All values that are not contained in given list."""
+  priority_not_in: [Int!]
+
+  """All values less than the given value."""
+  priority_lt: Int
+
+  """All values less than or equal the given value."""
+  priority_lte: Int
+
+  """All values greater than the given value."""
+  priority_gt: Int
+
+  """All values greater than or equal the given value."""
+  priority_gte: Int
   probability: Int
 
   """All values that are not equal to given value."""
@@ -8894,6 +8805,7 @@ input RiskUpdateInput {
   name: String
   plan: String
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus
   project: ProjectUpdateOneRequiredWithoutRisksInput
@@ -8903,6 +8815,7 @@ input RiskUpdateManyDataInput {
   name: String
   plan: String
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus
 }
@@ -8911,6 +8824,7 @@ input RiskUpdateManyMutationInput {
   name: String
   plan: String
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus
 }
@@ -8935,6 +8849,7 @@ input RiskUpdateWithoutProjectDataInput {
   name: String
   plan: String
   impact: Int
+  priority: Int
   probability: Int
   status: RiskStatus
 }
@@ -9101,6 +9016,28 @@ input RiskWhereInput {
 
   """All values greater than or equal the given value."""
   impact_gte: Int
+  priority: Int
+
+  """All values that are not equal to given value."""
+  priority_not: Int
+
+  """All values that are contained in given list."""
+  priority_in: [Int!]
+
+  """All values that are not contained in given list."""
+  priority_not_in: [Int!]
+
+  """All values less than the given value."""
+  priority_lt: Int
+
+  """All values less than or equal the given value."""
+  priority_lte: Int
+
+  """All values greater than the given value."""
+  priority_gt: Int
+
+  """All values greater than or equal the given value."""
+  priority_gte: Int
   probability: Int
 
   """All values that are not equal to given value."""
@@ -10155,12 +10092,12 @@ type Subscription {
   contributorExperience(where: ContributorExperienceSubscriptionWhereInput): ContributorExperienceSubscriptionPayload
   contributorFormation(where: ContributorFormationSubscriptionWhereInput): ContributorFormationSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
+  resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
   projectRole(where: ProjectRoleSubscriptionWhereInput): ProjectRoleSubscriptionPayload
   projectRoleContributor(where: ProjectRoleContributorSubscriptionWhereInput): ProjectRoleContributorSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
   roleLevel(where: RoleLevelSubscriptionWhereInput): RoleLevelSubscriptionPayload
   milestone(where: MilestoneSubscriptionWhereInput): MilestoneSubscriptionPayload
-  lifecycle(where: LifecycleSubscriptionWhereInput): LifecycleSubscriptionPayload
   epic(where: EpicSubscriptionWhereInput): EpicSubscriptionPayload
   userStory(where: UserStorySubscriptionWhereInput): UserStorySubscriptionPayload
   release(where: ReleaseSubscriptionWhereInput): ReleaseSubscriptionPayload
