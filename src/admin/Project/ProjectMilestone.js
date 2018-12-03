@@ -33,6 +33,7 @@ class ProjectMilestone extends Component {
         dataIndex: 'dueDate',
         title: 'Data de vencimento',
         defaultSortOrder: 'ascend',
+        width: 200,
         sorter: function(a, b) {
           return moment(a.dueDate) - moment(b.dueDate)
         },
@@ -49,6 +50,7 @@ class ProjectMilestone extends Component {
         key: 'status',
         dataIndex: 'status',
         title: 'Estado',
+        width: 200,
         render: function(text) {
           return milestoneStatusTranslate[text]
         }
@@ -57,6 +59,7 @@ class ProjectMilestone extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -146,6 +149,7 @@ class ProjectMilestone extends Component {
           rowKey="id"
           columns={self.columns}
           dataSource={self.props.project.milestones}
+          pagination={false}
         />
 
         {self.state.modalMilestoneVisible && (

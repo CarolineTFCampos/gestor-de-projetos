@@ -16,9 +16,6 @@ function ProjectSchedulea(props) {
       <TabPane tab="Iterações" key="iterations">
         <ProjectIteration project={props.project} />
       </TabPane>
-      <TabPane tab="Gantt" key="gantt">
-        <h2>GANTT</h2>
-      </TabPane>
     </Tabs>
   )
 }

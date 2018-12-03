@@ -28,14 +28,15 @@ class RolesList extends Component {
         dataIndex: 'name'
       },
       {
-        key: 'description',
-        title: 'Descrição',
-        dataIndex: 'description'
+        key: 'department',
+        title: 'Departamento',
+        dataIndex: 'department'
       },
       {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -115,6 +116,7 @@ class RolesList extends Component {
             columns={this.columns}
             dataSource={this.props.data.roles || []}
             loading={this.props.data.loading}
+            pagination={false}
           />
         </Card>
       </>
@@ -127,7 +129,7 @@ const GET_ROLES = gql`
     roles {
       id
       name
-      description
+      department
     }
   }
 `

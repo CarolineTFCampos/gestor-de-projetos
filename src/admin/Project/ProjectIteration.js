@@ -81,6 +81,7 @@ class ProjectIteration extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -250,6 +251,7 @@ class ProjectIteration extends Component {
                 .flat()
             }
           })}
+          pagination={false}
         />
 
         {self.state.modalIterationVisible && (

@@ -32,6 +32,11 @@ class ProjectRisk extends Component {
         title: 'Nome'
       },
       {
+        key: 'priority',
+        dataIndex: 'priority',
+        title: 'Prioridade'
+      },
+      {
         key: 'probability',
         dataIndex: 'probability',
         title: 'Probabilidade'
@@ -53,6 +58,7 @@ class ProjectRisk extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -139,6 +145,7 @@ class ProjectRisk extends Component {
           rowKey="id"
           columns={self.columns}
           dataSource={self.props.project.risks}
+          pagination={false}
         />
 
         {self.state.modalRiskVisible && (

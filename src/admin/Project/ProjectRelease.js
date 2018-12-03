@@ -82,6 +82,7 @@ class ProjectRelease extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -152,7 +153,7 @@ class ProjectRelease extends Component {
       })
 
       // Exibe mensagem de sucesso
-      message.success(`Epic removida com sucesso`)
+      message.success(`Epico removido com sucesso`)
     } catch (err) {
       // Mensagem de erro do graphql
       const error = err.graphQLErrors[0].message
@@ -237,6 +238,7 @@ class ProjectRelease extends Component {
               })
             }
           })}
+          pagination={false}
         />
 
         {self.state.modalReleaseVisible && (

@@ -86,6 +86,7 @@ class ProjectTeam extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -180,6 +181,7 @@ class ProjectTeam extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -411,6 +413,7 @@ class ProjectTeam extends Component {
               />
             )
           }}
+          pagination={false}
         />
 
         {self.state.modalProjectRoleVisible && (

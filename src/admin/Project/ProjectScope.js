@@ -120,11 +120,11 @@ class ProjectScope extends Component {
         dataIndex: 'releaseSprint',
         title: 'Release | Sprint',
         render: function(text, record) {
-          return record.release
+          return record.release && record.release.id !== ''
             ? `${record.release.name} (${
                 releaseStatusTranslate[record.release.status]
               })`
-            : record.iteration
+            : record.iteration && record.iteration.id !== ''
             ? `${record.iteration.name} (${
                 iterationStatusTranslate[record.iteration.status]
               })`
@@ -135,6 +135,7 @@ class ProjectScope extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -278,15 +279,16 @@ class ProjectScope extends Component {
         </div>
 
         <Table
-          defaultExpandAllRows={true}
+          rowKey="id"
           columns={self.columns}
+          defaultExpandAllRows={true}
           dataSource={self.props.project.epics.map(function(epic) {
             return {
               ...epic,
               children: epic.userStories
             }
           })}
-          rowKey="id"
+          pagination={false}
         />
 
         {self.state.modalEpicVisible && (

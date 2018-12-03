@@ -51,6 +51,7 @@ class ProjectsList extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -130,6 +131,7 @@ class ProjectsList extends Component {
             columns={this.columns}
             dataSource={this.props.data.projects || []}
             loading={this.props.data.loading}
+            pagination={false}
           />
         </Card>
       </>
