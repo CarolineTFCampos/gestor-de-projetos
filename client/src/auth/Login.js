@@ -93,7 +93,7 @@ class Login extends Component {
   render() {
     return (
       <AuthLayout>
-        <h3 style={{ textAlign: 'center' }}>Code Projetos</h3>
+        <h3 style={{ textAlign: 'center' }}>Gestor de Projetos</h3>
 
         <Card>
           <h3 style={{ textAlign: 'center' }}>Login</h3>
