@@ -3,9 +3,9 @@ const { GraphQLServer } = require('graphql-yoga')
 
 const resolvers = require('./resolvers')
 
-const tw = require('./teamwork')
+const teamwork = require('./teamwork')
 
-const db = new Prisma({
+const prisma = new Prisma({
   typeDefs: 'src/generated/prisma.graphql', // the auto-generated GraphQL schema of the Prisma API
   endpoint: process.env.PRISMA_ENDPOINT // the endpoint of the Prisma API (value set in `.env`)
   // debug: true // log all GraphQL queries & mutations sent to the Prisma API
@@ -21,8 +21,8 @@ const server = new GraphQLServer({
   context: function(req) {
     return {
       ...req,
-      tw,
-      db
+      teamwork,
+      prisma
     }
   }
 })
