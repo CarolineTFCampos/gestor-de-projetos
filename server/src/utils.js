@@ -1,11 +1,15 @@
 const jwt = require('jsonwebtoken')
 
 async function getUserById(userId, ctx) {
-  const user = await ctx.db.query.user({
+  const user = await ctx.prisma.query.user({
     where: {
       id: userId
     }
   })
+
+  if (!user) {
+    throw new AuthError()
+  }
 
   return user
 }
