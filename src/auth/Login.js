@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 
-import Button from 'antd/lib/button'
 import Card from 'antd/lib/card'
 import Form from 'antd/lib/form'
 import Icon from 'antd/lib/icon'
 import Input from 'antd/lib/input'
+import Button from 'antd/lib/button'
 import FormItem from 'antd/lib/form/FormItem'
 import message from 'antd/lib/message'
 
@@ -70,14 +69,11 @@ class Login extends Component {
           variables: values
         })
 
-        // TODO: Salva token do usuário no localStorage
+        // Salva token do usuário no localStorage
         localStorage.setItem('gestor__token', result.data.signin.token)
 
-        // TODO: Redireciona o usuário para tela principal
+        // Redireciona o usuário para tela principal
         self.props.history.push('/admin')
-
-        // TODO: DELETAR
-        console.log(result)
       } catch (err) {
         // Mensagem de erro do graphql
         const error = err.graphQLErrors[0].message
@@ -149,12 +145,6 @@ class Login extends Component {
               </Button>
             </FormItem>
           </Form>
-
-          <hr />
-
-          <Link to="/auth/forgot-password">
-            <a href>Esqueci minha senha</a>
-          </Link>
         </Card>
       </AuthLayout>
     )
