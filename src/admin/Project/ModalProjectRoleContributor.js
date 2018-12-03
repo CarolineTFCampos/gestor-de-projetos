@@ -151,7 +151,7 @@ class ModalProjectRoleContributor extends Component {
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title={item ? item.name : 'Novo Colaborador'}
+              title={item ? item.contributor.name : 'Novo Colaborador'}
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"

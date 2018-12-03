@@ -53,7 +53,7 @@ class ModalReleaseAddEpic extends Component {
       })
 
       // Exibe mensagem de sucesso
-      message.success(`Épico (${values.name}) adicionado com sucesso`)
+      message.success(`Épico adicionado com sucesso`)
 
       // Fecha modal
       this.props.onClose()

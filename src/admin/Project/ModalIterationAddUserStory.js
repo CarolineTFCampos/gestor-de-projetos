@@ -51,9 +51,7 @@ class ModalIterationAddUserStory extends Component {
       })
 
       // Exibe mensagem de sucesso
-      message.success(
-        `História de Usuário (${values.name}) adicionada com sucesso`
-      )
+      message.success(`História de Usuário adicionada com sucesso`)
 
       // Fecha modal
       this.props.onClose()

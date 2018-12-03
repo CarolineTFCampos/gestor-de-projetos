@@ -146,7 +146,7 @@ class ModalIteration extends Component {
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title="Nova Iteração"
+              title={item ? item.name : 'Nova Iteração'}
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"

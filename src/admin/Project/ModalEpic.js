@@ -91,9 +91,11 @@ class ModalEpic extends Component {
                         id: values.release.id
                       }
                     }
-                  : {
+                  : this.props.item.release && this.props.item.release.id !== ''
+                  ? {
                       disconnect: true
-                    },
+                    }
+                  : {},
               name: values.name,
               description: values.description,
               priority: values.priority,
@@ -128,9 +130,7 @@ class ModalEpic extends Component {
                         id: values.release.id
                       }
                     }
-                  : {
-                      disconnect: true
-                    },
+                  : {},
               name: values.name,
               description: values.description,
               priority: values.priority,
