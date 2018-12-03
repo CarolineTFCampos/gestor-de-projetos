@@ -27,23 +27,14 @@ const style = {
 class SideBar extends Component {
   render() {
     let activeMenu = this.props.location.pathname.split('/')[2]
-    const activeSubmenu = ['roles', 'contributors', 'projects'].includes(
-      activeMenu
-    )
-      ? 'cruds'
-      : ''
+    const activeSubmenu = activeMenu === 'contributors' ? 'contributors' : ''
 
     if (activeMenu === 'project') {
       activeMenu = `${activeMenu}-${this.props.location.pathname.split('/')[3]}`
     }
 
     return (
-      <Sider
-        trigger={null}
-        collapsible={true}
-        style={style.sider}
-        collapsed={this.props.collapsed}
-      >
+      <Sider trigger={null} style={style.sider}>
         {/* LOGO */}
         <div>
           <a href="/">
@@ -60,38 +51,40 @@ class SideBar extends Component {
           defaultOpenKeys={[activeSubmenu]}
           defaultSelectedKeys={[activeMenu]}
         >
-          <MenuItem key="home">
-            <Link to="/admin/home">
-              <Icon type="dashboard" theme="outlined" />
-              <span>Dashboard</span>
+          <MenuItem key="projects">
+            <Link to="/admin/projects">
+              <Icon type="project" theme="outlined" />
+              <span>Projetos</span>
+            </Link>
+          </MenuItem>
+
+          <MenuItem key="roles">
+            <Link to="/admin/roles">
+              <Icon type="solution" theme="outlined" />
+              <span>Papéis</span>
             </Link>
           </MenuItem>
 
           <SubMenu
-            key="cruds"
+            key="contributors"
             title={
               <span>
-                <Icon type="plus-circle" />
-                <span>Cadastros</span>
+                <Icon type="team" theme="outlined" />
+                <span>Colaboradores</span>
               </span>
             }
           >
-            <MenuItem key="roles">
-              <Link to="/admin/roles">
-                <Icon type="solution" theme="outlined" />
-                <span>Papéis</span>
+            <MenuItem key="contributors-crud">
+              <Link to="/admin/contributors/crud">
+                <Icon type="plus" />
+                <span>Cadastro</span>
               </Link>
             </MenuItem>
-            <MenuItem key="contributors">
-              <Link to="/admin/contributors">
-                <Icon type="team" theme="outlined" />
-                <span>Colaboradores</span>
-              </Link>
-            </MenuItem>
-            <MenuItem key="projects">
-              <Link to="/admin/projects">
-                <Icon type="project" theme="outlined" />
-                <span>Projetos</span>
+
+            <MenuItem key="contributors-allocation">
+              <Link to="/admin/contributors/allocation">
+                <Icon type="sliders" />
+                <span>Alocação</span>
               </Link>
             </MenuItem>
           </SubMenu>
