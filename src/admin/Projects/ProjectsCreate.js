@@ -33,6 +33,7 @@ class ProjectsCreate extends Component {
       await this.props.mutate({
         variables: {
           data: {
+            plan: '',
             name: values.name,
             sponsor: values.sponsor,
             objectives: values.objectives,

@@ -12,24 +12,28 @@ import Loading from '../../components/Loading'
 import ProjectInfo from './ProjectInfo'
 import ProjectTeam from './ProjectTeam'
 import ProjectRisk from './ProjectRisk'
+import ProjectPlan from './ProjectPlan'
 import ProjectScope from './ProjectScope'
 import ProjectSchedule from './ProjectSchedule'
+import ProjectResource from './ProjectResource'
 import ProjectMilestone from './ProjectMilestone'
 
 const TabPane = Tabs.TabPane
 
 function Project(props) {
-  return (
-    <>
-      {props.data.loading && <Loading />}
+  if (props.data.loading) {
+    return <Loading />
+  }
 
-      {props.data.project && <ProjectInfo project={props.data.project} />}
+  if (props.data.project) {
+    return (
+      <>
+        <ProjectInfo project={props.data.project} />
 
-      {props.data.project && (
         <Card>
-          <Tabs defaultActiveKey="risk">
-            <TabPane tab="Sobre" key="about">
-              <h2>Sobre</h2>
+          <Tabs defaultActiveKey="plan">
+            <TabPane tab="Plano" key="plan">
+              <ProjectPlan project={props.data.project} />
             </TabPane>
             <TabPane tab="Escopo" key="scope">
               <ProjectScope project={props.data.project} />
@@ -37,8 +41,8 @@ function Project(props) {
             <TabPane tab="Equipe" key="team">
               <ProjectTeam project={props.data.project} />
             </TabPane>
-            <TabPane tab="Riscos" key="risk">
-              <ProjectRisk project={props.data.project} />
+            <TabPane tab="Recursos" key="resources">
+              <ProjectResource project={props.data.project} />
             </TabPane>
             <TabPane tab="Marcos" key="milestones">
               <ProjectMilestone project={props.data.project} />
@@ -46,17 +50,14 @@ function Project(props) {
             <TabPane tab="Cronograma" key="schedule">
               <ProjectSchedule project={props.data.project} />
             </TabPane>
-            <TabPane tab="Recursos" key="resources">
-              <h2>Recursos Fisico</h2>
-            </TabPane>
-            <TabPane tab="Orçamento ??" key="price">
-              <h2>Orçamento TeamWork</h2>
+            <TabPane tab="Riscos" key="risk">
+              <ProjectRisk project={props.data.project} />
             </TabPane>
           </Tabs>
         </Card>
-      )}
-    </>
-  )
+      </>
+    )
+  }
 }
 
 const GET_PROJECT = gql`
@@ -68,6 +69,7 @@ const GET_PROJECT = gql`
       status
       startAt
       endAt
+      plan
       objectives
       motivations
       limitations
@@ -78,6 +80,7 @@ const GET_PROJECT = gql`
         id
         name
         plan
+        priority
         probability
         impact
         status
@@ -111,6 +114,13 @@ const GET_PROJECT = gql`
             }
           }
         }
+      }
+      resources {
+        id
+        name
+        description
+        type
+        price
       }
       milestones {
         id
