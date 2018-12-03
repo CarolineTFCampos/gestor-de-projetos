@@ -14,22 +14,6 @@ const style = {
 }
 
 class AdminLayout extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      collapsed: false
-    }
-
-    this.toggle = this.toggle.bind(this)
-  }
-
-  toggle() {
-    this.setState({
-      collapsed: !this.state.collapsed
-    })
-  }
-
   render() {
     const contentStyle = this.props.hasFooter
       ? {
@@ -40,10 +24,10 @@ class AdminLayout extends Component {
 
     return (
       <Layout>
-        <SideBar collapsed={this.state.collapsed} />
+        <SideBar />
 
         <Layout>
-          <NavBar toggle={this.toggle} collapsed={this.state.collapsed} />
+          <NavBar />
 
           <Content style={contentStyle}>{this.props.children}</Content>
         </Layout>
