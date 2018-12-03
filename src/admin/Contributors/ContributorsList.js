@@ -36,6 +36,7 @@ class ContributorsList extends Component {
         key: 'action',
         title: 'Ações',
         align: 'right',
+        width: 130,
         render: function(text, record) {
           return (
             <span>
@@ -92,7 +93,7 @@ class ContributorsList extends Component {
   }
 
   handleEdit(id) {
-    this.props.history.push(`/admin/contributors/${id}`)
+    this.props.history.push(`/admin/contributors/crud/${id}`)
   }
 
   render() {
@@ -101,7 +102,7 @@ class ContributorsList extends Component {
         <Title>
           <h2>Lista de Colaboradores</h2>
 
-          <Link to="/admin/contributors/create">
+          <Link to="/admin/contributors/crud/create">
             <Button type="primary">
               <Icon type="plus" theme="outlined" />
               <span>Novo Colaborador</span>
@@ -115,6 +116,7 @@ class ContributorsList extends Component {
             columns={this.columns}
             dataSource={this.props.data.contributors || []}
             loading={this.props.data.loading}
+            pagination={false}
           />
         </Card>
       </>

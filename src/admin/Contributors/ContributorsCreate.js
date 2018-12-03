@@ -60,7 +60,7 @@ class ContributorsCreate extends Component {
       message.success(`Colaborador (${values.name}) criado com sucesso`)
 
       // Redireciona para lista
-      this.props.history.push('/admin/contributors')
+      this.props.history.push('/admin/contributors/crud')
     } catch (err) {
       // Mensagem de erro do graphql
       const error = err.graphQLErrors[0].message
@@ -78,7 +78,7 @@ class ContributorsCreate extends Component {
         <Title>
           <h2>Cadastro de Colaborador</h2>
 
-          <Link to="/admin/contributors">Voltar</Link>
+          <Link to="/admin/contributors/crud">Voltar</Link>
         </Title>
 
         <ContributorsForm
@@ -98,6 +98,8 @@ const CREATE_CONTRIBUTOR = gql`
       name
       email
       emailPrivate
+      phone
+      address
       doc
       price
       active

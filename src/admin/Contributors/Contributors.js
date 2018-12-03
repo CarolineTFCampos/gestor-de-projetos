@@ -11,17 +11,17 @@ function Contributors() {
   return (
     <Switch>
       <Route
-        path="/admin/contributors/create"
+        path="/admin/contributors/crud/create"
         exact={true}
         component={ContributorsCreate}
       />
       <Route
-        path="/admin/contributors/:id"
+        path="/admin/contributors/crud/:id"
         exact={true}
         component={ContributorsEdit}
       />
       <Route
-        path="/admin/contributors"
+        path="/admin/contributors/crud"
         exact={true}
         component={ContributorsList}
       />

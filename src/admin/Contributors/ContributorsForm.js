@@ -124,7 +124,7 @@ class ContributorsForm extends Component {
             <>
               <Card title="Dados Principais" style={styles.card}>
                 <Row type="flex" justify="space-between">
-                  <Col sm={24} md={15}>
+                  <Col sm={24} md={16}>
                     <Field
                       name="name"
                       type="text"
@@ -133,12 +133,12 @@ class ContributorsForm extends Component {
                       component={FormInput}
                     />
                   </Col>
-                  <Col sm={24} md={8}>
+                  <Col sm={24} md={7}>
                     <Field
                       name="doc"
                       type="text"
-                      label="Documento"
-                      placeholder="Documento"
+                      label="CPF"
+                      placeholder="CPF"
                       component={FormInput}
                     />
                   </Col>
@@ -155,7 +155,7 @@ class ContributorsForm extends Component {
                       disabled={!!self.props.initialValues.id}
                     />
                   </Col>
-                  <Col sm={24} md={8}>
+                  <Col sm={24} md={7}>
                     <Field
                       name="emailPrivate"
                       type="text"
@@ -179,7 +179,7 @@ class ContributorsForm extends Component {
                 </Row>
 
                 <Row type="flex" justify="space-between">
-                  <Col sm={24} md={15}>
+                  <Col sm={24} md={16}>
                     <Field
                       name="address"
                       type="text"
@@ -188,7 +188,7 @@ class ContributorsForm extends Component {
                       component={FormInput}
                     />
                   </Col>
-                  <Col sm={24} md={8}>
+                  <Col sm={24} md={7}>
                     <Field
                       name="phone"
                       type="text"

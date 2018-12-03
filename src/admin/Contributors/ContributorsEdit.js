@@ -34,6 +34,8 @@ class ContributorsEdit extends Component {
             name: values.name,
             email: values.email,
             emailPrivate: values.emailPrivate,
+            phone: values.phone,
+            address: values.address,
             doc: values.doc,
             price: values.price,
             experiences: {
@@ -97,7 +99,7 @@ class ContributorsEdit extends Component {
       message.success(`Colaborador (${values.name}) editado com sucesso`)
 
       // Redireciona para lista
-      this.props.history.push('/admin/contributors')
+      this.props.history.push('/admin/contributors/crud')
     } catch (err) {
       // Mensagem de erro do graphql
       const error = err.graphQLErrors[0].message
@@ -115,7 +117,7 @@ class ContributorsEdit extends Component {
         <Title>
           <h2>Editar Colaborador</h2>
 
-          <Link to="/admin/contributors">Voltar</Link>
+          <Link to="/admin/contributors/crud">Voltar</Link>
         </Title>
 
         {this.props.data && this.props.data.loading && <Loading />}
@@ -158,6 +160,8 @@ const GET_CONTRIBUTOR = gql`
       name
       email
       emailPrivate
+      phone
+      address
       doc
       price
       active
