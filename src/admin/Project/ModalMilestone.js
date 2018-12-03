@@ -134,7 +134,7 @@ class ModalMilestone extends Component {
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title="Novo Marco"
+              title={item ? item.name : 'Novo Marco'}
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"

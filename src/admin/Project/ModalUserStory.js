@@ -74,9 +74,12 @@ class ModalUserStory extends Component {
                         id: values.iteration.id
                       }
                     }
-                  : {
+                  : this.props.item.iteration &&
+                    this.props.item.iteration.id !== ''
+                  ? {
                       disconnect: true
-                    },
+                    }
+                  : {},
               name: values.name,
               description: values.description,
               priority: values.priority,
@@ -110,9 +113,7 @@ class ModalUserStory extends Component {
                         id: values.iteration.id
                       }
                     }
-                  : {
-                      disconnect: true
-                    },
+                  : {},
               name: values.name,
               description: values.description,
               priority: values.priority,

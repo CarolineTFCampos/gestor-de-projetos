@@ -121,7 +121,7 @@ class ModalProjectRole extends Component {
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title={item ? item.name : 'Nova Papel'}
+              title={item ? item.role.name : 'Nova Papel'}
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"

@@ -50,6 +50,7 @@ class ModalRisk extends Component {
             data: {
               name: values.name,
               plan: values.plan,
+              priority: parseInt(values.priority),
               probability: parseInt(values.probability),
               impact: parseInt(values.impact),
               status: values.status
@@ -71,6 +72,7 @@ class ModalRisk extends Component {
               },
               name: values.name,
               plan: values.plan,
+              priority: parseInt(values.priority),
               probability: parseInt(values.probability),
               impact: parseInt(values.impact),
               status: values.status
@@ -112,12 +114,12 @@ class ModalRisk extends Component {
       <Form
         validate={validate}
         onSubmit={this.handleSubmit}
-        initialValues={item || { probability: '1', impact: '1' }}
+        initialValues={item || { priority: '1', probability: '1', impact: '1' }}
       >
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title="Novo Risco"
+              title={item ? item.name : 'Novo Risco'}
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"
@@ -127,7 +129,7 @@ class ModalRisk extends Component {
               width="80%"
             >
               <Row type="flex" justify="space-between">
-                <Col xs={24} sm={11}>
+                <Col xs={24} sm={16}>
                   <Field
                     name="name"
                     type="text"
@@ -137,7 +139,7 @@ class ModalRisk extends Component {
                   />
                 </Col>
 
-                <Col xs={24} sm={11}>
+                <Col xs={24} sm={7}>
                   <Field
                     name="status"
                     type="radiobutton"
@@ -152,7 +154,33 @@ class ModalRisk extends Component {
               </Row>
 
               <Row type="flex" justify="space-between">
-                <Col xs={24} sm={11}>
+                <Col xs={24} sm={8}>
+                  <Field
+                    name="priority"
+                    type="select"
+                    label="Prioridade"
+                    placeholder="Prioridade"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                    component={FormInput}
+                  >
+                    {['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].map(
+                      function(priority) {
+                        return (
+                          <Select.Option key={priority} value={priority}>
+                            {priority}
+                          </Select.Option>
+                        )
+                      }
+                    )}
+                  </Field>
+                </Col>
+
+                <Col xs={24} sm={7}>
                   <Field
                     name="probability"
                     type="select"
@@ -178,7 +206,7 @@ class ModalRisk extends Component {
                   </Field>
                 </Col>
 
-                <Col xs={24} sm={11}>
+                <Col xs={24} sm={7}>
                   <Field
                     name="impact"
                     type="select"

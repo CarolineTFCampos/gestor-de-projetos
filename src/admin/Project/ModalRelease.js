@@ -125,7 +125,7 @@ class ModalRelease extends Component {
         {function({ handleSubmit, submitting, invalid }) {
           return (
             <Modal
-              title="Nova Release"
+              title={item ? item.name : 'Nova Release'}
               visible={visible}
               onOk={handleSubmit}
               okText="Salvar"
