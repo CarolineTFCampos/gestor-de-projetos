@@ -1,22 +1,16 @@
 import React, { Component } from 'react'
-import Divider from 'antd/lib/divider'
+
+import { withRouter } from 'react-router'
+
 import Icon from 'antd/lib/icon'
+// import Divider from 'antd/lib/divider'
 import { Header } from 'antd/lib/layout'
-// import Row from 'antd/lib/row'
-// import Col from 'antd/lib/col'
 
 const styles = {
   header: {
     background: '#272838',
     padding: '0 24px',
     borderBottom: '1px solid #ccc'
-  },
-  trigger: {
-    fontSize: '18px',
-    lineHeight: '64px',
-    cursor: 'pointer',
-    color: '#fff',
-    transition: 'color .3s'
   },
   optionMenu: {
     textAlign: 'right',
@@ -29,34 +23,36 @@ const styles = {
     cursor: 'pointer',
     color: '#fff',
     transition: 'color .3s'
-  },
-  divider: {
-    color: '#3c3c3c',
-    margin: '0 20px'
   }
+  // divider: {
+  //   color: '#3c3c3c',
+  //   margin: '0 20px'
+  // }
 }
 
 class NavBar extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleLogout = this.handleLogout.bind(this)
+  }
+
+  handleLogout() {
+    localStorage.removeItem('gestor__token')
+    this.props.history.push('/auth')
+  }
+
   render() {
     return (
       <Header style={styles.header} type="flex">
-        <Icon
-          style={styles.trigger}
-          type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-          onClick={this.props.toggle}
-        />
-
         <div style={styles.optionMenu}>
-          <Icon
-            style={styles.menus}
-            type={'user'}
-            // onClick={this.props.new}
-          />
+          {/* <Icon style={styles.menus} type='user' />
           <Divider style={styles.divider} type="vertical" />
+          <Icon style={styles.menus} type='setting' /> */}
           <Icon
             style={styles.menus}
-            type={'setting'}
-            // onClick={this.props.new}
+            type="logout"
+            onClick={this.handleLogout}
           />
         </div>
       </Header>
@@ -64,4 +60,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar
+export default withRouter(NavBar)
